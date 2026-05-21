@@ -3,6 +3,24 @@
   home.shellAliases = {
     git-addnospace = "git diff -U0 -w --no-color --src-prefix=a/ --dst-prefix=b/ | git apply --cached --ignore-whitespace --unidiff-zero -";
   };
+  home.packages = with pkgs; [
+    (writeShellApplication {
+      name = "gfm";
+      text = ''
+        if [ -z "$1" ]; then
+          echo "Usage: gfm <branch> [remote]"
+          exit 1
+        fi
+
+        branch="$1"
+        remote="''${2:-origin}"
+
+        git fetch "$remote" "$branch" &&
+        git merge "$remote/$branch"
+      '';
+    })
+
+  ];
   programs = {
     git = {
       enable = true;
