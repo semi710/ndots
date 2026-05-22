@@ -26,7 +26,6 @@
       "numi"
       "protonvpn"
       "steam"
-      "signal"
       "utm"
       "whatsapp"
       "windows-app"
