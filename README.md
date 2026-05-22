@@ -78,9 +78,11 @@ I've used **[Flake-Parts](https://flake.parts)** to modularize the config.<br>
 
 | Host      | Description |
 | --------- | ----------- |
-| **mach**  | Personal laptop (CLI setup) |
-| **vm**    | Virtual Machine testing (CLI only) |
-| **iso**   | Custom installer ISO with NetworkManager and pre-configured setup |
+| **mach**  | Personal laptop (CLI only) |
+| **dsd**   | Work desktop (CLI only) |
+| **semi**  | Semi-personal machine (CLI only) |
+| **virt**  | Virtual Machine testing (CLI only) |
+| **iso**   | Custom installer ISO with NetworkManager, home-manager, and pre-configured setup |
 | **jp-mbp** | MacBook Pro M4 (Darwin) |
 
 ---
@@ -128,16 +130,18 @@ On Darwin systems (MacBook), I use **Yabai** for window management.
 ## 📦 Build ISO
 
 ```bash
-nix build .#iso
+nix build .#iso.iso
 ```
 
-The ISO will be available in `result/iso`.
+The ISO will be available in `result/iso/`. The ISO includes home-manager for the `nixos` user with shell, editor, ssh, and nix-index configured.
 
 ## 🛠️ Flake Parts
 
 This configuration uses **[Flake-Parts](https://flake.parts)** to modularize the setup. Check the `parts/` directory for:
 - `disko/` - Disk partitioning configurations
-- `iso/` - ISO builder configurations
+- `iso/` - ISO build alias (wired via [nix-wire](https://github.com/semi710/nix-wire))
+
+Built with **[nix-wire](https://github.com/semi710/nix-wire)** — auto-wiring for hosts, modules, overlays, and templates.
 
 ## 🔗 Related
 

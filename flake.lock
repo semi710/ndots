@@ -1020,11 +1020,11 @@
     },
     "nix-wire": {
       "locked": {
-        "lastModified": 1758621374,
-        "narHash": "sha256-4shaR/1Dehl/zHGKxrROisrkO0b06Oj/+YLRbd3wOAQ=",
+        "lastModified": 1779441742,
+        "narHash": "sha256-K3wRBc1fDYC7KgjYxJ06jrGdZSx/3koO7c6ivZRNKsQ=",
         "owner": "semi710",
         "repo": "nix-wire",
-        "rev": "b9e0d027777306a23526551447f54288c2ebf105",
+        "rev": "30629e18363d4fa7f4d82b201924a93b2b533c5e",
         "type": "github"
       },
       "original": {
