@@ -8,6 +8,7 @@ let
           hostName = machine;
         };
         inherit inputs self hostPlatform;
+        flake = inputs.self;
       };
       modules = [ ./minimal.nix ];
     };
