@@ -1607,11 +1607,11 @@
         "systems": "systems_4"
       },
       "locked": {
-        "lastModified": 1779106538,
-        "narHash": "sha256-0Wdq79YRQoJ14+FoQKXeQuJ4zrv07hzCga/qCjB3Oy0=",
+        "lastModified": 1779556718,
+        "narHash": "sha256-jh7CFfU6AMVf1BU1q2rWSTOzKI107//vz8D8ewcU1lY=",
         "owner": "semi710",
         "repo": "nvix",
-        "rev": "6de501d458c7b27d7488775520f60a5f9e65628c",
+        "rev": "3d42a1cdbecd97eb50182d751de5616d27402c71",
         "type": "github"
       },
       "original": {
