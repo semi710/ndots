@@ -38,7 +38,6 @@ in
     "private-keys/gemini_api" = { };
     "private-keys/openai_api" = { };
     "private-keys/github_token" = { };
-    "private-keys/jp-key" = { };
     "private-keys/cachix_token" = { };
     "private-keys/ssh" = {
       path = "${config.home.homeDirectory}/.ssh/id_ed25519";
@@ -51,6 +50,10 @@ in
     "syncthing/jp-mbp/password" = { };
     "syncthing/jp-mbp/cert" = { };
     "syncthing/jp-mbp/key" = { };
+    # office keys
+    "private-keys/jp-key" = {
+      sopsFile = "${flake}/secrets/office.yaml";
+    };
   };
 
   home.sessionVariables = {

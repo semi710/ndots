@@ -5,7 +5,6 @@
 {
   flake,
   config,
-  lib,
   ...
 }:
 let
@@ -25,7 +24,6 @@ in
     "private-keys/gemini_api" = { };
     "private-keys/openai_api" = { };
     "private-keys/github_token" = { };
-    "private-keys/jp-key" = { };
     "private-keys/cachix_token" = { };
     "private-keys/ssh" = {
       path = "${config.home.homeDirectory}/.ssh/id_ed25519";
@@ -36,6 +34,11 @@ in
     "syncthing/mach/password" = { };
     "syncthing/mach/cert" = { };
     "syncthing/mach/key" = { };
+
+    # office keys
+    "private-keys/jp-key" = {
+      sopsFile = "${flake}/secrets/office.yaml";
+    };
   };
 
   services.syncthing = {

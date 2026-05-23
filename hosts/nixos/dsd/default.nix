@@ -85,6 +85,14 @@ in
 
   nix.settings.trusted-users = [ me.username ];
 
+  hm.sops.secrets."private-keys/nix_access_token" = {
+    sopsFile = "${flake}/secrets/office.yaml";
+  };
+  nix.extraOptions = # conf
+    ''
+      !include ${config.hm.sops.secrets."private-keys/nix_access_token".path}
+    '';
+
   nixpkgs.hostPlatform = "x86_64-linux";
 
   # Used for backwards compatibility, please read the changelog before changing.
