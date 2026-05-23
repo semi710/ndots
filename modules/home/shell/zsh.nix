@@ -103,6 +103,9 @@ in
       bindkey -M vicmd 'y' _normal_yank_with_osc52
       bindkey -M visual 'y' _visual_yank_with_osc52
 
+      # Run background + detached (use after Ctrl+Z)
+      runbg() { bg %+ >/dev/null 2>&1 && disown %+ >/dev/null 2>&1; }
+
       function zvm_after_lazy_keybindings() {
         bindkey -M visual 'y' _visual_yank_with_osc52
       }

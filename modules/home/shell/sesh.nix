@@ -15,7 +15,12 @@
     });
     tmuxKey = "c-o";
     settings = {
-      blacklist = [ "scratch" ];
+      blacklist = [
+        "^scratch$"
+        ".*/Library(/.*)?"
+        ".*/Applications(/.*)?"
+        ".*/Pictures(/.*)?"
+      ];
       dir_length = 2;
       session = [
         rec {
