@@ -24,7 +24,7 @@ in
       special < 0x29   ; default
       special < q      ; default
 
-      ${mod} - return : ${lib.getExe pkgs.putils.yabai-toggle-app} "kitty"
+      ${mod} - return : ${lib.getExe pkgs.putils.yabai-toggle-app} --process .kitty-wrapped "kitty"
       ${mod} - b : ${lib.getExe pkgs.putils.yabai-toggle-app} "Zen Browser (Beta)"
       ${mod} - s : ${lib.getExe pkgs.putils.yabai-toggle-app} "Slack"
       ${mod} + shift - s : open -b com.apple.ScreenSaver.Engine
@@ -81,6 +81,9 @@ in
       special < j : yabai -m window --resize bottom:0:20 2> /dev/null || yabai -m window --resize top:0:-20 2> /dev/null
       special < k : yabai -m window --resize bottom:0:-20 2> /dev/null || yabai -m window --resize top:0:20 2> /dev/null
       special < l : yabai -m window --resize right:20:0 2> /dev/null || yabai -m window --resize left:-20:0 2> /dev/null
+
+      special < shift - 0x2B : ${lib.getExe pkgs.putils.yabai-resize} smaller
+      special < shift - 0x2F : ${lib.getExe pkgs.putils.yabai-resize} bigger
 
       special < c : [ "$(yabai -m query --windows --window | jq '.["is-floating"]')" = "true" ] && yabai -m window --grid 8:8:1:1:6:6 ; default
 
