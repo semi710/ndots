@@ -10,9 +10,8 @@
   ...
 }:
 let
-  me = (import (flake + "/config.nix")).me // {
-    username = "nikhil.singh";
-  };
+  jp = (import (flake + "/config.nix")).jp;
+  me = (import (flake + "/config.nix")).me;
 in
 {
   # users specific home modules
@@ -84,11 +83,16 @@ in
         name = me.fullname;
         email = me.email;
       };
+      core.sshCommand = "ssh -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes";
     };
     includes = [
       {
         condition = "gitdir:~/work/bitbucket/";
-        contents.user.email = "${me.username}@juspay.in";
+        contents = {
+          user.name = jp.fullname;
+          user.email = "${jp.username}@juspay.in";
+          core.sshCommand = "ssh -i ~/.ssh/id_ed25519_work.pub -o IdentitiesOnly=yes";
+        };
       }
     ];
   };

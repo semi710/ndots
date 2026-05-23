@@ -9,9 +9,8 @@
   ...
 }:
 let
-  me = (import (flake + "/config.nix")).me // {
-    username = "nikhil.singh";
-  };
+  jp = (import (flake + "/config.nix")).jp;
+  me = (import (flake + "/config.nix")).me;
 in
 {
   # users specific home modules
@@ -33,14 +32,19 @@ in
 
   services.syncthing = {
     guiCredentials = {
-      username = me.username;
+      username = jp.username;
       passwordFile = config.sops.secrets."syncthing/semi/password".path;
     };
     cert = config.sops.secrets."syncthing/semi/cert".path;
     key = config.sops.secrets."syncthing/semi/key".path;
   };
 
-  # comes from homeModules.editor
+  # Public keys for SSH agent key selection via -i
+  home.file = {
+    ".ssh/id_ed25519.pub".text = builtins.elemAt me.sshPublicKeys 0;
+    ".ssh/id_ed25519_work.pub".text = builtins.elemAt jp.sshPublicKeys 0;
+  };
+
   nvix.variant = "core";
   programs.opencode.web = {
     enable = true;
@@ -53,11 +57,16 @@ in
         name = me.fullname;
         email = me.email;
       };
+      core.sshCommand = "ssh -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes";
     };
     includes = [
       {
         condition = "gitdir:~/work/bitbucket/";
-        contents.user.email = "${me.username}@juspay.in";
+        contents = {
+          user.name = jp.fullname;
+          user.email = "${jp.username}@juspay.in";
+          core.sshCommand = "ssh -i ~/.ssh/id_ed25519_work.pub -o IdentitiesOnly=yes";
+        };
       }
     ];
   };
