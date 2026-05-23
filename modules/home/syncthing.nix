@@ -15,7 +15,7 @@
         };
         semi = {
           name = "semi";
-          id = "UCAGOTG-DZFF3EY-NVVGRRC-OE7HPXW-AEMDVKL-Q6CVMZJ-AVOHXNC-ILUNBQD";
+          id = "VIRL66U-KLPB2V5-7NHB7FU-5HYPREY-LZDGXGU-4F5VCXT-JYO3JHH-F2J2NQJ";
           autoAcceptFolders = true;
         };
         jp-mbp = {
