@@ -28,7 +28,7 @@
         };
         dsd = {
           name = "dsd";
-          id = "ANCU4R2-OMSKZRH-VLPZKDP-6E4733J-QLSI7MM-CVR5SY7-KFAW4EN-RKLRCAW";
+          id = "DNPFMLD-3SFDPIJ-PVVA7VV-HWBOEOI-ABEM47N-7RU4HHQ-TOF7EHC-SXX7DQZ";
           autoAcceptFolders = true;
         };
       };
