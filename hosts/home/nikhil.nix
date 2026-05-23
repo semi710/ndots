@@ -10,7 +10,6 @@ in
     flake.homeModules.ai
   ];
   home.username = "nikhil";
-  programs.zsh.completionInit = "autoload -U compinit && compinit -i";
   programs.git = {
     settings = {
       user = {

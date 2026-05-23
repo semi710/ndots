@@ -24,6 +24,7 @@ in
   home.packages = [ copy ];
   programs.zsh = {
     enable = true;
+    completionInit = "autoload -U compinit && compinit -C";
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     history = {
