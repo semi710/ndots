@@ -5,9 +5,11 @@
 {
   flake,
   config,
+  lib,
   ...
 }:
 let
+  jp = (import (flake + "/config.nix")).jp;
   me = (import (flake + "/config.nix")).me;
 in
 {
@@ -55,7 +57,6 @@ in
     CACHIX_AUTH_TOKEN = "$(cat ${config.sops.secrets."private-keys/cachix_token".path})";
   };
 
-  # comes from homeModules.editor
   nvix.variant = "full";
 
   programs.git = {
@@ -64,6 +65,17 @@ in
         name = me.fullname;
         email = me.email;
       };
+      core.sshCommand = "ssh -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes";
     };
+    includes = [
+      {
+        condition = "gitdir:~/work/bitbucket/";
+        contents = {
+          user.name = jp.fullname;
+          user.email = "${jp.username}@juspay.in";
+          core.sshCommand = "ssh -i ~/.ssh/id_ed25519_work.pub -o IdentitiesOnly=yes";
+        };
+      }
+    ];
   };
 }
