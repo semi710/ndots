@@ -45,6 +45,10 @@ in
       path = "${config.home.homeDirectory}/.ssh/id_ed25519";
       mode = "0600";
     };
+    "private-keys/ssh-office" = {
+      path = "${config.home.homeDirectory}/.ssh/id_ed25519_work";
+      mode = "0600";
+    };
     "syncthing/jp-mbp/password" = { };
     "syncthing/jp-mbp/cert" = { };
     "syncthing/jp-mbp/key" = { };

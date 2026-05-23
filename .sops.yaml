@@ -1,0 +1,12 @@
+---
+keys:
+  - &personal age1qq74n2h6sq8gv843dc67k3jczru768pq6jg3zg4ycmrtqdyfhfes803ncy
+  - &office age1kkh7046u0m22jsw9cclsdlefxyzlmpxhwm58n3qjrjshjqn2lq5qey6p7e
+creation_rules:
+  - path_regex: ^secrets/keys\.yaml$
+    key_groups:
+      - age: [*personal]
+  - path_regex: ^secrets/office\.yaml$
+    key_groups:
+      - age:
+          - *office
