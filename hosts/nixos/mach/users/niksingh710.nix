@@ -51,7 +51,7 @@ in
     GEMINI_API_KEY = "$(cat ${config.sops.secrets."private-keys/gemini_api".path})";
     GITHUB_TOKEN = "$(cat ${config.sops.secrets."private-keys/github_token".path})";
     JUSPAY_API_KEY = "$(cat ${config.sops.secrets."private-keys/jp-key".path})";
-    SOPS_AGE_KEY_FILE = config.sops.age.keyFile;
+
     CACHIX_AUTH_TOKEN = "$(cat ${config.sops.secrets."private-keys/cachix_token".path})";
   };
 
