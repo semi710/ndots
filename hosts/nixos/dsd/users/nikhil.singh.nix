@@ -27,10 +27,6 @@ in
       username = me.username;
       passwordFile = "${config.home.homeDirectory}/.syncthing.pass";
     };
-
-    settings = {
-      gui.user = me.username;
-    };
   };
   # comes from homeModules.editor
   nvix.variant = "core";

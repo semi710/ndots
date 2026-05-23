@@ -7,9 +7,6 @@
     overrideDevices = false;
     overrideFolders = false;
     settings = {
-      gui = {
-        theme = "black";
-      };
       devices = {
         mach = {
           name = "mach";

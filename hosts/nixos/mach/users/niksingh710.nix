@@ -41,9 +41,6 @@ in
       username = me.username;
       passwordFile = config.sops.secrets."syncthing/mach/password".path;
     };
-    settings = {
-      gui.user = me.username;
-    };
     cert = config.sops.secrets."syncthing/mach/cert".path;
     key = config.sops.secrets."syncthing/mach/key".path;
   };

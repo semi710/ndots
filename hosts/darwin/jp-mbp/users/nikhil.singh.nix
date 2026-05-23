@@ -33,9 +33,6 @@ in
     };
     cert = config.sops.secrets."syncthing/jp-mbp/cert".path;
     key = config.sops.secrets."syncthing/jp-mbp/key".path;
-    settings = {
-      gui.user = me.username;
-    };
   };
 
   sops.secrets = {
