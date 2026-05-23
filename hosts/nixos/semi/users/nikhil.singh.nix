@@ -5,6 +5,7 @@
 {
   flake,
   config,
+  lib,
   ...
 }:
 let
@@ -15,19 +16,30 @@ in
 {
   # users specific home modules
   imports = [
+    flake.homeModules.sops
     flake.homeModules.ai
     flake.homeModules.terminal
     flake.homeModules.syncthing
   ];
 
-  services.syncthing = {
-    # CPU is in office and ssh key get's there by ssh-agent forwarding, so skipping sops here
-    # Passwordfile is to be expected in a manual path
-    guiCredentials = {
-      username = me.username;
-      passwordFile = "${config.home.homeDirectory}/.syncthing.pass";
+  sops = {
+    defaultSopsFile = lib.mkForce "${flake}/secrets/office.yaml";
+    secrets = {
+      "syncthing/semi/password" = { };
+      "syncthing/semi/cert" = { };
+      "syncthing/semi/key" = { };
     };
   };
+
+  services.syncthing = {
+    guiCredentials = {
+      username = me.username;
+      passwordFile = config.sops.secrets."syncthing/semi/password".path;
+    };
+    cert = config.sops.secrets."syncthing/semi/cert".path;
+    key = config.sops.secrets."syncthing/semi/key".path;
+  };
+
   # comes from homeModules.editor
   nvix.variant = "core";
   programs.opencode.web = {
