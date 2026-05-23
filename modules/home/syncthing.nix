@@ -26,6 +26,11 @@
           id = "3AAAQDF-H57Z4S4-4CKGZJX-BLSVSXF-SP7V2LZ-R2YQIFK-KFPG7MJ-I6RPQAQ";
           autoAcceptFolders = true;
         };
+        dsd = {
+          name = "dsd";
+          id = "ANCU4R2-OMSKZRH-VLPZKDP-6E4733J-QLSI7MM-CVR5SY7-KFAW4EN-RKLRCAW";
+          autoAcceptFolders = true;
+        };
       };
 
       folders = {
