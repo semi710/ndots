@@ -25,9 +25,7 @@ in
   aria2tui = selfPkgs.aria2tui;
 
   # From an external pinned flake
-  putils =
-    (builtins.getFlake "github:niksingh710/utils/efd613813db08fe7a514e1b9cf98f8e06b00f4d5")
-    .packages.${prev.stdenv.hostPlatform.system};
+  putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
 
   # Overrides
   # Fix appstream build on Darwin: meson's pthread detection returns
