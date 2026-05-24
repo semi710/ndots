@@ -40,6 +40,7 @@
             "semi"
             "mach"
             "jp-mbp"
+            "dsd"
           ];
         };
       };

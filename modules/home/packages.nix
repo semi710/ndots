@@ -18,11 +18,7 @@ let
     # quickemu # OVMF to be fixed
   ];
 
-  linux = lib.optionals isLinux (
-    with pkgs;
-    [
-    ]
-  );
+  linux = lib.optionals isLinux ([ ]);
   darwin = lib.optionals isDarwin (
     with pkgs;
     [
