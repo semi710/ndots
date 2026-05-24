@@ -15,17 +15,12 @@ let
 
   both = with pkgs; [
     google-chrome
-    # telegram-desktop
-    ytmdesktop
     # quickemu # OVMF to be fixed
   ];
 
   linux = lib.optionals isLinux (
     with pkgs;
     [
-      zulip
-      mailspring
-      google-chrome
     ]
   );
   darwin = lib.optionals isDarwin (
@@ -33,6 +28,7 @@ let
     [
       mas
       bruno
+      ytmdesktop
       bruno-cli
 
       # Mac ui apps are preferred to be from homebrew via or mas
