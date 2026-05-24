@@ -36,13 +36,13 @@ in
     };
   };
   sops = {
-    age.keyFile = "/Users/${me.username}/.config/sops/age/keys.txt";
+    age.keyFile = "${config.users.users.${me.username}.home}/.config/sops/age/keys.txt";
     defaultSopsFile = "${flake}/secrets/office.yaml";
     secrets."private-keys/nix-builder" = {
-      owner = "root";
-      group = "root";
+      owner = me.username;
+      group = "staff";
       mode = "0600";
-      path = "/root/.ssh/nix-builder";
+      path = "${config.users.users.${me.username}.home}/.ssh/nix-builder";
     };
   };
   nix.distributedBuilds = true;

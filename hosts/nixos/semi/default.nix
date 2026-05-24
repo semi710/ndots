@@ -64,7 +64,7 @@ in
     };
   };
   sops = {
-    age.keyFile = "/home/${me.username}/.config/sops/age/keys.txt";
+    age.keyFile = "${config.users.users.${me.username}.home}/.config/sops/age/keys.txt";
     defaultSopsFile = "${flake}/secrets/office.yaml";
     secrets."private-keys/nix-builder" = {
       owner = "root";

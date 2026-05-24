@@ -85,8 +85,8 @@ let
           [[ -z "$line" || "$line" =~ ^# ]] && continue
           b_host=$(echo "$line" | awk '{print $1}')
           b_sys=$(echo "$line" | awk '{print $2}')
-          b_jobs=$(echo "$line" | awk '{print $5}')
-          b_speed=$(echo "$line" | awk '{print $6}')
+          b_jobs=$(echo "$line" | awk '{print $4}')
+          b_speed=$(echo "$line" | awk '{print $5}')
           echo -e "  ''${GREEN}Builder''${RESET} ''${DIM}→''${RESET}  ''${BOLD}''${b_host}''${RESET} ''${DIM}(''${b_sys} / j''${b_jobs} / f''${b_speed})''${RESET}"
         done < /etc/nix/machines
       else
