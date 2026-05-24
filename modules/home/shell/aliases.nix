@@ -133,6 +133,7 @@ in
       mkdir = "printf '\\033[1;33m' && mkdir -pv";
       isodate = ''date -u "+%Y-%m-%dT%H:%M:%SZ"'';
       matrix = "${lib.getExe pkgs.unimatrix} -f -l ocCgGkS -s 96 2&> /dev/null";
+      fetch = "${lib.getExe pkgs.fastfetch} -c ${pkgs.fastfetch}/share/fastfetch/presets/examples/10.jsonc";
     };
 
     packages = [
