@@ -10,8 +10,8 @@
   ...
 }:
 let
-  jp = (import (flake + "/config.nix")).jp;
-  me = (import (flake + "/config.nix")).me;
+  jp = (import (flake + "/config.nix")).users.jp;
+  me = (import (flake + "/config.nix")).users.me;
 in
 {
   # users specific home modules

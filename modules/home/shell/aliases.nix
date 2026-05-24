@@ -79,7 +79,19 @@ let
       echo -e "  ''${GREEN}Jobs''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}''${max_jobs}''${RESET}"
       echo -e "  ''${GREEN}Speed''${RESET}  ''${DIM}→''${RESET}  ''${BOLD}''${speed_factor}''${RESET}"
     else
-      echo -e "  ''${GREEN}Mode''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}configured builders''${RESET}"
+      # Show configured builders from /etc/nix/machines
+      if [[ -f /etc/nix/machines ]]; then
+        while IFS= read -r line; do
+          [[ -z "$line" || "$line" =~ ^# ]] && continue
+          b_host=$(echo "$line" | awk '{print $1}')
+          b_sys=$(echo "$line" | awk '{print $2}')
+          b_jobs=$(echo "$line" | awk '{print $5}')
+          b_speed=$(echo "$line" | awk '{print $6}')
+          echo -e "  ''${GREEN}Builder''${RESET} ''${DIM}→''${RESET}  ''${BOLD}''${b_host}''${RESET} ''${DIM}(''${b_sys} / j''${b_jobs} / f''${b_speed})''${RESET}"
+        done < /etc/nix/machines
+      else
+        echo -e "  ''${GREEN}Mode''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}configured builders''${RESET}"
+      fi
     fi
     echo -e "  ''${GREEN}System''${RESET} ''${DIM}→''${RESET}  ''${BOLD}''${system}''${RESET}"
     if [[ ''${#nix_args[@]} -gt 0 ]]; then
@@ -90,6 +102,20 @@ let
     if [[ -n "$host" ]]; then
       nix build --system "$system" \
         --builders "ssh://$host $system - $max_jobs $speed_factor" \
+        "''${nix_args[@]+"''${nix_args[@]}"}"
+    elif [[ -f /etc/nix/machines ]] && { [[ $max_jobs -ne 8 ]] || [[ $speed_factor -ne 2 ]]; }; then
+      # Override configured builders with -j/-f values
+      builders=""
+      while IFS= read -r line; do
+        [[ -z "$line" || "$line" =~ ^# ]] && continue
+        b_host=$(echo "$line" | awk '{print $1}')
+        b_sys=$(echo "$line" | awk '{print $2}')
+        b_key=$(echo "$line" | awk '{print $3}')
+        b_feat=$(echo "$line" | awk '{print $7}')
+        builders+="ssh://$b_host $b_sys $b_key $max_jobs $speed_factor $b_feat "
+      done < /etc/nix/machines
+      nix build --system "$system" \
+        --builders "$builders" \
         "''${nix_args[@]+"''${nix_args[@]}"}"
     else
       nix build --system "$system" "''${nix_args[@]+"''${nix_args[@]}"}"

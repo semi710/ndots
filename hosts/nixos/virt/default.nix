@@ -5,7 +5,7 @@
   ...
 }:
 let
-  me = (import (flake + "/config.nix")).me // {
+  me = (import (flake + "/config.nix")).users.me // {
     username = "virt";
   };
 in

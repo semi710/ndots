@@ -6,7 +6,7 @@
   ...
 }:
 let
-  me = (import (flake + "/config.nix")).virt;
+  me = (import (flake + "/config.nix")).users.virt;
 in
 {
   imports = [
