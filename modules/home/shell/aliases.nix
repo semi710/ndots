@@ -2,6 +2,7 @@
 let
   nxbuild = pkgs.writeShellScriptBin "nxbuild" ''
     # nxbuild - Build nix packages on remote builders
+    # If a host is given, uses --builders (ad-hoc). Otherwise uses nix.buildMachines.
     set -euo pipefail
 
     # Colors (disabled if not a terminal)
@@ -20,7 +21,9 @@ let
     show_help() {
       echo -e "''${BOLD}''${CYAN}nxbuild''${RESET} - Build nix packages on remote builders"
       echo ""
-      echo -e "''${BOLD}Usage:''${RESET} nxbuild ''${YELLOW}<host>''${RESET} [options...] [nix build args...]"
+      echo -e "''${BOLD}Usage:''${RESET}"
+      echo -e "  nxbuild ''${YELLOW}[host]''${RESET} [options...] [nix build args...]"
+      echo -e "  nxbuild [options...] [nix build args...]       (uses configured builders)"
       echo ""
       echo -e "''${BOLD}Options:''${RESET}"
       echo -e "  ''${GREEN}-s, --system''${RESET} SYS       Target system (default: current system)"
@@ -28,19 +31,17 @@ let
       echo -e "  ''${GREEN}-f, --speed-factor''${RESET} N   Relative speed, higher = preferred (default: 2)"
       echo -e "  ''${GREEN}-h, --help''${RESET}             Show this help message"
       echo ""
-      echo -e "''${BOLD}Examples:''${RESET}"
-      echo -e "  nxbuild ''${YELLOW}dsd''${RESET}                                Build current flake on dsd"
-      echo -e "  nxbuild ''${YELLOW}dsd''${RESET} ''${BLUE}nixpkgs#hello''${RESET}                  Build hello on dsd"
-      echo -e "  nxbuild ''${YELLOW}dsd''${RESET} -s x86_64-linux ''${BLUE}nixpkgs#hello''${RESET}  Explicit system"
-      echo -e "  nxbuild ''${YELLOW}dsd''${RESET} -j 4 -f 3 ''${BLUE}nixpkgs#hello''${RESET}        4 jobs, speed factor 3"
-      echo -e "  nxbuild ''${YELLOW}user@host''${RESET} ''${BLUE}nixpkgs#hello''${RESET}             With explicit SSH user"
+      echo -e "''${BOLD}Modes:''${RESET}"
+      echo -e "  ''${YELLOW}With host:''${RESET}    nxbuild semi .#iso.iso"
+      echo -e "              Uses --builders ssh://host (ad-hoc, no setup needed)"
+      echo -e "  ''${YELLOW}Without host:''${RESET} nxbuild .#iso.iso"
+      echo -e "              Uses nix.buildMachines (requires host config)"
       echo ""
-      echo -e "''${DIM}The <host> can be any SSH-accessible machine with nix installed."
-      echo -e "SSH user defaults to \$USER, override with user@host syntax."
-      echo -e ""
-      echo -e "Builder spec: ssh://host system - maxJobs speedFactor"
-      echo -e "  maxJobs:     parallel builds on remote (default: 8)"
-      echo -e "  speedFactor: relative speed, higher = nix prefers this builder (default: 2)''${RESET}"
+      echo -e "''${BOLD}Examples:''${RESET}"
+      echo -e "  nxbuild ''${YELLOW}semi''${RESET} ''${BLUE}.#iso.iso''${RESET}                    Build ISO on semi (ad-hoc)"
+      echo -e "  nxbuild ''${BLUE}.#iso.iso''${RESET}                          Build ISO (configured builders)"
+      echo -e "  nxbuild ''${YELLOW}dsd''${RESET} -j 4 ''${BLUE}nixpkgs#hello''${RESET}             4 jobs on dsd"
+      echo -e "  nxbuild ''${YELLOW}user@host''${RESET} ''${BLUE}nixpkgs#hello''${RESET}             With explicit SSH user"
       exit 0
     }
 
@@ -48,13 +49,19 @@ let
       show_help
     fi
 
-    host="''${1}"
-    shift
-
     system=$(nix eval --raw --expr 'builtins.currentSystem' 2>/dev/null || echo x86_64-linux)
     max_jobs=8
     speed_factor=2
+    host=""
     nix_args=()
+
+    # If first arg doesn't look like a flag or nix target, treat it as a host
+    case "$1" in
+      -*) ;;           # flag → not a host
+      .#*) ;;          # flake output → not a host
+      *#*) ;;          # nixpkgs#hello → not a host
+      *) host="$1"; shift ;;
+    esac
 
     while [[ $# -gt 0 ]]; do
       case "$1" in
@@ -67,18 +74,26 @@ let
     done
 
     echo -e "''${BOLD}''${CYAN}nxbuild''${RESET}"
-    echo -e "  ''${GREEN}Host''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}''${host}''${RESET}"
+    if [[ -n "$host" ]]; then
+      echo -e "  ''${GREEN}Host''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}''${host}''${RESET} ''${DIM}(ad-hoc)''${RESET}"
+      echo -e "  ''${GREEN}Jobs''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}''${max_jobs}''${RESET}"
+      echo -e "  ''${GREEN}Speed''${RESET}  ''${DIM}→''${RESET}  ''${BOLD}''${speed_factor}''${RESET}"
+    else
+      echo -e "  ''${GREEN}Mode''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}configured builders''${RESET}"
+    fi
     echo -e "  ''${GREEN}System''${RESET} ''${DIM}→''${RESET}  ''${BOLD}''${system}''${RESET}"
-    echo -e "  ''${GREEN}Jobs''${RESET}   ''${DIM}→''${RESET}  ''${BOLD}''${max_jobs}''${RESET}"
-    echo -e "  ''${GREEN}Speed''${RESET}  ''${DIM}→''${RESET}  ''${BOLD}''${speed_factor}''${RESET}"
     if [[ ''${#nix_args[@]} -gt 0 ]]; then
-    echo -e "  ''${GREEN}Target''${RESET} ''${DIM}→''${RESET}  ''${YELLOW}''${nix_args[*]}''${RESET}"
+      echo -e "  ''${GREEN}Target''${RESET} ''${DIM}→''${RESET}  ''${YELLOW}''${nix_args[*]}''${RESET}"
     fi
     echo ""
 
-    nix build --system "$system" \
-      --builders "ssh://$host $system - $max_jobs $speed_factor" \
-      "''${nix_args[@]+"''${nix_args[@]}"}"
+    if [[ -n "$host" ]]; then
+      nix build --system "$system" \
+        --builders "ssh://$host $system - $max_jobs $speed_factor" \
+        "''${nix_args[@]+"''${nix_args[@]}"}"
+    else
+      nix build --system "$system" "''${nix_args[@]+"''${nix_args[@]}"}"
+    fi
   '';
 in
 {

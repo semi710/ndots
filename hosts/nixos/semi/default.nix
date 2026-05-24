@@ -16,6 +16,7 @@ in
     flake.nixosModules.default
 
     flake.nixosModules.office
+    flake.inputs.sops-nix.nixosModules.sops
 
     # Important for the hardware
     flake.inputs.disko.nixosModules.disko
@@ -46,7 +47,9 @@ in
         "extra"
         "docker"
       ];
-      openssh.authorizedKeys.keys = me.sshPublicKeys;
+      openssh.authorizedKeys.keys = me.sshPublicKeys ++ [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKSq2XkQgBVoDLjvh7X1ULsDIfCrRcn4HM3un2uzUUIM nix-builder@ndots"
+      ];
     };
   };
 
@@ -62,6 +65,17 @@ in
         AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* CLAUDE_*
       '';
   };
+  # System-wide known hosts so nix-daemon (root) can SSH to builders
+  programs.ssh.knownHosts = {
+    dsd = {
+      hostNames = [
+        "dsd"
+        "dsd.persian-vega.ts.net"
+      ];
+      publicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH9PMm+g87zvYb85/LhAiguCWbSXlDeR56m+OV86lYbK";
+    };
+  };
+
   virtualisation.docker = {
     enable = true;
     rootless = {
@@ -86,6 +100,19 @@ in
 
   nix.settings.trusted-users = [ me.username ];
 
+  # System-level sops for nix builder SSH key
+  sops = {
+    age.keyFile = "/home/${me.username}/.config/sops/age/keys.txt";
+    defaultSopsFile = "${flake}/secrets/office.yaml";
+    secrets."private-keys/nix-builder" = {
+      owner = "root";
+      group = "root";
+      mode = "0600";
+      path = "/root/.ssh/nix-builder";
+    };
+  };
+
+  # Home-manager still manages nix_access_token
   hm.sops.secrets."private-keys/nix_access_token" = {
     sopsFile = "${flake}/secrets/office.yaml";
   };
@@ -93,6 +120,26 @@ in
     ''
       !include ${config.hm.sops.secrets."private-keys/nix_access_token".path}
     '';
+
+  # Remote builders
+  nix.distributedBuilds = true;
+  nix.buildMachines = [
+    {
+      hostName = "dsd";
+      system = "x86_64-linux";
+      maxJobs = 8;
+      speedFactor = 2;
+      supportedFeatures = [
+        "nixos-test"
+        "benchmark"
+        "big-parallel"
+        "kvm"
+      ];
+      mandatoryFeatures = [ ];
+      sshUser = "nikhil.singh";
+      sshKey = config.sops.secrets."private-keys/nix-builder".path;
+    }
+  ];
 
   nixpkgs.hostPlatform = "x86_64-linux";
 
