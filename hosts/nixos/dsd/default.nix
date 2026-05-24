@@ -56,38 +56,18 @@ in
     extraConfig = "AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* CLAUDE_*";
   };
 
-  # Remote builders
+  # Known hosts for remote builds (e.g. nxbuild semi .#foo or nix build --builders ssh://semi .#foo)
   programs.ssh.knownHosts = {
     semi = {
       inherit (cfg.builders.semi) hostNames;
       publicKey = cfg.builders.semi.hostPublicKey;
     };
   };
+
   sops = {
     age.keyFile = "${config.users.users.${me.username}.home}/.config/sops/age/keys.txt";
     defaultSopsFile = "${flake}/secrets/office.yaml";
-    secrets."private-keys/nix-builder" = {
-      owner = "root";
-      group = "root";
-      mode = "0600";
-      path = "/root/.ssh/nix-builder";
-    };
   };
-  nix.distributedBuilds = true;
-  nix.buildMachines = [
-    {
-      inherit (cfg.builders.semi)
-        hostName
-        system
-        maxJobs
-        speedFactor
-        supportedFeatures
-        sshUser
-        ;
-      mandatoryFeatures = [ ];
-      sshKey = config.sops.secrets."private-keys/nix-builder".path;
-    }
-  ];
 
   virtualisation.docker = {
     enable = true;
