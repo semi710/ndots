@@ -9,28 +9,6 @@ let
   profileName = "default";
 
   # Helper function to build extensions that aren't in firefox-addons
-  buildFirefoxExtension =
-    {
-      pname,
-      version,
-      addonId,
-      url,
-      sha256,
-      meta ? { },
-    }:
-    pkgs.stdenv.mkDerivation {
-      inherit pname version;
-      src = pkgs.fetchurl { inherit url sha256; };
-      nativeBuildInputs = [ pkgs.unzip ];
-      unpackPhase = ''
-        unzip $src -d $out/
-      '';
-      installPhase = ''
-        mkdir -p $out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}
-        cp -r $out/* $out/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/${addonId}.xpi || true
-      '';
-      inherit meta;
-    };
 in
 {
   imports = [
@@ -40,35 +18,6 @@ in
   stylix.targets.zen-browser.enable = false;
   programs.zen-browser = {
     enable = true;
-
-    # ═══════════════════════════════════════════════════════════════
-    # EXTENSIONS NOTE
-    # ═══════════════════════════════════════════════════════════════
-    # Extensions cannot be declared in the zen-browser home-manager module.
-    # The module doesn't support the 'extensions' option like standard Firefox.
-    #
-    # INSTALLED EXTENSIONS (from your profile):
-    # - darkreader          # Dark mode for every website
-    # - refined-github      # GitHub UI improvements
-    # - ublock-origin       # Ad blocker
-    # - iCloud Passwords    # Apple keychain integration
-    # - Firenvim            # Neovim in browser
-    # - Material Icons for GitHub
-    # - LanguageTool        # Grammar checking
-    # - GitOwl              # GitHub notifications
-    # - Nixpkgs PR Tracker
-    # - Auto Tab Discard
-    # - Simple Translate
-    #
-    # INSTALLATION METHODS:
-    # 1. Sign into Firefox Sync (recommended) - restores all extensions
-    # 2. Install manually from https://addons.mozilla.org
-    # 3. Use the firefox-addons overlay with standard Firefox module
-    #
-    # To use firefox-addons, you'd need to use the standard Firefox
-    # home-manager module instead of zen-browser's custom module.
-    # See: https://github.com/nix-community/home-manager/blob/master/modules/programs/firefox.nix
-
     profiles."${profileName}" = {
       containersForce = true;
       containers = {
@@ -436,73 +385,4 @@ in
     x-scheme-handler/element=zen-beta.desktop
   '';
 
-  # EXTENSIONS NOT IN FIREFOX-ADDONS (need manual installation):
-  # These extensions are installed in your profile but not available via nix:
-  #
-  # 1. iCloud Passwords (password-manager-firefox-extension@apple.com)
-  #    - Apple-specific, installed from App Store or addons.mozilla.org
-  #    - Required for iCloud Keychain integration
-  #
-  # 2. Firenvim (firenvim@lacamb.re)
-  #    - Neovim integration for browser text areas
-  #    - Install from: https://addons.mozilla.org/firefox/addon/firenvim/
-  #    - Requires Neovim with firenvim plugin
-  #
-  # 3. Material Icons for GitHub ({eac6e624-97fa-4f28-9d24-c06c9b8aa713})
-  #    - File icons on GitHub
-  #    - Install from addons.mozilla.org
-  #
-  # 4. LanguageTool (languagetool-webextension@languagetool.org)
-  #    - Grammar and spell checking
-  #    - Install from addons.mozilla.org
-  #
-  # 5. GitOwl (gitowl@gitowl.dev)
-  #    - GitHub notifications
-  #    - Install from addons.mozilla.org
-  #
-  # 6. Nixpkgs PR Tracker (nixpkgs-pr-tracker@tahayassine.me)
-  #    - Track Nixpkgs PRs
-  #    - Install from addons.mozilla.org
-  #
-  # 7. Auto Tab Discard (ATBC@EasonWong)
-  #    - Memory management by suspending tabs
-  #    - Install from addons.mozilla.org
-  #
-  # 8. Simple Translate (simple-translate@sienori)
-  #    - Quick translation popup
-  #    - Install from addons.mozilla.org
-  #
-  # 9. Custom Userscripts (various)
-  #    - Stored in /chrome/JS/ directory
-  #    - Managed via Sine userscript manager
-  #
-  # SYNC SETUP:
-  # - Firefox Sync is configured with: nik.singh710@gmail.com
-  # - Device ID: 490787759d8dce90692779a6aeaa86f0
-  # - 2FA enabled
-  # - Sign in manually after first run to restore:
-  #   * Bookmarks
-  #   * History
-  #   * Passwords (if not using iCloud)
-  #   * Open tabs
-  #   * Workspaces
-  #
-  # SINE USERSCRIPT MANAGER:
-  # - Advanced userscript system in /chrome/JS/sine.uc.mjs
-  # - Custom mod manager with marketplace
-  # - Currently NOT managed by Nix (too complex)
-  # - Consider backing up /chrome directory before switch
-  #
-  # CUSTOM EXTENSION PACKAGING:
-  # To package extensions not in firefox-addons, use buildFirefoxExtension:
-  #
-  # myExtension = buildFirefoxExtension {
-  #   pname = "my-extension";
-  #   version = "1.0.0";
-  #   addonId = "extension-id@author.com";
-  #   url = "https://addons.mozilla.org/firefox/downloads/file/xxxx/extension.xpi";
-  #   sha256 = "sha256-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx=";
-  # };
-  #
-  # Then add to extensions list: [ darkreader refined-github myExtension ]
 }
