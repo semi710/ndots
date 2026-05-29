@@ -5,6 +5,7 @@
   home.file.".hammerspoon/init.lua".text = # lua
     ''
       hs.allowAppleScript(true)
+      hs.console.darkMode(true)
 
       -- ============================================
       -- HAMMERSPOON MODE (Ctrl+Option+Shift+H)
@@ -210,9 +211,74 @@
       vim:disableForApp('zoom.us')
       vim:disableForApp('kitty')
       vim:disableForApp('Maccy')
+      vim:disableForApp('Homerow')
       vim:enterWithSequence('jk')
-      vim:enableBetaFeature('block_cursor_overlay')
       vim:shouldShowAlertInNormalMode(true)
+
+      -- ============================================
+      -- Homerow scroll conflict guard
+      -- ============================================
+      -- Homerow sends real j/k key events when scrolling, which triggers
+      -- the jk enter sequence. We patch the key sequence event handler
+      -- to skip detection when Homerow's scroll overlay is visible.
+      vim.homerowScrollActive = false
+
+      vim.homerowWatcher = hs.window.filter.new(function(win)
+        if not win then return false end
+        local app = win:application()
+        return app and app:name() == "Homerow"
+      end)
+
+      vim.homerowWatcher:subscribe(hs.window.filter.windowCreated, function()
+        vim.homerowScrollActive = true
+        if vim.sequence and vim.sequence.enabled then
+          vim.sequence:disable()
+        end
+      end)
+
+      vim.homerowWatcher:subscribe(hs.window.filter.windowDestroyed, function()
+        vim.homerowScrollActive = false
+        if vim.sequence and vim.enabled then
+          vim.sequence:enable()
+        end
+      end)
+
+      -- ============================================
+      -- Password field guard
+      -- ============================================
+      -- Disable vim mode when a password field is focused to avoid
+      -- swallowing keystrokes meant for authentication.
+      vim.inPasswordField = false
+
+      vim.passwordChecker = hs.timer.doEvery(0.3, function()
+        local ax = require("hs.axuielement")
+        local systemElement = ax.systemWideElement()
+        if not systemElement then return end
+
+        local currentElement = systemElement:attributeValue("AXFocusedUIElement")
+        if not currentElement then
+          if vim.inPasswordField then
+            vim.inPasswordField = false
+            vim:enable()
+          end
+          return
+        end
+
+        local role = currentElement:attributeValue("AXRole") or ""
+        local isSecure = currentElement:attributeValue("AXSecure") or false
+
+        if role == "AXSecureTextField" or isSecure then
+          if not vim.inPasswordField then
+            vim.inPasswordField = true
+            vim:disable()
+          end
+        else
+          if vim.inPasswordField then
+            vim.inPasswordField = false
+            vim:enable()
+          end
+        end
+      end)
 
       -- ============================================
       -- Spotlight support for vim mode
@@ -397,18 +463,27 @@
         canvas:topLeft(pos)
         canvas:level("overlay")
 
-        -- Glass styling
-        canvas:elementAttribute(1, 'fillColor', {
+        -- Glass styling — subtle tint per mode
+        local fillColor = {
           red = 0.12, green = 0.12, blue = 0.12, alpha = 0.9
-        })
-        canvas:elementAttribute(1, 'strokeColor', { white = 1.0, alpha = 0.4 })
+        }
+        local strokeColor = { white = 1.0, alpha = 0.4 }
+        local textLabel = "N"
+
+        if mode == 'visual' then
+          fillColor = { red = 0.18, green = 0.12, blue = 0.08, alpha = 0.9 }
+          strokeColor = { red = 0.82, green = 0.60, blue = 0.38, alpha = 0.6 }
+          textLabel = "V"
+        end
+
+        canvas:elementAttribute(1, 'fillColor', fillColor)
+        canvas:elementAttribute(1, 'strokeColor', strokeColor)
         canvas:elementAttribute(1, 'strokeWidth', 1.0)
         canvas:elementAttribute(1, 'roundedRectRadii', { xRadius = 8, yRadius = 8 })
 
         canvas:size({ w = 40, h = 28 })
 
-        local text = (mode == 'visual') and "V" or "N"
-        canvas:elementAttribute(2, 'text', hs.styledtext.new(text, {
+        canvas:elementAttribute(2, 'text', hs.styledtext.new(textLabel, {
           font = { size = 16 },
           color = { white = 1.0 },
           paragraphStyle = { alignment = 'center' }
@@ -418,7 +493,45 @@
         return true
       end
 
-      -- Watch for stateIndicator updates and apply custom render
+      -- Override the canvas fill color immediately so blue never flashes
+      local function applyDarkCanvas(canvas)
+        if not canvas then return end
+        local mode = vim.mode
+        local fillColor = { red = 0.12, green = 0.12, blue = 0.12, alpha = 0.9 }
+        local strokeColor = { white = 1.0, alpha = 0.4 }
+        if mode == 'visual' then
+          fillColor = { red = 0.18, green = 0.12, blue = 0.08, alpha = 0.9 }
+          strokeColor = { red = 0.82, green = 0.60, blue = 0.38, alpha = 0.6 }
+        end
+        canvas:elementAttribute(1, 'fillColor', fillColor)
+        canvas:elementAttribute(1, 'strokeColor', strokeColor)
+        canvas:elementAttribute(1, 'strokeWidth', 1.0)
+        canvas:elementAttribute(1, 'roundedRectRadii', { xRadius = 8, yRadius = 8 })
+      end
+
+      -- Hook both render AND update to ensure styling always wins
+      local originalUpdate = nil
+
+      local function customUpdate(self)
+        -- Call render first to set text/visibility
+        local shouldShow = customRender(self)
+        if shouldShow then
+          if not self.showing then
+            applyDarkCanvas(self.canvas)
+            self.canvas:show()
+            self.canvas:level("overlay")
+            self.showing = true
+          end
+        else
+          if self.showing then
+            self.canvas:hide()
+            self.showing = false
+          end
+        end
+        return self
+      end
+
+      -- Watch for stateIndicator and hook both render and update
       local hookAttempts = 0
       hs.timer.doEvery(0.5, function()
         hookAttempts = hookAttempts + 1
@@ -432,13 +545,21 @@
           return -- continue polling
         end
 
-        -- Check if we need to hook the render
+        -- Apply dark styling immediately on the canvas
+        applyDarkCanvas(vim.stateIndicator.canvas)
+
+        -- Hook render
         if vim.stateIndicator.render ~= customRender then
           originalRender = vim.stateIndicator.render
           vim.stateIndicator.render = customRender
           print("Custom UI render hooked (attempt " .. hookAttempts .. ")")
-        else
-          print("Custom UI already hooked (attempt " .. hookAttempts .. ")")
+        end
+
+        -- Hook update to fully control show/hide + styling
+        if vim.stateIndicator.update ~= customUpdate then
+          originalUpdate = vim.stateIndicator.update
+          vim.stateIndicator.update = customUpdate
+          print("Custom UI update hooked (attempt " .. hookAttempts .. ")")
         end
 
         return false -- stop the timer
