@@ -281,6 +281,56 @@
       end)
 
       -- ============================================
+      -- Firenvim guard
+      -- ============================================
+      -- Disable vim mode when a Firenvim iframe is focused inside the browser,
+      -- so Hammerspoon doesn't swallow keystrokes meant for the embedded Neovim.
+      -- Detection: Firenvim creates an AXWebArea with moz-extension:// in its
+      -- AXDescription, which does not appear in normal web content iframes.
+      vim.inFirenvim = false
+
+      vim.firenvimChecker = hs.timer.doEvery(0.3, function()
+        local ax = require("hs.axuielement")
+        local systemElement = ax.systemWideElement()
+        if not systemElement then return end
+
+        local currentElement = systemElement:attributeValue("AXFocusedUIElement")
+        if not currentElement then
+          if vim.inFirenvim then
+            vim.inFirenvim = false
+            vim:enable()
+          end
+          return
+        end
+
+        -- Walk up the AX tree looking for a moz-extension:// AXWebArea (Firenvim iframe)
+        local el = currentElement
+        local isFirenvim = false
+        for _ = 1, 10 do
+          if not el then break end
+          local role = el:attributeValue("AXRole") or ""
+          local desc = el:attributeValue("AXDescription") or ""
+          if role == "AXWebArea" and desc:find("moz%-extension://") then
+            isFirenvim = true
+            break
+          end
+          el = el:attributeValue("AXParent")
+        end
+
+        if isFirenvim then
+          if not vim.inFirenvim then
+            vim.inFirenvim = true
+            vim:disable()
+          end
+        else
+          if vim.inFirenvim then
+            vim.inFirenvim = false
+            vim:enable()
+          end
+        end
+      end)
+
+      -- ============================================
       -- Spotlight support for vim mode
       -- ============================================
       vim.spotlightWatcher = hs.window.filter.new(function(win)
