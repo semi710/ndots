@@ -1,9 +1,6 @@
 let
   users = {
     "sunny.sehwag" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB9si+8/vDKLDskxjbmcGy/B6rKaU5M5D9E+eSQtwu3T";
-    "sebin.duke" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF2EzDOXkYOyMAz7Jak7bDm//W+3qId+XyniC48ejv1B";
-    "charana.c" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOjfGad/qfh3IavYYhD//1o7cYdbiBwzBfVCcawIMaTe";
-    "ambuj.kumar" = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH3mXIOrizx6UW51Y4zbqCexcam+aYc73JWcMPZ59M01";
   };
 
   mkUsers = usersFromKeys: {
