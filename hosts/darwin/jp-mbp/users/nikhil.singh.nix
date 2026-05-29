@@ -99,6 +99,29 @@ in
       }
     ];
   };
+
+  # Allow nix flake fetcher to find the work SSH key regardless of directory.
+  # Nix's internal git fetcher doesn't use git's core.sshCommand (which is
+  # gated behind gitdir:~/work/bitbucket/), so without this Host block it
+  # has no key to offer and gets Permission denied.
+  programs.ssh.settings = {
+    "ssh.bitbucket.juspay.net" = {
+      identityFile = "~/.ssh/id_ed25519_work";
+      identitiesOnly = true;
+    };
+  };
+
+  # Safari & system default search engine
+  targets.darwin.search = "DuckDuckGo";
+
+  targets.darwin.defaults."com.apple.Safari" = {
+    AutoOpenSafeDownloads = false;
+    IncludeDevelopMenu = true;
+    ShowOverlayStatusBar = true;
+    SearchProviderShortName = "DuckDuckGo";
+    "WebKitPreferences.developerExtrasEnabled" = true;
+  };
+
   stylix.targets.fzf.enable = false;
   # Kitty terminal override
   programs.kitty = {
