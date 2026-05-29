@@ -305,7 +305,7 @@ in
 
       search = {
         force = true;
-        default = "google";
+        default = "duckduckgo";
         engines = {
           "google" = {
             name = "Google";
