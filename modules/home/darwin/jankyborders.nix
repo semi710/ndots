@@ -10,6 +10,7 @@ let
     "Karabiner-Elements"
     "Screen Sharing"
     "iPhone Mirroring"
+    "Homerow"
     "ical"
     "weather"
     "passwords"

@@ -4,16 +4,19 @@
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
-    settings."*" = {
-      forwardAgent = true;
-      addKeysToAgent = "yes";
-      sendEnv = [
-        "JUSPAY_*"
-        "GITHUB_*"
-        "ANTHROPIC_*"
-        "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS"
-      ];
-    };
+    settings."*" = lib.mkMerge [
+      {
+        forwardAgent = true;
+        addKeysToAgent = "yes";
+        sendEnv = [
+          "JUSPAY_*"
+          "GITHUB_*"
+          "ANTHROPIC_*"
+          "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS"
+        ];
+      }
+      (lib.mkIf pkgs.stdenv.isDarwin { useKeychain = true; })
+    ];
   };
   # To avoid collision in home-manager
   # see: https://github.com/nix-community/home-manager/issues/4199
