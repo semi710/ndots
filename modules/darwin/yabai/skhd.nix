@@ -26,7 +26,7 @@ in
 
       ${mod} - return : ${lib.getExe pkgs.putils.yabai-toggle-app} --process .kitty-wrapped "kitty"
       ${mod} - b : ${lib.getExe pkgs.putils.yabai-toggle-app} "Zen Browser (Beta)"
-      ${mod} - s : ${lib.getExe pkgs.putils.yabai-toggle-app} "Slack"
+      ${mod} - s : osascript -e 'if application "Slack" is frontmost then' -e 'tell application "Slack" to hide' -e 'else' -e 'tell application "Slack" to activate' -e 'end if'
       ${mod} + shift - s : open -b com.apple.ScreenSaver.Engine
 
       ${mod} - h : ${lib.getExe pkgs.putils.yabai-cycle-focus} west
