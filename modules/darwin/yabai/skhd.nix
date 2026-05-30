@@ -79,10 +79,10 @@ in
       ${mod} - c : yabai -m space --focus comms
       ${mod} + shift - c : yabai -m window --space comms --focus
 
-      special < h : yabai -m window --resize right:-20:0 2> /dev/null || yabai -m window --resize left:20:0 2> /dev/null
-      special < j : yabai -m window --resize bottom:0:20 2> /dev/null || yabai -m window --resize top:0:-20 2> /dev/null
-      special < k : yabai -m window --resize bottom:0:-20 2> /dev/null || yabai -m window --resize top:0:20 2> /dev/null
-      special < l : yabai -m window --resize right:20:0 2> /dev/null || yabai -m window --resize left:-20:0 2> /dev/null
+      special < h : ${lib.getExe pkgs.putils.yabai-resize-dir} h
+      special < j : ${lib.getExe pkgs.putils.yabai-resize-dir} j
+      special < k : ${lib.getExe pkgs.putils.yabai-resize-dir} k
+      special < l : ${lib.getExe pkgs.putils.yabai-resize-dir} l
 
       special < shift - 0x2B : ${lib.getExe pkgs.putils.yabai-resize} smaller
       special < shift - 0x2F : ${lib.getExe pkgs.putils.yabai-resize} bigger

@@ -1909,11 +1909,11 @@
         "nixpkgs": "nixpkgs_12"
       },
       "locked": {
-        "lastModified": 1779577715,
-        "narHash": "sha256-iFsQuMH5wiH/AR5pdBIiUWzXMWKkSR4A2RR80Lf8l9M=",
+        "lastModified": 1780154297,
+        "narHash": "sha256-DRW13Or06EQ/cb5Fb8kezwnOOU3tNBVGbZpm3VLOCDU=",
         "owner": "niksingh710",
         "repo": "utils",
-        "rev": "65264d56da9d5980be586d57273a345b86da3f62",
+        "rev": "9cb6b94ac5ccec88cc951ad6800ff5f393861706",
         "type": "github"
       },
       "original": {
