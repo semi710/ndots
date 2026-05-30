@@ -92,6 +92,14 @@
       function hsmode.enter()
         hsmode.active = true
         hsmode.showIndicator()
+        -- Disable vim mode so its eventtap doesn't consume keys
+        if vim and vim.enabled then
+          hsmode._vimWasEnabled = true
+          vim:exit()
+          if vim.sequence and vim.sequence.enabled then
+            vim.sequence:disable()
+          end
+        end
 
         hsmode.bindings['comma'] = hs.hotkey.bind({ "shift" }, 43, function()
           hsmode.startBrightnessRepeat("down")
@@ -129,6 +137,15 @@
           binding:delete()
         end
         hsmode.bindings = {}
+
+        -- Re-enable vim mode
+        if hsmode._vimWasEnabled then
+          hsmode._vimWasEnabled = nil
+          vim:enter()
+          if vim.sequence and not vim.sequence.enabled then
+            vim.sequence:enable()
+          end
+        end
       end
 
       hs.hotkey.bind({ "ctrl", "option", "shift" }, "H", function()
@@ -136,6 +153,8 @@
           hsmode.enter()
         end
       end)
+
+      -- URL handler for skhd special mode to trigger Hammerspoon mode (defined after skhdmode below)
 
       -- ============================================
       -- SKHD Special Mode Indicator
@@ -199,6 +218,12 @@
       hs.urlevent.bind("skhd-special-on", skhdmode.show)
       hs.urlevent.bind("skhd-special-off", skhdmode.hide)
 
+      hs.urlevent.bind("hammerspoon-mode-enter", function()
+        if not hsmode.active then
+          hsmode.enter()
+        end
+      end)
+
       -- ============================================
       -- VIM MODE
       -- ============================================
@@ -240,6 +265,32 @@
         vim.homerowScrollActive = false
         if vim.sequence and vim.enabled then
           vim.sequence:enable()
+        end
+      end)
+
+      -- ============================================
+      -- Hyper key guard
+      -- ============================================
+      -- When CapsLock is mapped to Hyper (Ctrl+Opt+Cmd), pressing Hyper+J
+      -- triggers the jk enter sequence. We temporarily disable the sequence
+      -- while Hyper modifiers are held so the keypress passes through.
+      vim.hyperActive = false
+
+      -- Use a background timer to check modifier state since the VimMode spoon's
+      -- eventtap may consume flag change events before a watcher can see them.
+      vim.hyperChecker = hs.timer.doEvery(0.1, function()
+        local flags = hs.eventtap.checkKeyboardModifiers()
+        local isHyper = flags.ctrl and flags.alt and flags.cmd and not flags.shift
+        if isHyper and not vim.hyperActive then
+          vim.hyperActive = true
+          if vim.sequence and vim.sequence.enabled then
+            vim.sequence:disable()
+          end
+        elseif not isHyper and vim.hyperActive then
+          vim.hyperActive = false
+          if vim.sequence and vim.enabled then
+            vim.sequence:enable()
+          end
         end
       end)
 

@@ -62,6 +62,8 @@ in
       special < x : yabai -m window --toggle split ; default
       special < b : yabai -m space --balance ; default
 
+      special < shift - h ; default : open -g hammerspoon://hammerspoon-mode-enter
+
       ${mod} - m : \
         case "$(yabai -m query --spaces --space | ${lib.getExe pkgs.jq} -r '.type')" in \
             bsp)   yabai -m space --layout stack ;; \
