@@ -111,6 +111,19 @@ in
     };
   };
 
+  # Patch Zen bundle ID so Kandji MDM profile (targeting app.zen-browser.zen) doesn't match.
+  # This prevents enterprise extension blocking from taking effect.
+  programs.zen-browser = {
+    unwrappedPackage =
+      flake.inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.overrideAttrs
+        (oldAttrs: {
+          postInstall = (oldAttrs.postInstall or "") + ''
+            /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier app.zen-browser.zen-oss" \
+              "$out/Applications/Zen Browser (Beta).app/Contents/Info.plist"
+          '';
+        });
+  };
+
   # Safari & system default search engine
   targets.darwin.search = "DuckDuckGo";
 
