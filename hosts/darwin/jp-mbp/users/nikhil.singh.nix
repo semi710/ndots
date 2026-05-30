@@ -113,6 +113,12 @@ in
 
   # Patch Zen bundle ID so Kandji MDM profile (targeting app.zen-browser.zen) doesn't match.
   # This prevents enterprise extension blocking from taking effect.
+  #
+  # nixpkgs 26.05 wrapFirefox has a bug: the buildCommand heredoc doesn't quote
+  # ${browser.applicationName}, so "Zen Browser (Beta)" (with parentheses) causes
+  # a bash syntax error when eval'd. We fix the unquoted references and pass
+  # policies through the wrapper (the HM module skips policies when
+  # unwrappedPackage is set).
   programs.zen-browser = {
     unwrappedPackage =
       flake.inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.beta-unwrapped.overrideAttrs
@@ -121,6 +127,21 @@ in
             /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier app.zen-browser.zen-oss" \
               "$out/Applications/Zen Browser (Beta).app/Contents/Info.plist"
           '';
+        });
+    package =
+      (pkgs.wrapFirefox config.programs.zen-browser.unwrappedPackage {
+        inherit (config.programs.zen-browser) extraPrefs extraPrefsFiles nativeMessagingHosts;
+        extraPolicies = config.programs.zen-browser.policies;
+        icon = "zen-browser";
+      }).overrideAttrs
+        (old: {
+          # Fix nixpkgs wrapFirefox bug: unquoted "Zen Browser (Beta)" in buildCommand.
+          # Replace the single unquoted $out path with a quoted version.
+          buildCommand =
+            builtins.replaceStrings
+              [ "touch $out/Applications/Zen Browser (Beta).app" ]
+              [ "touch \"$out/Applications/Zen Browser (Beta).app\"" ]
+              old.buildCommand;
         });
   };
 
