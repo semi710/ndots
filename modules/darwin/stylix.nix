@@ -4,6 +4,10 @@
   imports = [
     flake.inputs.stylix.darwinModules.stylix
 
-    (flake.homeModules.stylix + "/config.nix")
+    (flake + /modules/home/stylix/config.nix)
+  ];
+
+  home-manager.sharedModules = [
+    { stylix.enableReleaseChecks = false; }
   ];
 }

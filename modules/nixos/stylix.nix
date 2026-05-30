@@ -5,4 +5,8 @@
     flake.inputs.stylix.nixosModules.stylix
     (flake + /modules/home/stylix/config.nix)
   ];
+
+  home-manager.sharedModules = [
+    { stylix.enableReleaseChecks = false; }
+  ];
 }
