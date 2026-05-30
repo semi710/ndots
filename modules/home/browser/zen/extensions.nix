@@ -57,8 +57,8 @@ in
       installation_mode = "normal_installed";
     };
     # Wide GitHub
-    "wide-github@nicksellen" = {
-      install_url = "https://addons.mozilla.org/firefox/downloads/latest/wide-github/latest.xpi";
+    "{72742915-c83b-4485-9023-b55dc5a1e730}" = {
+      install_url = "https://addons.mozilla.org/firefox/downloads/latest/widegithub/latest.xpi";
       installation_mode = "normal_installed";
     };
   };

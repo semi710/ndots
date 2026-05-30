@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   edit-pane =
     pkgs.writeShellScript "edit-pane" # sh
@@ -33,8 +33,13 @@ in
           '';
         }
         better-mouse-mode
-        open
-        fzf-tmux-url
+        {
+          plugin = fzf-tmux-url;
+          extraConfig = ''
+            set -g @fzf-url-bind 'u'
+            set -g @fzf-url-copy-cmd '${lib.getExe pkgs.copy}'
+          '';
+        }
         {
           plugin = vim-tmux-navigator;
           extraConfig = ''

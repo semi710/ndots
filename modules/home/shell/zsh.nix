@@ -1,27 +1,6 @@
 { pkgs, lib, ... }:
-let
-  copyScript = pkgs.writeText "copy-script" ''
-    #!/usr/bin/env bash
-    text=$(cat)
-    if [ -n "''${TMUX:-}" ]; then
-      encoded=$(printf '%s' "$text" | ${pkgs.coreutils}/bin/base64 | tr -d '\n')
-      printf '\ePtmux;\e\033]52;c;%s\a\e\\' "$encoded"
-    else
-      encoded=$(printf '%s' "$text" | ${pkgs.coreutils}/bin/base64 | tr -d '\n')
-      printf '\033]52;c;%s\007' "$encoded"
-    fi
-  '';
-
-  copy = pkgs.runCommand "copy" { nativeBuildInputs = [ pkgs.makeWrapper ]; } ''
-    mkdir -p $out/bin
-    cp ${copyScript} $out/bin/copy
-    chmod +x $out/bin/copy
-    patchShebangs $out/bin/copy
-  '';
-
-in
 {
-  home.packages = [ copy ];
+  home.packages = [ pkgs.copy ];
   programs.zsh = {
     enable = true;
     completionInit = "autoload -U compinit && compinit -C";
@@ -33,7 +12,7 @@ in
     };
     sessionVariables = {
       ZVM_SYSTEM_CLIPBOARD_ENABLED = "true";
-      ZVM_CLIPBOARD_COPY_CMD = "${copy}/bin/copy";
+      ZVM_CLIPBOARD_COPY_CMD = lib.getExe pkgs.copy;
     };
     localVariables = {
       ZVM_VI_INSERT_ESCAPE_BINDKEY = "jk";
@@ -55,17 +34,11 @@ in
       bindkey '^[k' fzf-tab-complete
 
       # OSC52 Clipboard Integration
-      # Copies yanked text to system clipboard via OSC52 (works over SSH and tmux)
+      # Uses the `osc` tool which handles tmux escape sequences automatically
       # Note: Visual mode highlight may linger after yanking due to upstream zsh-vi-mode bug
       # https://github.com/jeffreytse/zsh-vi-mode/issues/329
       _osc52_copy() {
-        local text="$1"
-        local encoded=$(printf '%s' "$text" | base64 | tr -d '\n')
-        if [[ -n "$TMUX" ]]; then
-          printf '\ePtmux;\e\033]52;c;%s\a\e\\' "$encoded"
-        else
-          printf '\033]52;c;%s\007' "$encoded"
-        fi
+        printf '%s' "$1" | ${lib.getExe pkgs.copy}
       }
 
       _yank_line_with_osc52() {

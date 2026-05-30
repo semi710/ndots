@@ -23,6 +23,7 @@ in
   road-rage = selfPkgs.road-rage;
   skhd-zig = selfPkgs.skhd-zig;
   aria2tui = selfPkgs.aria2tui;
+  copy = selfPkgs.copy;
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
