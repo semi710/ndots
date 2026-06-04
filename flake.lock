@@ -1910,11 +1910,11 @@
         "nixpkgs": "nixpkgs_12"
       },
       "locked": {
-        "lastModified": 1780154297,
-        "narHash": "sha256-DRW13Or06EQ/cb5Fb8kezwnOOU3tNBVGbZpm3VLOCDU=",
+        "lastModified": 1780568979,
+        "narHash": "sha256-D8DU9yx1VEdDZ07JaPdCzdscBTM92GCPtcuuxXV7rDY=",
         "owner": "niksingh710",
         "repo": "utils",
-        "rev": "9cb6b94ac5ccec88cc951ad6800ff5f393861706",
+        "rev": "ead1aee20d7d0b28bb8af78b9643dda52330efcc",
         "type": "github"
       },
       "original": {
