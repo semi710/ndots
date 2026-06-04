@@ -53,6 +53,8 @@ in
       extraConfig = # tmux
         ''
           set -g allow-passthrough all
+          set -g extended-keys on
+          set -g extended-keys-format csi-u
           set -g default-command "''${SHELL}"
 
           set -g default-terminal "tmux-256color"

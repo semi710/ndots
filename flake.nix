@@ -7,7 +7,8 @@
     nix-wire.url = "github:semi710/nix-wire";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    home-manager.url = "github:nix-community/home-manager";
+    # TODO: Switch back to github:nix-community/home-manager after pi-coding-agent module lands upstream
+    home-manager.url = "github:nix-community/home-manager/pull/9421/head";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
@@ -70,6 +71,10 @@
     nsearch.url = "github:semi710/nsearch";
     nvix.url = "github:semi710/nvix";
     utils.url = "github:niksingh710/utils";
+
+    # Local vim-motions-pi extension (testing fork before PR)
+    vim-motions-pi.url = "path:/home/nikhil.singh/work/vim-motions-pi";
+    vim-motions-pi.flake = false;
   };
 
   outputs =
