@@ -37,8 +37,8 @@ in
       installation_mode = "normal_installed";
     };
     # Material Icons for GitHub
-    "{85860b32-02a8-431a-b2b1-40fbd64c9c69}" = {
-      install_url = "https://addons.mozilla.org/firefox/downloads/latest/github-file-icons/latest.xpi";
+    "{eac6e624-97fa-4f28-9d24-c06c9b8aa713}" = {
+      install_url = "https://addons.mozilla.org/firefox/downloads/latest/material-icons-for-github/latest.xpi";
       installation_mode = "normal_installed";
     };
     # GitOwl

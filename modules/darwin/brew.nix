@@ -1,4 +1,10 @@
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+{
   # packages for darwin those are installed via homebrew
   homebrew = {
     taps = [
@@ -36,6 +42,7 @@
     ];
     masApps = {
       # only mac apps supported not iOS one
+      "wallnetic" = 6760347328;
       "handmirror" = 1502839586;
       "gifski" = 1351639930;
       "gladys" = 1382386877;
@@ -50,6 +57,10 @@
       upgrade = true;
       autoUpdate = true;
       cleanup = "zap";
+      # Homebrew >= 4.5 requires --force-cleanup for brew bundle install --cleanup --zap
+      extraFlags = [
+        "--force-cleanup"
+      ];
     };
     global.brewfile = true;
     greedyCasks = true;

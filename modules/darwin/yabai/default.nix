@@ -20,6 +20,7 @@ let
   ];
   unmanagedApps = [
     "System Settings"
+    "Wallnetic"
     "Calculator"
     "Karabiner-Elements"
     "Screen Sharing"
