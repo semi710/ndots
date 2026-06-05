@@ -1,7 +1,4 @@
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 {
@@ -9,6 +6,7 @@
   homebrew = {
     taps = [
       "xykong/tap"
+      "thusvill/livewallpaper"
     ];
     casks = [
       "betterdisplay"
@@ -27,6 +25,7 @@
       "localsend"
       "flux-markdown"
       # "lulu"
+      "livewallpaper"
       "fliqlo"
       "maccy"
       "numi"
@@ -42,7 +41,6 @@
     ];
     masApps = {
       # only mac apps supported not iOS one
-      "wallnetic" = 6760347328;
       "handmirror" = 1502839586;
       "gifski" = 1351639930;
       "gladys" = 1382386877;
