@@ -674,11 +674,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1780540886,
-        "narHash": "sha256-wl/GfoOF9NV1Eieudg9Gvzw/igHYMTavOzDVSHlbSrE=",
+        "lastModified": 1780602302,
+        "narHash": "sha256-7Sk6LkJiBkIgB6qbCPLTcU4Zu1OOmskdWze4rvA0WvU=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "fd6ac302f25894acfd254d4e194e37f0178374b7",
+        "rev": "e94728c58442099c7c4a62275da49c1460f4b005",
         "type": "github"
       },
       "original": {
@@ -1928,14 +1928,18 @@
     "vim-motions-pi": {
       "flake": false,
       "locked": {
-        "lastModified": 1780555481,
-        "narHash": "sha256-7ZkkSo/QnSvhfMK/6u5NJhG+OnljLFIfG7jiBRTbKN8=",
-        "path": "/home/nikhil.singh/work/vim-motions-pi",
-        "type": "path"
+        "lastModified": 1780566447,
+        "narHash": "sha256-1+JkqZTBR2QmI1axdxa5WbKvupMjPbUzhT4KNlF4FfU=",
+        "owner": "semi710",
+        "repo": "vim-motions-pi",
+        "rev": "1a563889f967fd7449dd7709ed34e43d8668b98b",
+        "type": "github"
       },
       "original": {
-        "path": "/home/nikhil.singh/work/vim-motions-pi",
-        "type": "path"
+        "owner": "semi710",
+        "ref": "feat/clipboard-and-escape",
+        "repo": "vim-motions-pi",
+        "type": "github"
       }
     },
     "xdph": {

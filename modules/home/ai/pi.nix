@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
 {
   home.sessionVariables = {
     # vim-motions-pi: two-key escape sequence (e.g. jk, jj)
@@ -21,9 +26,18 @@
       packages = [
         "npm:@termdraw/pi"
         "npm:pi-mcp-adapter"
-        # vim-motions-pi is installed manually from local fork:
-        #   pi install /home/nikhil.singh/work/vim-motions-pi
+        "npm:vim-motions-pi"
       ];
     };
   };
+
+  # Overwrite npm-installed vim-motions-pi with our fork after pi installs it.
+  # Runs after home-manager writes all files, so pi's npm install has already happened.
+  home.activation.copyVimMotionsPi = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    target="$HOME/.pi/agent/npm/node_modules/vim-motions-pi"
+    if [ -d "$target" ]; then
+      $DRY_RUN_CMD chmod -R +w "$target"
+      $DRY_RUN_CMD cp -rf ${inputs.vim-motions-pi}/* "$target/"
+    fi
+  '';
 }

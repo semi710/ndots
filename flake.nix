@@ -47,6 +47,12 @@
     claude-code.url = "github:anthropics/claude-code";
     claude-code.flake = false;
 
+    # TODO: purge from here after <https://github.com/kepatrick/vim-motions-pi/pull/5> is merged
+    vim-motions-pi = {
+      url = "github:semi710/vim-motions-pi/feat/clipboard-and-escape";
+      flake = false;
+    };
+
     # nix-index; `,` command available
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
@@ -71,10 +77,6 @@
     nsearch.url = "github:semi710/nsearch";
     nvix.url = "github:semi710/nvix";
     utils.url = "github:niksingh710/utils";
-
-    # Local vim-motions-pi extension (testing fork before PR)
-    vim-motions-pi.url = "path:/home/nikhil.singh/work/vim-motions-pi";
-    vim-motions-pi.flake = false;
   };
 
   outputs =
