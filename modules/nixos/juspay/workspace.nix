@@ -1,6 +1,6 @@
 { pkgs, lib, ... }:
 {
-  # enabled for office CPU
+  # enabled for juspay workspace
   services.postgresql = {
     enable = true;
     settings.listen_addresses = lib.mkForce "*";
