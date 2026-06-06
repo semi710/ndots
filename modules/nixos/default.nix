@@ -12,6 +12,9 @@ in
     flake.homeModules.default
   ];
 
+  # Backup conflicting home files instead of failing activation
+  home-manager.backupFileExtension = "backup";
+
   programs.nix-ld.enable = true;
   services.envfs.enable = true;
   environment.systemPackages = with pkgs; [
