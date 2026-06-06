@@ -237,6 +237,10 @@
       vim:disableForApp('kitty')
       vim:disableForApp('Maccy')
       vim:disableForApp('Homerow')
+      -- Disable in Minecraft/SKLauncher to prevent game jitter
+      vim:disableForApp('java')
+      vim:disableForApp('SKLauncher')
+      vim:disableForApp('Minecraft')
       vim:enterWithSequence('jk')
       vim:shouldShowAlertInNormalMode(true)
 
