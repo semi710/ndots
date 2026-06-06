@@ -18,7 +18,8 @@ in
   imports = [
     (flake.homeModules.darwin + "/jankyborders.nix")
     (flake.homeModules.darwin + "/karabiner.nix")
-    (flake.homeModules.darwin + "/hammerspoon.nix")
+    # DISABLED: hammerspoon causing game jitter
+    # (flake.homeModules.darwin + "/hammerspoon.nix")
 
     flake.homeModules.sops
     flake.homeModules.ai
