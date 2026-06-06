@@ -71,6 +71,7 @@ in
           ${fontFeatureString "Krypton"}
           ${fontFeatureString "Argon"}
           ${fontFeatureString "Neon"}
+          map shift+enter send_text all \x1b[13;2u
         '';
       settings = {
         background_opacity = lib.mkForce "0.85";
