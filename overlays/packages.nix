@@ -24,6 +24,7 @@ in
   skhd-zig = selfPkgs.skhd-zig;
   aria2tui = selfPkgs.aria2tui;
   copy = selfPkgs.copy;
+  sklauncher = selfPkgs.sklauncher;
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};

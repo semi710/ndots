@@ -25,6 +25,8 @@ in
     flake.homeModules.syncthing
   ];
 
+  home.packages = with pkgs; [ sklauncher ];
+
   services.syncthing = {
     guiCredentials = {
       username = jp.username;

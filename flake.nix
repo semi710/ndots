@@ -7,8 +7,7 @@
     nix-wire.url = "github:semi710/nix-wire";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # TODO: Switch back to github:nix-community/home-manager after pi-coding-agent module lands upstream
-    home-manager.url = "github:nix-community/home-manager/pull/9421/head";
+    home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-darwin.url = "github:LnL7/nix-darwin";
