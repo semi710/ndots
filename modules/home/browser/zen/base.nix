@@ -43,6 +43,7 @@
       settings = {
         # Session restore
         "browser.startup.page" = 3;
+        "browser.startup.homepage" = "about:blank";
         "browser.sessionstore.resume_from_crash" = true;
         "browser.sessionstore.restore_on_demand" = false;
         "browser.sessionstore.max_tabs_undo" = 100;
