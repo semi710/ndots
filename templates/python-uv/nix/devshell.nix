@@ -14,7 +14,7 @@
         name = "python-uv-devshell";
         inputsFrom = [ ];
         packages = with pkgs; [
-          python
+          python3
           uv
         ];
         shellHook = ''
