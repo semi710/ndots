@@ -1,5 +1,4 @@
 {
-  inputs,
   pkgs,
   lib,
   ...
@@ -26,18 +25,9 @@
       packages = [
         "npm:@termdraw/pi"
         "npm:pi-mcp-adapter"
-        "npm:vim-motions-pi"
+        "git:github.com/semi710/vim-motions-pi@feat/clipboard-and-escape"
       ];
     };
   };
 
-  # Overwrite npm-installed vim-motions-pi with our fork after pi installs it.
-  # Runs after home-manager writes all files, so pi's npm install has already happened.
-  home.activation.copyVimMotionsPi = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    target="$HOME/.pi/agent/npm/node_modules/vim-motions-pi"
-    if [ -d "$target" ]; then
-      $DRY_RUN_CMD chmod -R +w "$target"
-      $DRY_RUN_CMD cp -rf ${inputs.vim-motions-pi}/* "$target/"
-    fi
-  '';
 }

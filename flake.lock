@@ -1683,7 +1683,6 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "utils": "utils",
-        "vim-motions-pi": "vim-motions-pi",
         "zen-browser": "zen-browser"
       }
     },
@@ -1921,23 +1920,6 @@
       "original": {
         "owner": "niksingh710",
         "repo": "utils",
-        "type": "github"
-      }
-    },
-    "vim-motions-pi": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1780566447,
-        "narHash": "sha256-1+JkqZTBR2QmI1axdxa5WbKvupMjPbUzhT4KNlF4FfU=",
-        "owner": "semi710",
-        "repo": "vim-motions-pi",
-        "rev": "1a563889f967fd7449dd7709ed34e43d8668b98b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "semi710",
-        "ref": "feat/clipboard-and-escape",
-        "repo": "vim-motions-pi",
         "type": "github"
       }
     },

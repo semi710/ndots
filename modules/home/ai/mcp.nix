@@ -56,6 +56,6 @@ in
 {
   programs.mcp = {
     enable = true;
-    servers = lib.mapAttrs (_: server: server // { lifecycle = "keep-alive"; }) servers';
+    servers = lib.mapAttrs (_: server: { lifecycle = "eager"; } // server) servers';
   };
 }

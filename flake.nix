@@ -46,12 +46,6 @@
     claude-code.url = "github:anthropics/claude-code";
     claude-code.flake = false;
 
-    # TODO: purge from here after <https://github.com/kepatrick/vim-motions-pi/pull/5> is merged
-    vim-motions-pi = {
-      url = "github:semi710/vim-motions-pi/feat/clipboard-and-escape";
-      flake = false;
-    };
-
     # nix-index; `,` command available
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
