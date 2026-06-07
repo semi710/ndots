@@ -8,6 +8,8 @@
       {
         forwardAgent = true;
         addKeysToAgent = "yes";
+        # For home-manager setups we need to modify /etc/ssh/ssh_config
+        # AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* CLAUDE_*
         sendEnv = [
           "JUSPAY_*"
           "GITHUB_*"

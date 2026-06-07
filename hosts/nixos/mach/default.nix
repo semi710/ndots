@@ -13,7 +13,7 @@ in
     (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" me.username ])
     flake.nixosModules.default
     flake.nixosModules.hardware
-    flake.nixosModules.hyprland # Includes all other home manager modules
+    # flake.nixosModules.hyprland # Includes all other home manager modules
     flake.nixosModules.filebrowser
 
     # Important for the hardware

@@ -1,7 +1,7 @@
 { flake, ... }:
 let
   me = (import (flake + "/config.nix")).users.me // {
-    username = "nikhil.singh";
+    username = "nikhil";
   };
 in
 {
@@ -9,7 +9,11 @@ in
     flake.homeModules.default
     flake.homeModules.ai
   ];
-  home.username = "nikhil";
+  home.username = me.username;
+  programs.zsh.initContent = ''
+    export TERM="xterm-256color"
+    export ZSH_DISABLE_COMPFIX="true"
+  '';
   programs.git = {
     settings = {
       user = {
