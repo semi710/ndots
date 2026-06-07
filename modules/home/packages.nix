@@ -16,6 +16,7 @@ let
   both = with pkgs; [
     google-chrome
     # quickemu # OVMF to be fixed
+    telegram-desktop
   ];
 
   linux = lib.optionals isLinux ([ ]);
