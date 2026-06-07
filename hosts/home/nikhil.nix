@@ -10,8 +10,7 @@ in
     flake.homeModules.ai
     flake.homeModules.stylix # for consistent theming across devices
   ];
-  stylix.targets.gtk.enable = false;
-  stylix.targets.gtksourceview.enable = false;
+  stylix.cliOnly = true;
   home.username = me.username;
   programs.zsh.initContent = ''
     export TERM="xterm-256color"
