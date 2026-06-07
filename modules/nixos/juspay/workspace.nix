@@ -3,6 +3,7 @@
   # enabled for juspay workspace
   services.postgresql = {
     enable = true;
+    extraPlugins = ps: with ps; [ pg_partman ];
     settings.listen_addresses = lib.mkForce "*";
     authentication = pkgs.lib.mkOverride 10 ''
       # "local" is for Unix domain socket connections only
