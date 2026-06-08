@@ -1,5 +1,5 @@
 {
-  description = "Python UV template";
+  description = "Node Vite template";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
