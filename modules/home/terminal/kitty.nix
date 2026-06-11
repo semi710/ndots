@@ -84,6 +84,24 @@ in
         dynamic_background_opacity = "yes";
         scrollback_lines = 1000000;
 
+        input_delay = 0;
+        repaint_delay = 2;
+        sync_to_monitor = "yes";
+
+        cursor_shape = "beam";
+        cursor_beam_thickness = 1.5;
+        cursor_blink_interval = 0.5;
+        cursor_stop_blinking_after = 15.0;
+        cursor_trail_decay = "0.05 0.15";
+        cursor_trail_start_threshold = 2;
+
+        wheel_scroll_multiplier = 5.0;
+        touch_scroll_multiplier = 1.0;
+
+        undercurl_style = "thick-sparse";
+
+        modify_font = "cell_height 100% baseline 0";
+
         # tabs
         # I rely on tmux, but still for those who want tabs
         tab_bar_style = "custom";
