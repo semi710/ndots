@@ -6,6 +6,7 @@ from kitty.tab_bar import (
     draw_title,
 )
 
+
 def draw_tab(
     draw_data: DrawData,
     screen: Screen,

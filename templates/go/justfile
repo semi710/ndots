@@ -1,0 +1,7 @@
+# List all available commands
+@default:
+    just --list
+
+# Run the project
+@run:
+    go run main.go

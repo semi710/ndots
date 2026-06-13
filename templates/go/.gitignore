@@ -1,0 +1,11 @@
+.direnv/
+.devenv/
+result
+result-*
+flake.lock
+*.exe
+*.test
+/vendor/
+/tmp/
+/dist/
+/.pre-commit-config.yaml

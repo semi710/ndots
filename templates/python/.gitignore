@@ -5,3 +5,4 @@ __pycache__/
 .devenv/
 result
 result-*
+flake.lock

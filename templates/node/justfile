@@ -1,0 +1,7 @@
+# List all available commands
+@default:
+    just --list
+
+# Serve with Vite on all interfaces
+@run:
+    vite --host 0.0.0.0

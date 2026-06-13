@@ -1,23 +1,27 @@
-{ ... }:
+{ config, ... }:
 {
   perSystem =
     {
       config,
       pkgs,
-      self',
       ...
     }:
     {
-      formatter = pkgs.nixfmt;
+      treefmt = {
+        projectRootFile = "flake.nix";
+        programs.nixfmt.enable = true;
+        programs.prettier.enable = true;
+      };
 
       devShells.default = pkgs.mkShell {
-        name = "node-vite-devshell";
-        inputsFrom = [ ];
+        name = "node-devshell";
+        inputsFrom = [ config.pre-commit.devShell ];
         packages = with pkgs; [
           nodejs
+          typescript-language-server
           vitejs
-          live-server
           nodemon
+          just
         ];
         shellHook = ''
           echo 1>&2 "js: $(node --version)"

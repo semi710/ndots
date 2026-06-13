@@ -2,6 +2,7 @@
 {
   imports = [
     (inputs.git-hooks + /flake-module.nix)
+    inputs.treefmt-nix.flakeModule
   ];
 
   flake = {
@@ -10,8 +11,18 @@
   };
 
   perSystem =
-    { pkgs, config, ... }:
     {
+      pkgs,
+      config,
+      lib,
+      ...
+    }:
+    {
+      treefmt = {
+        projectRootFile = "flake.nix";
+        programs.nixfmt.enable = true;
+      };
+
       devShells.default = pkgs.mkShell {
         name = "ndots";
         meta.description = "Dev environment for nixos-config";
@@ -26,7 +37,10 @@
       };
 
       pre-commit.settings = {
-        hooks.nixfmt.enable = true;
+        hooks.treefmt = {
+          enable = true;
+          entry = "${lib.getExe config.treefmt.build.wrapper}";
+        };
       };
     };
 }

@@ -44,22 +44,22 @@ in
     enable = true;
     settings = {
       format = lib.concatStrings [
-        ''''${custom.dir}''
-        ''''${custom.home_dir}''
-        ''$directory''
-        ''''${custom.file_number}''
-        ''''${custom.folder_number}''
-        ''''${custom.df}''
-        ''$all''
-        ''''${custom.git_line_break}''
-        ''''${custom.git_host}''
-        ''$git_branch''
-        ''$git_commit''
-        ''$git_state''
-        ''$git_status''
-        ''''${custom.lastcommit}''
-        ''$line_break''
-        ''$character''
+        "\${custom.dir}"
+        "\${custom.home_dir}"
+        "$directory"
+        "\${custom.file_number}"
+        "\${custom.folder_number}"
+        "\${custom.df}"
+        "$all"
+        "\${custom.git_line_break}"
+        "\${custom.git_host}"
+        "$git_branch"
+        "$git_commit"
+        "$git_state"
+        "$git_status"
+        "\${custom.lastcommit}"
+        "$line_break"
+        "$character"
       ];
       continuation_prompt = "▶▶ ";
       scan_timeout = 10;
@@ -121,7 +121,7 @@ in
         format = ''\(:[$state( $progress_current/$progress_total)]($style)\)'';
       };
       git_status = {
-        format = ''(:[$all_status$ahead_behind]($style)) '';
+        format = "(:[$all_status$ahead_behind]($style)) ";
         conflicted = ''\[ [$count](bright-white bold)\]'';
         ahead = ''\[[ ](bright-blue)[$count](bright-white bold)\]'';
         behind = ''\[[ ](white)[$count](bright-white bold)\]'';

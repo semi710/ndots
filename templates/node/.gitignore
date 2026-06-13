@@ -1,7 +1,7 @@
-.venv/
-__pycache__/
-*.pyc
+node_modules/
+dist/
 .direnv/
 .devenv/
 result
 result-*
+flake.lock
