@@ -49,6 +49,11 @@
         pull.rebase = "true";
         diff.wsErrorHighlight = "none";
         apply.whitespace = "nowarn";
+        merge = {
+          conflictStyle = "diff3";
+          commit = false;
+        };
+        rerere.enabled = true;
       };
     };
     gh = {

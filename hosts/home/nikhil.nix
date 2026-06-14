@@ -26,7 +26,7 @@ in
     includes = [
       {
         condition = "gitdir:~/work/bitbucket/";
-        contents.user.email = "${me.username}@juspay.in";
+        contents.user.email = "${me.username}.singh@juspay.in";
       }
     ];
   };

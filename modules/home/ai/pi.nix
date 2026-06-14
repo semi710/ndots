@@ -3,6 +3,9 @@
   lib,
   ...
 }:
+let
+  combinedSystemPrompt = import ./combined-system-prompt.nix { inherit lib; };
+in
 {
   home.sessionVariables = {
     # vim-motions-pi: two-key escape sequence (e.g. jk, jj)
@@ -13,6 +16,7 @@
 
   programs.pi-coding-agent = {
     enable = true;
+    package = pkgs.llm-agents.pi;
     extraPackages = [
       pkgs.nodejs
       pkgs.bun
@@ -22,6 +26,7 @@
       defaultProvider = "anthropic";
       defaultThinkingLevel = "medium";
       theme = "dark";
+      systemPrompt = combinedSystemPrompt;
       packages = [
         "npm:@termdraw/pi"
         "npm:pi-mcp-adapter"

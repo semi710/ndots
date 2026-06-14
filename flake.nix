@@ -37,6 +37,8 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    opencode-vim.url = "github:leohenon/opencode-vim/pull/190/head";
+
     # AI tooling sources — vendored at the module level (not full flakes).
     # `flake = false` makes flake.lock track the rev+narHash, so we don't
     # have to hand-manage `sha256` in modules/home/ai/opencode.nix.
