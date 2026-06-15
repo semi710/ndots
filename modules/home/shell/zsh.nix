@@ -88,3 +88,27 @@
     '';
   };
 }
+
+# Discord IPC forwarding for Cord.nvim Rich Presence over SSH
+# Uncomment on machines where you use Cord.nvim + Discord:
+# ssh() {
+#   local HOST="$1"
+#   shift
+#   local -a SSH_OPTS
+#   SSH_OPTS=(
+#     -o MACs=hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com
+#     -o ServerAliveInterval=30
+#     -o ServerAliveCountMax=3
+#   )
+#   local IPC=""
+#   if [[ -S "$TMPDIR/discord-ipc-0" ]]; then
+#     IPC="$TMPDIR/discord-ipc-0"
+#   else
+#     local -a sockets
+#     sockets=("$TMPDIR"/discord-ipc-*(N))
+#     ((${#sockets})) && IPC="${sockets[1]}"
+#   fi
+#   [[ -z "$IPC" ]] && { command ssh "${SSH_OPTS[@]}" "$HOST" "$@"; return $?; }
+#   command ssh -o ConnectTimeout=3 -o BatchMode=yes -o LogLevel=QUIET "${SSH_OPTS[@]}" "$HOST" "rm -f /tmp/discord-ipc-0" 2>/dev/null || true
+#   command ssh "${SSH_OPTS[@]}" -o StreamLocalBindUnlink=yes -o ExitOnForwardFailure=yes -R /tmp/discord-ipc-0:"$IPC" "$HOST" "$@"
+# }
