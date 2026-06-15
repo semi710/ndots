@@ -3,7 +3,7 @@
     me = rec {
       username = "niksingh710";
       fullname = "Nikhil Singh";
-      email = "nik.singh710@gmail.com";
+      email = "nikhil@semi.sh";
       sshPublicKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwouW1kRGVOgb58dJPwF+HCsXXYl2OUOqpxuqAXGKIZ ${email}"
       ];
@@ -21,7 +21,7 @@
       fullname = "Virtual Machine User";
       email = "virt@localhost";
       sshPublicKeys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwouW1kRGVOgb58dJPwF+HCsXXYl2OUOqpxuqAXGKIZ nik.singh710@gmail.com"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwouW1kRGVOgb58dJPwF+HCsXXYl2OUOqpxuqAXGKIZ"
       ];
       # TODO: Use the hashed password instead of plain text
       password = "virt";

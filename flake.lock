@@ -1981,11 +1981,11 @@
         "nixpkgs": "nixpkgs_14"
       },
       "locked": {
-        "lastModified": 1780568979,
-        "narHash": "sha256-D8DU9yx1VEdDZ07JaPdCzdscBTM92GCPtcuuxXV7rDY=",
+        "lastModified": 1781553168,
+        "narHash": "sha256-Bkx4ERfy7NebPVDn2Ef9idpEHJf7xvj6g8aL9jUm4rg=",
         "owner": "niksingh710",
         "repo": "utils",
-        "rev": "ead1aee20d7d0b28bb8af78b9643dda52330efcc",
+        "rev": "fb42cdf1c4089952c4380c0ab035d46b97663675",
         "type": "github"
       },
       "original": {
