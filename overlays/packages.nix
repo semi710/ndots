@@ -45,7 +45,7 @@ in
         x86_64-linux = "sha256-SM30m9rSSuR1dvF/9lBCIMoJoUPkq9wpHcbhECErJfI=";
         # Add other platforms here when tested:
         # aarch64-linux = "sha256-...";
-        # aarch64-darwin = "sha256-...";
+        aarch64-darwin = "sha256-7C6mqePW6m+IgLB/B033sESgh3vyCzrg+VFh6OzcVYo=";
         # x86_64-darwin = "sha256-...";
       };
 
