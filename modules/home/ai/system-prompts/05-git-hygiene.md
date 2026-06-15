@@ -6,7 +6,7 @@
 - Keep commits focused and atomic
 - Use `git add -p` to stage changes selectively
 - **Follow the project's established commit conventions** — always check `git log` for the specific project's standards before writing a commit message
-- **NEVER commit anything without explicit user approval** — even if changes look trivial, always ask "should I commit?" first
+- **NEVER commit anything without explicit user approval** — "go" means approval to make changes, NOT to commit. Always ask "should I commit?" separately
 
 ### Workflow
 - Pull with rebase: `pull.rebase = true`
