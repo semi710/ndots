@@ -16,6 +16,9 @@ env:
 
 jobs:
   check-changes:
+    permissions:
+      id-token: write
+      contents: read
     name: Check if ISO derivation changed
     runs-on: ubuntu-latest
     outputs:
@@ -113,6 +116,9 @@ jobs:
     name: Build ISO (${{ matrix.arch }})
     needs: check-changes
     if: needs.check-changes.outputs.changed == 'true'
+    permissions:
+      id-token: write
+      contents: read
     strategy:
       fail-fast: false
       matrix:
@@ -154,7 +160,8 @@ jobs:
 
       - name: Rename ISO with version
         run: |
-          ISO_PATH=$(readlink -f result)
+          # The ISO is inside result/iso/ directory
+          ISO_PATH=$(find result/iso -maxdepth 1 -name '*.iso' -type f | head -1)
           ISO_NAME=$(basename "$ISO_PATH")
           # Append version to filename
           NEW_NAME="${ISO_NAME%.iso}-${RELEASE_VERSION}.iso"
