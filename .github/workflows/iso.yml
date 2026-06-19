@@ -175,13 +175,16 @@ jobs:
         with:
           name: iso-${{ matrix.arch }}
           path: ${{ env.iso-path }}
-          retention-days: 7
+          retention-days: 90
 
   release:
     name: Create Release
     needs: [check-changes, build]
     if: needs.check-changes.outputs.changed == 'true'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: write
     env:
       RELEASE_VERSION: ${{ needs.check-changes.outputs.version }}
     steps:
@@ -195,6 +198,13 @@ jobs:
         run: |
           find artifacts/ -type f -ls
 
+      - name: Generate SHA-256 checksums
+        run: |
+          find artifacts/ -name "*.iso" -type f | while read -r iso; do
+            sha256sum "$iso" > "${iso}.sha256"
+            echo "$(basename $iso): $(sha256sum $iso | cut -d' ' -f1)"
+          done
+
       - name: Create GitHub Release
         id: create-release
         uses: softprops/action-gh-release@v2
@@ -206,11 +216,13 @@ jobs:
 
             Built from commit `${{ github.sha }}`.
 
-            Architectures:
-            - `x86_64-linux`
-            - `aarch64-linux`
+            **ISO downloads** (GitHub artifacts, 90-day retention):
+            - [x86_64-linux](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+            - [aarch64-linux](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}#artifacts)
+
+            > Note: GitHub release assets have a 2 GB limit. ISOs are available via the workflow artifacts link above.
           files: |
-            artifacts/iso-*/*.iso
+            artifacts/**/*.sha256
           fail_on_unmatched_files: false
 
       - name: Purge old releases (keep latest 4)
