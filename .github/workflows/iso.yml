@@ -1,0 +1,234 @@
+name: Build and Release ISO
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: Force rebuild even if derivation hasn't changed
+        required: false
+        default: false
+        type: boolean
+
+env:
+  NIX_CONFIG: "experimental-features = nix-command flakes"
+
+jobs:
+  check-changes:
+    name: Check if ISO derivation changed
+    runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.compare.outputs.changed }}
+      iso-name: ${{ steps.info.outputs.iso-name }}
+      version: ${{ steps.info.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://cache.nixos.asia/juspay https://cache.nixos.asia/oss https://nvix.cachix.org https://hyprland.cachix.org https://attic.xuyh0120.win/lantian https://cache.numtide.com
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= juspay:5aHaNForWL03wKOGhUn/al4BZd3HqZDWZ3hrVTcf6Fg= oss:KO872wNJkCDgmGN3xy9dT89WAhvv13EiKncTtHDItVU= nvix.cachix.org-1:qVYAfj2oiH0DF3pSs8OfPYI6B0mAZ+h5mMajN+EOL2E= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=
+            trusted-users = root
+
+      - name: Restore previous derivation hashes
+        id: cache-restore
+        uses: actions/cache@v4
+        with:
+          path: .drv-hashes
+          key: iso-drv-hashes-${{ github.sha }}
+          restore-keys: |
+            iso-drv-hashes-
+
+      - name: Compute current derivation hashes
+        id: compute
+        run: |
+          mkdir -p .drv-hashes
+
+          # Evaluate drvPath for both architectures
+          DRV_X86=$(nix eval --raw '.#packages.x86_64-linux.iso.drvPath' 2>/dev/null || echo "")
+          DRV_AARCH=$(nix eval --raw '.#packages.aarch64-linux.iso.drvPath' 2>/dev/null || echo "")
+
+          echo "x86=$DRV_X86" >> .drv-hashes/current
+          echo "aarch=$DRV_AARCH" >> .drv-hashes/current
+
+          echo "Current x86_64 drv: $DRV_X86"
+          echo "Current aarch64 drv: $DRV_AARCH"
+
+      - name: Compare with previous hashes
+        id: compare
+        run: |
+          if [ "${{ github.event.inputs.force_rebuild }}" == "true" ]; then
+            echo "Force rebuild requested via workflow_dispatch"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if [ ! -f .drv-hashes/previous ]; then
+            echo "No previous hashes found — first run or cache miss"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            cp .drv-hashes/current .drv-hashes/previous
+            exit 0
+          fi
+
+          PREV_X86=$(grep "^x86=" .drv-hashes/previous | cut -d= -f2)
+          PREV_AARCH=$(grep "^aarch=" .drv-hashes/previous | cut -d= -f2)
+          CURR_X86=$(grep "^x86=" .drv-hashes/current | cut -d= -f2)
+          CURR_AARCH=$(grep "^aarch=" .drv-hashes/current | cut -d= -f2)
+
+          echo "Previous: x86=$PREV_X86 aarch=$PREV_AARCH"
+          echo "Current:  x86=$CURR_X86 aarch=$CURR_AARCH"
+
+          if [ "$PREV_X86" != "$CURR_X86" ] || [ "$PREV_AARCH" != "$CURR_AARCH" ]; then
+            echo "Derivation changed — will rebuild"
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Derivation unchanged — skipping build"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # Save current as previous for next run
+          cp .drv-hashes/current .drv-hashes/previous
+
+      - name: Generate ISO info
+        id: info
+        run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
+          DATE=$(date -u +'%Y%m%d')
+          TIME=$(date -u +'%H%M%S')
+          VERSION="iso-${DATE}-${TIME}-${SHORT_SHA}"
+
+          # Try to get ISO name from flake
+          ISO_NAME=$(nix eval --raw '.#packages.x86_64-linux.iso.name' 2>/dev/null || echo "ndots-iso")
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "iso-name=$ISO_NAME" >> "$GITHUB_OUTPUT"
+          echo "Release version: $VERSION"
+          echo "ISO name: $ISO_NAME"
+
+  build:
+    name: Build ISO (${{ matrix.arch }})
+    needs: check-changes
+    if: needs.check-changes.outputs.changed == 'true'
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64-linux
+            runner: ubuntu-latest
+          - arch: aarch64-linux
+            runner: ubuntu-24.04-arm
+    runs-on: ${{ matrix.runner }}
+    env:
+      RELEASE_VERSION: ${{ needs.check-changes.outputs.version }}
+    steps:
+      - name: Free disk space
+        run: |
+          # Remove unnecessary large packages to free up disk space
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          df -h
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://cache.nixos.asia/juspay https://cache.nixos.asia/oss https://nvix.cachix.org https://hyprland.cachix.org https://attic.xuyh0120.win/lantian https://cache.numtide.com
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= juspay:5aHaNForWL03wKOGhUn/al4BZd3HqZDWZ3hrVTcf6Fg= oss:KO872wNJkCDgmGN3xy9dT89WAhvv13EiKncTtHDItVU= nvix.cachix.org-1:qVYAfj2oiH0DF3pSs8OfPYI6B0mAZ+h5mMajN+EOL2E= hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc= lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc= niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=
+            trusted-users = root
+
+      - name: Build ISO
+        run: |
+          echo "Building ISO for ${{ matrix.arch }}..."
+          nix build '.#packages.${{ matrix.arch }}.iso' \
+            --print-build-logs \
+            --show-trace
+
+      - name: Rename ISO with version
+        run: |
+          ISO_PATH=$(readlink -f result)
+          ISO_NAME=$(basename "$ISO_PATH")
+          # Append version to filename
+          NEW_NAME="${ISO_NAME%.iso}-${RELEASE_VERSION}.iso"
+          cp "$ISO_PATH" "$NEW_NAME"
+          echo "Renamed to: $NEW_NAME"
+          echo "iso-path=$NEW_NAME" >> "$GITHUB_ENV"
+          ls -lh "$NEW_NAME"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: iso-${{ matrix.arch }}
+          path: ${{ env.iso-path }}
+          retention-days: 7
+
+  release:
+    name: Create Release
+    needs: [check-changes, build]
+    if: needs.check-changes.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ needs.check-changes.outputs.version }}
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts/
+          pattern: iso-*
+
+      - name: List artifacts
+        run: |
+          find artifacts/ -type f -ls
+
+      - name: Create GitHub Release
+        id: create-release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_VERSION }}
+          name: "ISO Build ${{ env.RELEASE_VERSION }}"
+          body: |
+            Automated ISO build for ${{ env.RELEASE_VERSION }}.
+
+            Built from commit `${{ github.sha }}`.
+
+            Architectures:
+            - `x86_64-linux`
+            - `aarch64-linux`
+          files: |
+            artifacts/iso-*/*.iso
+          fail_on_unmatched_files: false
+
+      - name: Purge old releases (keep latest 4)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          KEEP_COUNT=4
+
+          echo "Fetching releases..."
+          RELEASES=$(gh api "repos/${{ github.repository }}/releases" --jq '.[] | select(.tag_name | startswith("iso-")) | [.id, .tag_name, .published_at] | @tsv' | sort -k3 -r)
+
+          TOTAL=$(echo "$RELEASES" | wc -l)
+          echo "Found $TOTAL iso-* releases"
+
+          if [ "$TOTAL" -le "$KEEP_COUNT" ]; then
+            echo "Nothing to purge ($TOTAL <= $KEEP_COUNT)"
+            exit 0
+          fi
+
+          echo "Purging releases, keeping $KEEP_COUNT..."
+          echo "$RELEASES" | tail -n +$((KEEP_COUNT + 1)) | while IFS=$'\t' read -r id tag _date; do
+            echo "Deleting release $tag (id: $id)..."
+            gh api --method DELETE "repos/${{ github.repository }}/releases/$id"
+            # Optionally delete the tag too
+            git push --delete origin "$tag" || echo "Tag $tag may already be deleted"
+          done
+
+          echo "Done purging old releases"
