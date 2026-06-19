@@ -7,7 +7,6 @@
 
   flake = {
     disko = import ./disko;
-    iso = import ./iso { inherit inputs self; };
   };
 
   perSystem =

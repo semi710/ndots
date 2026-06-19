@@ -130,10 +130,10 @@ On Darwin systems (MacBook), I use **Yabai** for window management.
 ## 📦 Build ISO
 
 ```bash
-nix build .#iso.iso
+nix build .#iso
 ```
 
-The ISO will be available in `result/iso/`. The ISO includes home-manager for the `nixos` user with shell, editor, ssh, and nix-index configured.
+The ISO will be available in `result/iso/`. The ISO includes home-manager for the `nixos` user with shell, editor, ssh, and nix-index configured. The ISO is built for the architecture of the machine invoking the build (x86_64-linux on x86_64, aarch64-linux on aarch64).
 
 ## 🛠️ Flake Parts
 
