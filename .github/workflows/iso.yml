@@ -5,7 +5,11 @@ on:
     branches: [master]
     paths-ignore:
       - 'README.md'
-      - 'hosts/nixos/**'
+      - 'hosts/nixos/anywhere/**'
+      - 'hosts/nixos/dsd/**'
+      - 'hosts/nixos/mach/**'
+      - 'hosts/nixos/semi/**'
+      - 'hosts/nixos/virt*/**'
       - 'hosts/darwin/**'
       - 'hosts/home/**'
       - 'templates/**'
