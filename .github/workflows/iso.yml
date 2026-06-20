@@ -28,6 +28,12 @@ on:
         default: false
         type: boolean
 
+# Cancel any in-progress runs when a new push triggers the workflow.
+# This prevents wasting CI time on outdated commits.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   NIX_CONFIG: "experimental-features = nix-command flakes"
 
