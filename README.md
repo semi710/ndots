@@ -1,8 +1,3 @@
-> [!NOTE]
-> **Welcome!**
->
-> This is the main branch of my Nix configuration. For the fully riced version with Hyprland/Wayland, see the **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)**.
-
 <p align="center" style="color:grey">
 
 ![banner](https://github.com/user-attachments/assets/1f1600e9-a1d9-4aa6-9035-5d19e4ece908)

@@ -3,27 +3,6 @@ name: Build and Release ISO
 on:
   push:
     branches: [master]
-    paths-ignore:
-      - 'README.md'
-      - 'hosts/nixos/anywhere/**'
-      - 'hosts/nixos/dsd/**'
-      - 'hosts/nixos/mach/**'
-      - 'hosts/nixos/semi/**'
-      - 'hosts/nixos/virt*/**'
-      - 'hosts/darwin/**'
-      - 'hosts/home/**'
-      - 'templates/**'
-      - 'modules/darwin/**'
-      - 'modules/home/ai/**'
-      - 'modules/home/browser/**'
-      - 'modules/home/hyprland/**'
-      - 'modules/home/mpv.nix'
-      - 'modules/home/packages.nix'
-      - 'modules/home/stylix/**'
-      - 'modules/home/syncthing.nix'
-      - 'modules/home/terminal/**'
-      - 'modules/home/zathura.nix'
-      - 'modules/home/darwin/**'
   workflow_dispatch:
     inputs:
       force_rebuild:
