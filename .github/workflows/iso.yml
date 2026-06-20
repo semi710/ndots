@@ -61,7 +61,8 @@ jobs:
           DRV_X86=$(nix eval --raw '.#packages.x86_64-linux.iso.drvPath' 2>/dev/null || echo "")
           DRV_AARCH=$(nix eval --raw '.#packages.aarch64-linux.iso.drvPath' 2>/dev/null || echo "")
 
-          echo "x86=$DRV_X86" >> .drv-hashes/current
+          # Truncate first to avoid accumulating duplicates from cache restores
+          echo "x86=$DRV_X86" > .drv-hashes/current
           echo "aarch=$DRV_AARCH" >> .drv-hashes/current
 
           echo "Current x86_64 drv: $DRV_X86"
