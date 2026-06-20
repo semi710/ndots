@@ -1,11 +1,11 @@
 > [!NOTE]
 > **Welcome!**
 >
-> This is a simplified branch of my Nix configuration. For complete documentation, setup details, ricing, and advanced configurations (impermanence, disko, secure boot), check out the **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)**.
+> This is the main branch of my Nix configuration. For the fully riced version with Hyprland/Wayland, see the **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)**.
 
 <p align="center" style="color:grey">
 
-![image](https://github.com/user-attachments/assets/1f1600e9-a1d9-4aa6-9035-5d19e4ece908)
+![banner](https://github.com/user-attachments/assets/1f1600e9-a1d9-4aa6-9035-5d19e4ece908)
 
 <div align="center">
 
@@ -19,10 +19,9 @@
 <td align="center">
 <img width="2000" height="0"><br>
 
-My **[NixOS](https://nixos.org)/[Nix Config](https://nixos.org/download/#download-nix)** built using flakes.<br>
-I've used **[Flake-Parts](https://flake.parts)** to modularize the config.<br>
-<small>**Hyprland + Waybar Setup**</small><br>
-<small>**Yabai/Aerospace on Darwin**</small><br>
+My **[NixOS](https://nixos.org) + [nix-darwin](https://github.com/LnL7/nix-darwin)** configuration built with flakes.<br>
+Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[nix-wire](https://github.com/semi710/nix-wire)**.<br>
+<small>**Fully CLI-based** — accessed via SSH + Tailscale</small><br>
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/niksingh710/ndots)
 ![GitHub Org's stars](https://img.shields.io/github/stars/niksingh710%2Fndots)
@@ -46,16 +45,47 @@ I've used **[Flake-Parts](https://flake.parts)** to modularize the config.<br>
 </div>
 </p>
 
+---
+
+## Architecture
+
+| Platform | Details |
+|----------|---------|
+| **Linux** | NixOS hosts, fully CLI-based |
+| **Darwin** | nix-darwin on MacBook Pro (Yabai + skhd) |
+| **Build System** | Flakes + Flake-Parts + nix-wire auto-wiring |
+| **Disk Management** | disko for declarative partitioning |
+| **Secrets** | sops-nix |
+
+---
+
+## Hosts
+
+| Host | Platform | Description |
+|------|----------|-------------|
+| **mach** | NixOS | Personal laptop |
+| **dsd** | NixOS | Work desktop |
+| **semi** | NixOS | Semi-personal machine |
+| **virt** | NixOS | VM testing |
+| **anywhere** | NixOS | Generic QEMU guest template |
+| **iso** | NixOS | Installer ISO (see below) |
+| **jp-mbp** | Darwin | MacBook Pro M4 |
+
+---
+
 ## Quick Install
 
-### Prerequisites
+Boot from the [pre-built ISO](#iso-installer) or use upstream NixOS minimal ISO.
+
 1. **Connect to the internet**
-   - The ISO includes NetworkManager, so you can use `nmtui` to connect to WiFi
+   ```bash
+   nmtui  # WiFi via NetworkManager
+   ```
 
 2. **Get the disko configuration**
    ```bash
-   # Replace <hostname> with your target hostname (e.g., mach, vm, jp-mbp)
-   nix eval github:niksingh710/ndots#disko.partition \
+   # Replace <hostname> with your target (e.g., mach, dsd, semi, virt)
+   nix eval github:semi710/ndots#disko.partition \
      --apply 'b: builtins.fromJSON (builtins.toJSON (b { device = "/dev/nvme0n1"; ssdOptions = []; }))' \
      --impure > disko-config.nix
    ```
@@ -67,86 +97,120 @@ I've used **[Flake-Parts](https://flake.parts)** to modularize the config.<br>
 
 4. **Install the system**
    ```bash
-   sudo nixos-install --no-root-passwd --root /mnt --flake github:niksingh710/ndots#<hostname>
+   sudo nixos-install --no-root-passwd --root /mnt --flake github:semi710/ndots#<hostname>
    ```
 
-> For general instructions, troubleshooting, and detailed setup information, see the **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)**.
-
 ---
 
-## 📋 Hosts
+## ISO Installer
 
-| Host      | Description |
-| --------- | ----------- |
-| **mach**  | Personal laptop (CLI only) |
-| **dsd**   | Work desktop (CLI only) |
-| **semi**  | Semi-personal machine (CLI only) |
-| **virt**  | Virtual Machine testing (CLI only) |
-| **iso**   | Custom installer ISO with NetworkManager, home-manager, and pre-configured setup |
-| **jp-mbp** | MacBook Pro M4 (Darwin) |
+A minimal (~2.2 GB) install ISO with a pre-configured shell environment.
 
----
+### Pre-built ISOs
 
-## Preview
+Automated CI builds for both architectures via GitHub Actions:
 
-<details>
-  <summary>🖥️ Current Setup Previews</summary>
+| Architecture | Status |
+|-------------|--------|
+| `x86_64-linux` | Built on `ubuntu-latest` |
+| `aarch64-linux` | Built on `ubuntu-24.04-arm` |
 
-### Linux (CLI Mode)
+Download the latest ISO from the [Actions artifacts](https://github.com/semi710/ndots/actions/workflows/iso.yml) (90-day retention).
 
-My current setup is **fully CLI-based**, accessed via **Tailscale**.
+### What's Included
 
-![Shell Preview](https://github.com/user-attachments/assets/9d5d8491-1b3e-4e78-9d0d-6c8920560c82)
+- **Shell**: zsh + vi-mode + autosuggestions + syntax-highlighting
+- **Tools**: nvim (bare), tmux, fzf, fd, ripgrep, eza, zoxide, bat, btop
+- **Clipboard**: OSC52 copy support (works over SSH)
+- **Prompt**: starship
+- **Network**: NetworkManager + OpenSSH
+- **User**: `nixos` / password: `nixos`
+- **Disk**: `disko` for partitioning
 
-![FZF Preview](https://github.com/niksingh710/cdots/assets/60490474/6a96631d-02c0-4c5a-a777-1edaff594081)
-
-
-|![image](https://github.com/user-attachments/assets/1cd4da7d-ef2c-45f8-9a14-ada0288e1d6d) |![Image](https://github.com/user-attachments/assets/a8403f60-b58f-47ff-be3a-f51ed8e28306) |
-|-|-|
-
-| ![discord](https://github.com/user-attachments/assets/6921057d-1c40-417f-a652-a0063e98a55b) | ![telegram](https://github.com/user-attachments/assets/22afed68-5ce7-4d1e-8866-3ad46f613a85) |
-| ------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-
-![image](https://github.com/user-attachments/assets/ee3824ed-5d00-4f77-9661-fe2c3d4fcf32)
-
-![image](https://github.com/user-attachments/assets/151cc1af-7841-497b-8d43-516f78c24048)
-
-You can find more UI previews in my old repository: [gdots](https://github.com/niksingh710/gdots) or in my [Hacky issue](https://github.com/niksingh710/ndots/issues/1)
-
-**Colors are adapted from the wallpapers**
-
-- For Telegram I have ported `walogram` theme generator for my stylix config.
-
-I’ve used **[Stylix](https://github.com/danth/stylix)** for theming.
-
-Check out my favorite color schemes on [base16](https://github.com/niksingh710/base-16-colors).
-
-### Darwin (Yabai)
-
-On Darwin systems (MacBook), I use **Yabai** for window management.
-
-</details>
-
-## 📦 Build ISO
+### Build Locally
 
 ```bash
 nix build .#iso
+# ISO at: result/iso/
 ```
 
-The ISO will be available in `result/iso/`. The ISO includes home-manager for the `nixos` user with shell, editor, ssh, and nix-index configured. The ISO is built for the architecture of the machine invoking the build (x86_64-linux on x86_64, aarch64-linux on aarch64).
+---
 
-## 🛠️ Flake Parts
+## Repository Structure
 
-This configuration uses **[Flake-Parts](https://flake.parts)** to modularize the setup. Check the `parts/` directory for:
-- `disko/` - Disk partitioning configurations
-- `iso/` - ISO build alias (wired via [nix-wire](https://github.com/semi710/nix-wire))
+```
+.
+├── hosts/              # Host configurations
+│   ├── nixos/          # NixOS machines
+│   │   ├── mach/
+│   │   ├── dsd/
+│   │   ├── semi/
+│   │   ├── virt/
+│   │   └── anywhere/
+│   ├── iso/
+│   │   └── iso/        # Installer ISO config
+│   ├── darwin/
+│   │   └── jp-mbp/     # MacBook Pro
+│   └── home/           # Home-manager user profiles
+├── modules/
+│   ├── nixos/          # NixOS system modules
+│   ├── darwin/         # Darwin system modules
+│   ├── home/           # Home-manager modules
+│   └── flake/          # Flake-level modules (nix config, caches)
+├── packages/           # Custom packages
+│   ├── copy.nix        # OSC52 clipboard utility
+│   ├── aria2tui.nix    # TUI for aria2
+│   └── ...
+├── templates/          # Project templates (go, node, python)
+├── parts/              # Flake-Parts modules
+│   ├── disko/          # Partitioning schemas
+│   └── default.nix
+├── overlays/           # Nixpkgs overlays
+├── config.nix          # Shared user/builder config
+└── flake.nix           # Entry point
+```
 
-Built with **[nix-wire](https://github.com/semi710/nix-wire)** — auto-wiring for hosts, modules, overlays, and templates.
+---
 
-## 🔗 Related
+## Flake Outputs
+
+```bash
+# Build ISO for current architecture
+nix build .#iso
+
+# Build a specific host (e.g., mach)
+nixos-rebuild switch --flake .#mach
+
+# Build darwin host (e.g., jp-mbp)
+darwin-rebuild switch --flake .#jp-mbp
+
+# Activate home configuration
+home-manager switch --flake .#<user>
+
+# Run checks
+nix flake check
+
+# Enter dev shell
+nix develop
+```
+
+---
+
+## Key Features
+
+- **Declarative disk partitioning** with disko
+- **Encrypted secrets** via sops-nix
+- **Custom packages**: `copy` (OSC52), `aria2tui`, `sklauncher`, etc.
+- **Project templates**: Go, Node.js, Python with treefmt + pre-commit hooks
+- **Binary caches**: Configured for nixos.org, nix-community, and personal caches
+
+---
+
+## Related
 
 - **[Utils](https://github.com/niksingh710/utils)** - Utility scripts and tools
-- **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)** - Full documentation and ricing
+- **[nvix](https://github.com/semi710/nvix)** - Neovim configuration (used here)
+- **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)** - Full ricing with Hyprland/Wayland
 
 ### Acknowledgments
 
