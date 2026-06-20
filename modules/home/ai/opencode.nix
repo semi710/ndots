@@ -96,7 +96,8 @@ in
       autoupdate = true;
       agent = {
         OpenAgent = {
-          system_prompt = combinedSystemPrompt;
+          # opencode reads "prompt", NOT "system_prompt" (see agent.ts:281)
+          prompt = combinedSystemPrompt;
           skills = allSkills;
         };
       };
