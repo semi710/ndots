@@ -17,7 +17,7 @@ in
     # Important for the hardware
     flake.inputs.disko.nixosModules.disko
     ./disk.nix
-    # should be generated sudo nixos-generate-config --show-hardware-config --root /mnt > ./hosts/nixos/virt/hardware.nix>
+    # should be generated sudo nixos-generate-config --show-hardware-config --root /mnt > ./hosts/nixos/virt-common/hardware.nix>
     ./hardware.nix
   ];
 
