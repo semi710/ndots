@@ -63,10 +63,9 @@ in
 
   nix.settings.trusted-users = [ me.username ];
 
-  # Dynamically set architecture to match the build/evaluator system.
-  # Boot x86_64 ISO → evaluates as x86_64-linux.
-  # Boot aarch64 ISO → evaluates as aarch64-linux.
-  nixpkgs.hostPlatform = builtins.currentSystem;
+  # Dynamically set architecture from the evaluated package set.
+  # pkgs is already configured for the target system by the flake evaluator.
+  nixpkgs.hostPlatform = lib.mkDefault pkgs.stdenv.hostPlatform.system;
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
