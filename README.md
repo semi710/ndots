@@ -100,6 +100,16 @@ Boot from the [pre-built ISO](#iso-installer) or use upstream NixOS minimal ISO.
    sudo nixos-install --no-root-passwd --root /mnt --flake github:semi710/ndots#<hostname>
    ```
 
+   > [!NOTE]
+   > If you want to set a root password during install (recommended), omit `--no-root-passwd`:
+   > ```bash
+   > sudo nixos-install --root /mnt --flake github:semi710/ndots#<hostname>
+   > ```
+   > After setting your user password, lock root for security:
+   > ```bash
+   > sudo passwd -l root
+   > ```
+
 ---
 
 ## ISO Installer
