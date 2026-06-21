@@ -8,9 +8,7 @@ let
   hypr-pkgs = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
 in
 {
-  imports =
-    with builtins;
-    map (file: ./${file}) (filter (file: (file != "default.nix")) (attrNames (readDir ./.)));
+  imports = inputs.nix-wire.lib.autoImport ./.;
 
   hm.wayland.windowManager.hyprland.package = null;
   hm.wayland.windowManager.hyprland.portalPackage = null;

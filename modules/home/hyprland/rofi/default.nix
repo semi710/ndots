@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  inputs,
+  pkgs,
+  lib,
+  ...
+}:
 with lib;
 {
   stylix.targets.rofi.enable = false;
@@ -38,9 +43,5 @@ with lib;
     };
   };
 
-  imports =
-    with builtins;
-    map (fn: ./${fn}) (
-      filter (fn: (fn != "default.nix" && !hasSuffix ".md" "${fn}")) (attrNames (readDir ./.))
-    );
+  imports = inputs.nix-wire.lib.autoImport ./.;
 }

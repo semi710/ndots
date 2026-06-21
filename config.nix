@@ -23,8 +23,7 @@
       sshPublicKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEwouW1kRGVOgb58dJPwF+HCsXXYl2OUOqpxuqAXGKIZ"
       ];
-      # TODO: Use the hashed password instead of plain text
-      password = "virt";
+      hashedPassword = "$6$jvXw5025x7XND9MV$G9meEJQJ9S0MNG3VP7EzAo02xys1L6.YRPPE2Fbksj58C9n1ZU8k5FrNdvkoZsPW3xDGjg1m9sLxpdr1.J39s/";
     };
   };
 

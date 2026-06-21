@@ -1,6 +1,5 @@
 # Darwin specific modules
+{ inputs, ... }:
 {
-  imports =
-    with builtins;
-    map (file: ./${file}) (filter (file: (file != "default.nix")) (attrNames (readDir ./.)));
+  imports = inputs.nix-wire.lib.autoImport ./.;
 }

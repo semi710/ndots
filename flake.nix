@@ -4,7 +4,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
-    nix-wire.url = "github:semi710/nix-wire";
+    nix-wire.url = "github:semi710/nix-wire/b8915dd";
     flake-parts.url = "github:hercules-ci/flake-parts";
     treefmt-nix.url = "github:numtide/treefmt-nix";
 
