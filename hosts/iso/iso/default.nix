@@ -88,6 +88,11 @@
         # nix-index removed: not needed on ephemeral install ISO
       ];
 
+      # Disable android module on ISO — removes scrcpy which fails to build on aarch64
+      disabledModules = [
+        "${inputs.self}/modules/home/shell/android.nix"
+      ];
+
       # Override the default "core" variant to "bare" for ISO
       nvix.variant = lib.mkForce "bare";
 
