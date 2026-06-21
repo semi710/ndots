@@ -72,6 +72,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    minecraft.url = "github:Infinidoge/nix-minecraft";
+
     # personal flakes
     nsearch.url = "github:semi710/nsearch";
     nvix.url = "github:semi710/nvix";
