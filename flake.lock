@@ -1687,6 +1687,22 @@
         "type": "github"
       }
     },
+    "ponytail": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1782001397,
+        "narHash": "sha256-se6isAnVQCj+d2tUjHKkVJrvoHKRqkpih2rTSAsjT9g=",
+        "owner": "DietrichGebert",
+        "repo": "ponytail",
+        "rev": "6da37bfa7d0282522c7785759f4d2f1544015354",
+        "type": "github"
+      },
+      "original": {
+        "owner": "DietrichGebert",
+        "repo": "ponytail",
+        "type": "github"
+      }
+    },
     "pre-commit-hooks": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -1732,6 +1748,7 @@
         "nvix": "nvix",
         "openagents-control": "openagents-control",
         "opencode-vim": "opencode-vim",
+        "ponytail": "ponytail",
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix_2",

@@ -7,6 +7,7 @@
 let
   openagents-control = inputs.openagents-control;
   claude-code = inputs.claude-code;
+  ponytail = inputs.ponytail;
 
   # Read registry
   registry = builtins.fromJSON (builtins.readFile "${openagents-control}/registry.json");
@@ -55,6 +56,21 @@ let
       "${claude-code}/plugins/frontend-design/skills/frontend-design/SKILL.md";
   };
 
+  # Ponytail skills wired from the vendored repo
+  ponytailSkills = {
+    ".config/opencode/skills/ponytail/SKILL.md".source = "${ponytail}/skills/ponytail/SKILL.md";
+    ".config/opencode/skills/ponytail-review/SKILL.md".source =
+      "${ponytail}/skills/ponytail-review/SKILL.md";
+    ".config/opencode/skills/ponytail-audit/SKILL.md".source =
+      "${ponytail}/skills/ponytail-audit/SKILL.md";
+    ".config/opencode/skills/ponytail-debt/SKILL.md".source =
+      "${ponytail}/skills/ponytail-debt/SKILL.md";
+    ".config/opencode/skills/ponytail-gain/SKILL.md".source =
+      "${ponytail}/skills/ponytail-gain/SKILL.md";
+    ".config/opencode/skills/ponytail-help/SKILL.md".source =
+      "${ponytail}/skills/ponytail-help/SKILL.md";
+  };
+
   # Local skills mapped to ~/.config/opencode/skills/
   localSkills = lib.optionalAttrs (builtins.pathExists skillsDir) (
     lib.mapAttrs' (name: _: {
@@ -94,11 +110,20 @@ in
       };
       default_agent = "OpenAgent";
       autoupdate = true;
+      plugin = [ "${ponytail}/.opencode/plugins/ponytail.mjs" ];
+
       agent = {
         OpenAgent = {
           # opencode reads "prompt", NOT "system_prompt" (see agent.ts:281)
           prompt = combinedSystemPrompt;
-          skills = allSkills;
+          skills = allSkills ++ [
+            "ponytail"
+            "ponytail-review"
+            "ponytail-audit"
+            "ponytail-debt"
+            "ponytail-gain"
+            "ponytail-help"
+          ];
         };
       };
     };
@@ -111,5 +136,5 @@ in
     };
   };
 
-  home.file = componentFiles // externalSkills // localSkills;
+  home.file = componentFiles // externalSkills // localSkills // ponytailSkills;
 }

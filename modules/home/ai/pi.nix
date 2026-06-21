@@ -31,6 +31,7 @@ in
         "npm:@termdraw/pi"
         "npm:pi-mcp-adapter"
         "git:github.com/semi710/vim-motions-pi@feat/clipboard-and-escape"
+        "git:github.com/DietrichGebert/ponytail"
       ];
     };
   };
