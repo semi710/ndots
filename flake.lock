@@ -1694,11 +1694,11 @@
         "systems": "systems_5"
       },
       "locked": {
-        "lastModified": 1782042147,
-        "narHash": "sha256-hFSa/KRW4ZC5eq92EI7U4/CvW1e+2C4NLfVCjiNMA4c=",
+        "lastModified": 1782072075,
+        "narHash": "sha256-R7GrWgd4q1Nx58F8x+NKqhCqMGr0Tnj13jJ8XCgEpq4=",
         "owner": "semi710",
         "repo": "nvix",
-        "rev": "5a5bb542a6a07d5ecf3eaaf3afe8036925032692",
+        "rev": "1a9e03b689c104ff3981f21a1e37ceaa95f15de9",
         "type": "github"
       },
       "original": {
