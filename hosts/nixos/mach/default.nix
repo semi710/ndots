@@ -79,6 +79,9 @@ in
   services.tailscale.authKeyFile = config.sops.secrets."tailscale_auth_key".path;
   services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
   services.beszel.agent.environment.DOCKER_HOST = lib.mkForce "unix:///run/user/1000/docker.sock";
+  # beszel crashes reading AMD GPU sysfs (known bug). Disable GPU monitoring.
+  # FIX: https://github.com/henrygd/beszel/issues/1799
+  services.beszel.agent.environment.SKIP_GPU = "true";
   systemd.services.beszel-agent = {
     serviceConfig.DynamicUser = lib.mkForce false;
     serviceConfig.User = lib.mkForce me.username;
