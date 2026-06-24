@@ -1,5 +1,14 @@
-{ ... }:
+{ config, ... }:
 # For a new System Copy the generated cert and key and set it in that host's user.
+let
+  home = config.home.homeDirectory;
+  allDevices = [
+    "semi"
+    "mach"
+    "jp-mbp"
+    "dsd"
+  ];
+in
 {
   services.syncthing = {
     enable = true;
@@ -31,17 +40,15 @@
       };
 
       folders = {
-        # <https://nix-community.github.io/home-manager/options.xhtml#opt-services.syncthing.settings.folders._name_.path>
-        # as mentioned above `~` will be resolved
-        "~/.notes" = rec {
+        "${home}/.notes" = rec {
           id = "notes";
           name = id;
-          devices = [
-            "semi"
-            "mach"
-            "jp-mbp"
-            "dsd"
-          ];
+          devices = allDevices;
+        };
+        "${home}/.dump" = rec {
+          id = "dump";
+          name = id;
+          devices = allDevices;
         };
       };
     };
