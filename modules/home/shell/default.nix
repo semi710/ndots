@@ -9,5 +9,6 @@
     nixpkgs-manual
     nixpkgs-review
     nh
+    duf
   ];
 }
