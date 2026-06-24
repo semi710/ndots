@@ -33,6 +33,7 @@
       "steam"
       "utm"
       "whatsapp"
+      "frankea/whisky/whisky"
       "windows-app"
       "zulip"
     ];
