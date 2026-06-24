@@ -22,12 +22,20 @@ in
     flake.nixosModules.tailscale
   ];
 
-  sops.secrets."private-keys/beszel_u_token" = {
+  sops.secrets."beszel/token" = {
+    sopsFile = "${flake}/secrets/server.yaml";
     group = "beszel-token";
     mode = "0440";
   };
-  services.beszel.agent.environment.TOKEN_FILE =
-    config.sops.secrets."private-keys/beszel_u_token".path;
+  services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
+  # Rootless docker socket is per-user at /run/user/<uid>/docker.sock.
+  # The agent must run as that user to traverse the 0700 directory.
+  services.beszel.agent.environment.DOCKER_HOST = lib.mkForce "unix:///run/user/1000/docker.sock";
+  systemd.services.beszel-agent = {
+    serviceConfig.DynamicUser = lib.mkForce false;
+    serviceConfig.User = lib.mkForce me.username;
+    serviceConfig.Group = lib.mkForce "beszel-token";
+  };
 
   users.users.${me.username} = {
     name = me.username;

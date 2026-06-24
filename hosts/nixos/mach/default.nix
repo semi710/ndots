@@ -15,6 +15,9 @@ in
     flake.nixosModules.hardware
     # flake.nixosModules.hyprland # Includes all other home manager modules
     flake.nixosModules.filebrowser
+    flake.nixosModules.beszel
+    flake.nixosModules.tailscale
+    flake.inputs.sops-nix.nixosModules.sops
 
     # Important for the hardware
     flake.inputs.disko.nixosModules.disko
@@ -64,6 +67,23 @@ in
   };
 
   services.tailscale.enable = true;
+  sops = {
+    age.keyFile = "${config.users.users.${me.username}.home}/.config/sops/age/keys.txt";
+    defaultSopsFile = "${flake}/secrets/server.yaml";
+    secrets."tailscale_auth_key" = { };
+    secrets."beszel/token" = {
+      group = "beszel-token";
+      mode = "0440";
+    };
+  };
+  services.tailscale.authKeyFile = config.sops.secrets."tailscale_auth_key".path;
+  services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
+  services.beszel.agent.environment.DOCKER_HOST = lib.mkForce "unix:///run/user/1000/docker.sock";
+  systemd.services.beszel-agent = {
+    serviceConfig.DynamicUser = lib.mkForce false;
+    serviceConfig.User = lib.mkForce me.username;
+    serviceConfig.Group = lib.mkForce "beszel-token";
+  };
   services.openssh = {
     enable = true;
     settings = {
