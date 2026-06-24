@@ -19,6 +19,7 @@ in
     flake.inputs.sops-nix.nixosModules.sops
     flake.inputs.disko.nixosModules.disko
     flake.nixosModules.beszel
+    flake.nixosModules.tailscale
   ];
 
   sops.secrets."private-keys/beszel_u_token" = {
@@ -47,7 +48,9 @@ in
   sops = {
     age.keyFile = "${config.users.users.${me.username}.home}/.config/sops/age/keys.txt";
     defaultSopsFile = "${flake}/secrets/office.yaml";
+    secrets."tailscale_auth_key" = { };
   };
+  services.tailscale.authKeyFile = config.sops.secrets."tailscale_auth_key".path;
 
   hm.sops.secrets."private-keys/nix_access_token" = {
     sopsFile = "${flake}/secrets/office.yaml";
