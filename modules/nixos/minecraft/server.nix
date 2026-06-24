@@ -18,7 +18,7 @@
 
       serverProperties = {
         server-port = 25565;
-        difficulty = "hard";
+        difficulty = "normal";
         gamemode = "survival";
         max-players = 20;
         motd = "\\u00A7cDSD\\u00A7r - \\u00A7bSurvival Server\\u00A7r";

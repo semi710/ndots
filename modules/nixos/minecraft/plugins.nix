@@ -45,10 +45,18 @@
       sha256 = "0s4d73gbi2mbp72520qr2nq1gqsjh8l0xz8gnzw55qnpv01xlsv7";
     };
 
-    # Death chest
-    "plugins/GraveSafe.jar" = pkgs.fetchurl {
-      url = "https://cdn.modrinth.com/data/fBkeX04T/versions/JG5sdcpZ/gravesafe-plugin-1.0.0.jar";
-      sha256 = "000326bl7agwikfz4wf1sxgjnzbkrv93vbndqdcs817ihv9m5z5p";
+    # Death chest (DeathChest 1.5.7 — replaces GraveSafe 1.0.0 which duped
+    # armor: it collected getContents() [all 41 slots incl armor+offhand] then
+    # re-collected getArmorContents() + getItemInOffHand(), adding them twice)
+    "plugins/DeathChest.jar" = pkgs.fetchurl {
+      url = "https://cdn.modrinth.com/data/kdfRxKkQ/versions/lXnPnDDw/chest1.5.7.jar";
+      sha256 = "0dcirs5ii1wimf7z1k5vknjs21p5qaiwp2jv81352bn9wfsaf9zw";
+    };
+
+    # /sethome and /home (SimpleTPA only covers /tpa)
+    "plugins/ServerHomes.jar" = pkgs.fetchurl {
+      url = "https://cdn.modrinth.com/data/P7dzUyOJ/versions/8jKberGd/serverhomes-1.0.0.jar";
+      sha256 = "1lnnpga2k4bmyhjh1v5f71k3nhlx1lfr23qza33amnn7938hv88b";
     };
 
     # Proximity voice chat (bukkit-2.6.18 supports Paper 1.21.2+)
