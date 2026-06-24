@@ -18,7 +18,15 @@ in
     flake.nixosModules.juspay
     flake.inputs.sops-nix.nixosModules.sops
     flake.inputs.disko.nixosModules.disko
+    flake.nixosModules.beszel
   ];
+
+  sops.secrets."private-keys/beszel_u_token" = {
+    group = "beszel-token";
+    mode = "0440";
+  };
+  services.beszel.agent.environment.TOKEN_FILE =
+    config.sops.secrets."private-keys/beszel_u_token".path;
 
   users.users.${me.username} = {
     name = me.username;
