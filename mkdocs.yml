@@ -23,20 +23,9 @@ theme:
     - content.code.annotate
     - content.tabs.link
   palette:
-    - media: "(prefers-color-scheme: light)"
-      scheme: default
+    - scheme: slate
       primary: deep purple
       accent: deep orange
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: deep purple
-      accent: deep orange
-      toggle:
-        icon: material/brightness-4
-        name: Switch to light mode
   icon:
     repo: fontawesome/brands/github
 
@@ -99,3 +88,11 @@ extra_javascript:
 
 plugins:
   - search
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/niksingh710/ndots
+  generator: false
+
+copyright: "Made with <span style=\"color: #ff6e40\">&hearts;</span> by Nikhil · <a href=\"https://semi.sh\">semi.sh</a>"

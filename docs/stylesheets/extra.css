@@ -18,28 +18,7 @@
   --md-gradient: linear-gradient(135deg, #7c4dff 0%, #ff6e40 100%);
 }
 
-[data-md-color-scheme="default"] {
-  --md-default-bg-color: #faf9fb;
-  --md-default-fg-color: #1a1a2e;
-  --md-default-fg-color--light: #4a4a5e;
-  --md-default-fg-color--lighter: #7a7a8e;
-  --md-card-bg: rgba(0, 0, 0, 0.02);
-  --md-card-border: rgba(0, 0, 0, 0.06);
-}
-
-/* gradient hero on home page */
-.md-typeset .md-hero {
-  background: linear-gradient(135deg, #0d0d12 0%, #1a1528 50%, #1e1420 100%);
-  color: #e8e8ec;
-  padding: 3rem 1rem 2.5rem;
-}
-
-[data-md-color-scheme="default"] .md-typeset .md-hero {
-  background: linear-gradient(135deg, #faf9fb 0%, #f0edf8 50%, #fff5f0 100%);
-  color: #1a1a2e;
-}
-
-/* glassmorphism cards (admonitions, content blocks) */
+/* glassmorphism cards */
 .md-typeset .admonition,
 .md-typeset details {
   background: var(--md-card-bg);
@@ -49,7 +28,7 @@
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
 }
 
-/* code blocks — terminal feel */
+/* code blocks */
 .md-typeset code,
 .md-typeset pre code {
   font-family: var(--md-code-font-family);
@@ -60,10 +39,6 @@
   border-radius: 10px;
   border: 1px solid var(--md-card-border);
   background: #12121a !important;
-}
-
-[data-md-color-scheme="default"] .md-typeset pre {
-  background: #1e1e2e !important;
 }
 
 .highlight .p,
@@ -79,23 +54,27 @@
   padding: 0.1em 0.4em;
 }
 
-/* nav sidebar — refined */
+/* nav sidebar */
 .md-sidebar--primary .md-nav__item {
   margin: 2px 0;
 }
 
 .md-sidebar--primary .md-nav__link {
   border-radius: 8px;
-  transition: all 0.2s ease;
+  border: 1px solid transparent;
+  transition: background 0.2s ease;
 }
 
 .md-sidebar--primary .md-nav__link:hover,
 .md-sidebar--primary .md-nav__link--active {
   background: var(--md-card-bg);
-  border: 1px solid var(--md-card-border);
 }
 
-/* header bar — subtle gradient line */
+.md-sidebar--secondary .md-nav {
+  background: transparent;
+}
+
+/* header */
 .md-header {
   background: var(--md-default-bg-color);
   border-bottom: 1px solid var(--md-card-border);
@@ -107,7 +86,13 @@
   letter-spacing: -0.01em;
 }
 
-/* tabs — modern pill style */
+/* footer */
+.md-footer {
+  background: var(--md-default-bg-color);
+  border-top: 1px solid var(--md-card-border);
+}
+
+/* tabs */
 .md-typeset .tabbed-set > .tabbed-labels {
   border-radius: 10px;
   background: var(--md-card-bg);
@@ -121,18 +106,7 @@
   transition: all 0.2s ease;
 }
 
-/* table of contents — floating glass */
-.md-sidebar--secondary .md-nav {
-  background: transparent;
-}
-
-/* footer */
-.md-footer {
-  background: var(--md-default-bg-color);
-  border-top: 1px solid var(--md-card-border);
-}
-
-/* custom scrollbar */
+/* scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -151,7 +125,7 @@
   background: var(--md-primary-fg-color--light);
 }
 
-/* links — gradient underline on hover */
+/* links */
 .md-typeset a {
   transition: color 0.15s ease;
 }
@@ -160,17 +134,25 @@
   color: var(--md-accent-fg-color);
 }
 
-/* tasklist checkboxes — custom styled */
+/* tasklist checkboxes */
 .md-typeset .tasklist-control .tasklist-indicator::before {
   background: var(--md-gradient);
 }
 
-/* content area max-width for readability */
-.md-content {
-  max-width: 900px;
+/* content area full width */
+.md-grid,
+.md-main__inner,
+.md-content,
+.md-content__inner {
+  max-width: 100%;
+  margin: 0;
 }
 
-/* section headings — gradient accent */
+.md-content__inner {
+  padding: 1.2rem 1.5rem;
+}
+
+/* section headings */
 .md-typeset h1 {
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -183,7 +165,7 @@
   padding-bottom: 0.3em;
 }
 
-/* animated page transitions */
+/* page transitions */
 .md-main__inner {
   animation: fadeIn 0.3s ease;
 }
@@ -193,17 +175,29 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* search overlay — glass */
+/* search */
 .md-search__overlay {
   backdrop-filter: blur(var(--md-glass-blur));
   background: rgba(13, 13, 18, 0.7);
 }
 
-[data-md-color-scheme="default"] .md-search__overlay {
-  background: rgba(250, 249, 251, 0.7);
+.md-search__input,
+.md-search__form {
+  border-radius: 24px !important;
 }
 
-/* badge-like elements */
+.md-search__scrollwrap,
+.md-search-result {
+  border-radius: 16px !important;
+  border-top: none !important;
+  margin-top: 4px !important;
+}
+
+.md-search-result__meta {
+  border-radius: 16px 16px 0 0 !important;
+}
+
+/* badges */
 .md-typeset .md-badge {
   background: var(--md-gradient);
   border-radius: 20px;
