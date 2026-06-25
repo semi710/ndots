@@ -47,24 +47,53 @@ Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[ni
 | Platform | Details |
 |----------|---------|
 | **Linux** | NixOS hosts, fully CLI-based |
-| **Darwin** | nix-darwin on MacBook Pro (Yabai + skhd) |
+| **Darwin** | nix-darwin on MacBook Pro (Yabai + skhd / Aerospace) |
 | **Build System** | Flakes + Flake-Parts + nix-wire auto-wiring |
 | **Disk Management** | disko for declarative partitioning |
-| **Secrets** | sops-nix |
+| **Secrets** | sops-nix (age encryption, split by office/server keys) |
+| **Networking** | Tailscale mesh VPN for all hosts |
+| **Monitoring** | Beszel hub + agents on all NixOS hosts |
+| **Deployment** | `just deploy` (auto-detects NixOS vs Darwin) |
 
 ---
 
 ## Hosts
 
-| Host | Platform | Description |
-|------|----------|-------------|
-| **mach** | NixOS | Personal laptop |
-| **dsd** | NixOS | Work desktop |
-| **semi** | NixOS | Semi-personal machine |
-| **virt** | NixOS | VM testing |
-| **anywhere** | NixOS | Generic QEMU guest template |
-| **iso** | NixOS | Installer ISO (see below) |
-| **jp-mbp** | Darwin | MacBook Pro M4 |
+| Host | Platform | Arch | CPU | RAM | Role | Services |
+|------|----------|------|-----|-----|------|----------|
+| **mach** | NixOS | x86_64 | Intel i7-10510U (4c/8t) | 24 GB | Personal laptop | FileBrowser, Beszel agent, Tailscale, Docker |
+| **dsd** | NixOS | x86_64 | Intel i9-12900KS (16c/24t) | 64 GB | Intel i9-12900KS | FileBrowser, Beszel agent, Tailscale, Docker |
+| **semi** | NixOS | x86_64 | Intel i9-14900K (24c/32t) | 128 GB | Intel i9-14900K | FileBrowser, Beszel agent, Tailscale, Docker |
+| **obox** | NixOS | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | Oracle Cloud VPS | Beszel hub, Stirling PDF, FileBrowser, Caddy, Tailscale, Docker |
+| **virt-x86_64** | NixOS | x86_64 | — | — | VM testing | — |
+| **virt-aarch64** | NixOS | aarch64 | — | — | VM testing | — |
+| **anywhere** | NixOS | — | — | — | Generic QEMU guest template | — |
+| **iso** | NixOS | — | — | — | Installer ISO | — |
+| **jp-mbp** | Darwin | aarch64 | Apple M4 | — | MacBook Pro | Yabai/skhd, Aerospace, Karabiner, Hammerspoon |
+
+---
+
+## Services
+
+### Beszel Monitoring
+
+Hub on **obox**, agents on all NixOS hosts. System + Docker stats, SSH key-based agent registration, universal token for auto-enrollment.
+
+### Stirling PDF
+
+On **obox**, branded as "semi.sh PDF". NixOS native service, no Docker. Update notifications disabled. Behind Caddy reverse proxy.
+
+### FileBrowser Quantum
+
+On **all NixOS hosts**. Runs as root for full filesystem access. Tailscale-only (no public firewall). Admin credentials per-host via sops — user is hostname, password is `<host>@filebrowser`.
+
+### Caddy
+
+On **obox**. Imperative config (`/etc/caddy/Caddyfile`) — editable on the box, no rebuild needed.
+
+### Syncthing
+
+Home-manager module, syncs `.notes` and `.dump` folders across all 4 devices.
 
 ---
 
@@ -107,6 +136,67 @@ Boot from the [pre-built ISO](#iso-installer) or use upstream NixOS minimal ISO.
 
 ---
 
+## Deployment
+
+All deployment is handled via `just` recipes:
+
+```bash
+just deploy              # Current host (auto-detects NixOS vs Darwin)
+just deploy obox         # Remote deploy to obox (builds on obox)
+just deploy mach         # Remote deploy to mach
+just deploy dsd          # Remote deploy to dsd
+just deploy semi         # Remote deploy to semi
+just home nikhil         # Home-manager only (run on target machine)
+```
+
+Other commands:
+
+```bash
+just build <host>        # Dry build (eval only)
+just iso                 # Build installer ISO
+just fmt                 # Format nix files (treefmt)
+just update              # Update flake lock
+just check               # Check flake (eval all configs)
+just gc                  # Garbage collect all profiles
+```
+
+---
+
+## Adding a New Host (nixos-anywhere)
+
+The `anywhere` template is a generic NixOS server config for bootstrapping new machines via SSH — no physical access or ISO needed.
+
+1. **Copy the template**
+   ```bash
+   cp -r hosts/nixos/anywhere hosts/nixos/<name>
+   ```
+
+2. **Set the platform arch** in `hosts/nixos/<name>/default.nix`:
+   ```nix
+   nixpkgs.hostPlatform = "x86_64-linux"; # or "aarch64-linux"
+   ```
+
+3. **Adjust disk config** in `hosts/nixos/<name>/disk.nix` — set the correct device path.
+
+4. **Install via nixos-anywhere** (from any machine with nix + SSH access):
+   ```bash
+   nix run github:nix-community/nixos-anywhere -- \
+     --generate-hardware-config nixos-generate-config ./hosts/nixos/<name>/hardware.nix \
+     --flake .#<name> \
+     --target-host root@<ip>
+   ```
+
+   This partitions the disk, installs the system, and reboots — fully unattended.
+
+5. **Deploy future updates** with:
+   ```bash
+   just deploy <name>
+   ```
+
+> The template uses the `virt` user from `config.nix`. Override with a real user for production hosts. Add sops, tailscale, beszel, etc. by importing the relevant modules.
+
+---
+
 ## ISO Installer
 
 A minimal (~2.2 GB) install ISO with a pre-configured shell environment.
@@ -145,35 +235,81 @@ nix build .#iso
 
 ```
 .
-├── hosts/              # Host configurations
-│   ├── nixos/          # NixOS machines
-│   │   ├── mach/
-│   │   ├── dsd/
-│   │   ├── semi/
-│   │   ├── virt/
-│   │   └── anywhere/
+├── hosts/                  # Host configurations
+│   ├── nixos/
+│   │   ├── common/
+│   │   │   └── workstation.nix   # Shared workstation config (semi, dsd)
+│   │   ├── mach/                 # Personal laptop
+│   │   ├── dsd/                  # Work desktop
+│   │   ├── semi/                 # Semi-personal machine
+│   │   ├── obox/                 # Oracle Cloud VPS (aarch64)
+│   │   ├── virt-x86_64/          # VM testing
+│   │   ├── virt-aarch64/         # VM testing
+│   │   └── anywhere/             # Generic QEMU guest template
 │   ├── iso/
-│   │   └── iso/        # Installer ISO config
-│   ├── darwin/
-│   │   └── jp-mbp/     # MacBook Pro
-│   └── home/           # Home-manager user profiles
+│   │   └── iso/                  # Installer ISO config
+│   └── darwin/
+│       └── jp-mbp/               # MacBook Pro M4
 ├── modules/
-│   ├── nixos/          # NixOS system modules
-│   ├── darwin/         # Darwin system modules
-│   ├── home/           # Home-manager modules
-│   └── flake/          # Flake-level modules (nix config, caches)
-├── packages/           # Custom packages
-│   ├── copy.nix        # OSC52 clipboard utility
-│   ├── aria2tui.nix    # TUI for aria2
+│   ├── nixos/                    # NixOS system modules
+│   │   ├── beszel.nix            # Beszel agent module
+│   │   ├── filebrowser.nix       # FileBrowser Quantum module
+│   │   ├── virtualisation.nix    # Shared docker + podman module
+│   │   ├── tailscale.nix         # Tailscale VPN module
+│   │   ├── hardware/             # Audio, bluetooth, etc.
+│   │   ├── hyprland/             # Hyprland window manager
+│   │   ├── juspay/               # Juspay workspace config
+│   │   └── ...
+│   ├── darwin/                   # Darwin system modules
+│   │   ├── yabai/                # Tiling WM + skhd
+│   │   ├── brew.nix              # Homebrew casks/formulae
+│   │   ├── stylix.nix            # Theming
+│   │   └── ...
+│   ├── home/                     # Home-manager modules
+│   │   ├── ai/                   # AI tooling (opencode, claude, mcp)
+│   │   │   ├── opencode/         # Opencode config (default, skills, registry)
+│   │   │   └── skills/           # Shared skills (git-wisdom, think-deeper)
+│   │   ├── shell/                # zsh, tmux, fzf, starship, git, etc.
+│   │   ├── editor/               # Helix, nvix (Neovim)
+│   │   ├── browser/              # Zen browser
+│   │   ├── terminal/             # Kitty
+│   │   ├── hyprland/             # Hyprland home config
+│   │   ├── darwin/               # Aerospace, Karabiner, Hammerspoon
+│   │   ├── syncthing.nix         # Cross-device file sync
+│   │   ├── sops.nix              # Home-level secrets
+│   │   └── ...
+│   └── flake/                    # Flake-level modules (nix config, caches)
+├── packages/                     # Custom packages
+│   ├── copy.nix                  # OSC52 clipboard utility
+│   ├── aria2tui.nix              # TUI for aria2
+│   ├── sklauncher.nix            # Minecraft launcher
+│   ├── stremio-enhanced.nix      # Stremio with addons
 │   └── ...
-├── templates/          # Project templates (go, node, python)
-├── parts/              # Flake-Parts modules
-│   ├── disko/          # Partitioning schemas
+├── templates/                    # Project templates (go, node, python)
+├── parts/                        # Flake-Parts modules
+│   ├── disko/                    # Partitioning schemas (btrfs, btrfs-enc)
 │   └── default.nix
-├── overlays/           # Nixpkgs overlays
-├── config.nix          # Shared user/builder config
-└── flake.nix           # Entry point
+├── overlays/                     # Nixpkgs overlays
+├── secrets/                      # sops-encrypted secrets
+│   ├── office.yaml               # Office machines (semi, dsd)
+│   └── server.yaml               # Servers (obox, mach)
+├── config.nix                    # Shared user/builder config
+├── .sops.yaml                    # sops creation rules
+├── justfile                      # Deployment commands
+└── flake.nix                     # Entry point
 ```
+
+---
+
+## Secrets
+
+Managed with [sops-nix](https://github.com/Mic92/sops-nix) using age encryption. Two key groups:
+
+| File | Key | Hosts | Contents |
+|------|-----|-------|----------|
+| `secrets/office.yaml` | office age key | semi, dsd | Tailscale auth, nix access token, syncthing certs, filebrowser passwords |
+| `secrets/server.yaml` | office age key | obox, mach | Tailscale auth, beszel creds/SSH key, filebrowser passwords |
+| `secrets/keys.yaml` | personal age key | — | Age key generation |
 
 ---
 
@@ -203,11 +339,18 @@ nix develop
 
 ## Key Features
 
-- **Declarative disk partitioning** with disko
-- **Encrypted secrets** via sops-nix
-- **Custom packages**: `copy` (OSC52), `aria2tui`, `sklauncher`, etc.
+- **Declarative disk partitioning** with disko (btrfs encrypted)
+- **Encrypted secrets** via sops-nix, split by office/server keys
+- **Tailscale mesh VPN** across all hosts
+- **Beszel monitoring** — hub on obox, agents on all NixOS hosts
+- **FileBrowser Quantum** — full filesystem access, Tailscale-only
+- **Stirling PDF** — self-hosted PDF tools, branded
+- **Caddy** reverse proxy on obox (imperative config)
+- **Syncthing** — cross-device file sync via home-manager
+- **Custom packages**: `copy` (OSC52), `aria2tui`, `sklauncher`, `stremio-enhanced`
 - **Project templates**: Go, Node.js, Python with treefmt + pre-commit hooks
 - **Binary caches**: Configured for nixos.org, nix-community, and personal caches
+- **AI tooling**: Opencode with shared skills, Claude Code, MCP servers
 
 ---
 
@@ -215,6 +358,7 @@ nix develop
 
 - **[Utils](https://github.com/niksingh710/utils)** - Utility scripts and tools
 - **[nvix](https://github.com/semi710/nvix)** - Neovim configuration (used here)
+- **[nix-wire](https://github.com/semi710/nix-wire)** - Flake auto-wiring library
 - **[OG Branch](https://github.com/niksingh710/ndots/tree/OG)** - Full ricing with Hyprland/Wayland
 
 ### Acknowledgments
