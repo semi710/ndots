@@ -15,6 +15,19 @@
 - **Tailscale** — mesh VPN
 - **Docker** — system + rootless
 
+## Modules Imported
+
+```nix
+imports = [
+  ../common/workstation.nix        # shared Juspay workstation config
+  ./disk.nix
+  ./hardware.nix
+  ./extra-users.nix
+];
+```
+
+The `common/workstation.nix` base imports: [default](../modules/nixos.md#basenix--defaultnix), [juspay](../modules/nixos.md#juspay), sops, disko, [beszel](../modules/nixos.md#beszelnix), [tailscale](../modules/nixos.md#tailscaletailnix), [virtualisation](../modules/nixos.md#virtualisationnix), [filebrowser](../modules/nixos.md#filebrowsernix).
+
 ## Nix Remote Builder
 
 semi acts as a remote build host for dsd (and vice versa). Builder config is in `config.nix`:
@@ -27,20 +40,16 @@ builders.semi = {
 };
 ```
 
-Known hosts are wired via `programs.ssh.knownHosts` in `workstation.nix`.
+Known hosts are wired via `programs.ssh.knownHosts` in `workstation.nix`. jp-mbp uses semi (and dsd) as remote build machines.
 
-## Inheritance
+## Secrets
 
-Shares `common/workstation.nix` with dsd. Minimal host-specific config:
+Uses `secrets/office.yaml` (office age key):
 
-```nix
-imports = [
-  ../common/workstation.nix
-  ./disk.nix
-  ./hardware.nix
-  ./extra-users.nix
-];
-```
+- `tailscale_auth_key`
+- `beszel/token`
+- `filebrowser/semi`
+- `private-keys/nix_access_token`
 
 ## Files
 

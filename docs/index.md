@@ -15,6 +15,7 @@ Fully CLI-based — all hosts are managed via SSH + Tailscale. No GUI required f
 | **Networking** | Tailscale mesh VPN |
 | **Monitoring** | Beszel hub + agents |
 | **Deployment** | `just deploy` (auto-detects NixOS vs Darwin) |
+| **Theming** | Stylix (kanagawa-dragon, cross-platform) |
 
 ## Hosts
 
@@ -38,6 +39,21 @@ See [Hosts](hosts/index.md) for per-host details.
 - [Tailscale](services/tailscale.md) — mesh VPN
 - [Docker & Podman](services/docker.md) — container runtimes
 
+## Modules
+
+The flake exposes reusable modules you can import into your own configuration:
+
+- [NixOS Modules](modules/nixos.md) — system services, hardware, window manager
+- [Home Modules](modules/home.md) — shell, editor, AI, browser, terminal, theming
+- [Darwin Modules](modules/darwin.md) — macOS system settings, window managers, Homebrew
+- [Flake Modules](modules/flake.md) — nix settings, binary caches
+
+## Packages
+
+Custom packages exposed via the flake and overlays:
+
+- [Custom Packages](packages/index.md) — `copy`, `aria2tui`, `sklauncher`, `stremio-enhanced`, etc.
+
 ## Quick Start
 
 ```bash
@@ -49,6 +65,43 @@ just deploy obox
 
 # Build ISO installer
 just iso
+
+# Serve docs locally
+just doc
 ```
 
 See [Deployment](guides/deployment.md) for full details.
+
+## Using This Flake Externally
+
+!!! tip "Import modules into your own flake"
+    Add this repo as a flake input and import any module:
+
+    ```nix
+    {
+      inputs.ndots.url = "github:semi710/ndots";
+
+      outputs = { self, nixpkgs, ndots, ... }: {
+        nixosConfigurations.myhost = nixpkgs.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ndots.nixosModules.tailscale
+            ndots.nixosModules.filebrowser
+            # ... see modules docs for the full list
+          ];
+        };
+      };
+    }
+    ```
+
+    You can also fetch disko schemas and custom packages:
+
+    ```bash
+    # Fetch a partition schema
+    nix eval github:semi710/ndots#disko.partition \
+      --apply 'b: builtins.fromJSON (builtins.toJSON (b { device = "/dev/nvme0n1"; }))' \
+      --impure
+
+    # Run a custom package
+    nix run github:semi710/ndots#copy -- "hello"
+    ```

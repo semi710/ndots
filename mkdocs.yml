@@ -42,6 +42,12 @@ theme:
 nav:
   - Home: index.md
   - Architecture: architecture.md
+  - Modules:
+      - NixOS: modules/nixos.md
+      - Home: modules/home.md
+      - Darwin: modules/darwin.md
+      - Flake: modules/flake.md
+  - Packages: packages/index.md
   - Hosts:
       - Overview: hosts/index.md
       - mach (Laptop): hosts/mach.md
