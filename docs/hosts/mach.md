@@ -1,4 +1,4 @@
-# mach — Personal Laptop
+# mach - Personal Laptop
 
 | | |
 |---|---|
@@ -11,10 +11,10 @@
 
 ## Services
 
-- **FileBrowser Quantum** — serves `/run/media/niksingh710/` (external media) + user home
-- **Beszel agent** — monitors system + rootless Docker (runs as user, SKIP_GPU=true)
-- **Tailscale** — mesh VPN
-- **Docker** — system + rootless via shared [virtualisation](../modules/nixos.md#virtualisationnix) module
+- **FileBrowser Quantum** - serves `/run/media/niksingh710/` (external media) + user home
+- **Beszel agent** - monitors system + rootless Docker (runs as user, SKIP_GPU=true)
+- **Tailscale** - mesh VPN
+- **Docker** - system + rootless via shared [virtualisation](../modules/nixos.md#virtualisationnix) module
 
 ## Modules Imported
 
@@ -35,11 +35,11 @@ imports = [
 ## Notable Config
 
 ```nix
-# AMD GPU bug workaround — beszel crashes reading sysfs
+# AMD GPU bug workaround - beszel crashes reading sysfs
 # https://github.com/henrygd/beszel/issues/1799
 services.beszel.agent.environment.SKIP_GPU = "true";
 
-# Rootless docker agent — runs as user to access /run/user/1000/docker.sock
+# Rootless docker agent - runs as user to access /run/user/1000/docker.sock
 services.beszel.agent.environment.DOCKER_HOST = "unix:///run/user/1000/docker.sock";
 
 # FileBrowser includes external media mount
@@ -65,6 +65,6 @@ Uses `secrets/server.yaml` (office age key):
 
 ## Files
 
-- `hosts/nixos/mach/default.nix` — main config
-- `hosts/nixos/mach/disk.nix` — disko partitioning
-- `hosts/nixos/mach/hardware.nix` — auto-generated hardware config
+- `hosts/nixos/mach/default.nix` - main config
+- `hosts/nixos/mach/disk.nix` - disko partitioning
+- `hosts/nixos/mach/hardware.nix` - auto-generated hardware config

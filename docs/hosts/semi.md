@@ -1,4 +1,4 @@
-# semi — Semi-Personal
+# semi - Semi-Personal
 
 | | |
 |---|---|
@@ -10,10 +10,10 @@
 
 ## Services
 
-- **FileBrowser Quantum** — serves `/` + user home
-- **Beszel agent** — system + rootless Docker
-- **Tailscale** — mesh VPN
-- **Docker** — system + rootless
+- **FileBrowser Quantum** - serves `/` + user home
+- **Beszel agent** - system + rootless Docker
+- **Tailscale** - mesh VPN
+- **Docker** - system + rootless
 
 ## Modules Imported
 
@@ -53,7 +53,7 @@ Uses `secrets/office.yaml` (office age key):
 
 ## Files
 
-- `hosts/nixos/semi/default.nix` — main config
-- `hosts/nixos/semi/disk.nix` — disko partitioning
-- `hosts/nixos/semi/hardware.nix` — auto-generated
-- `hosts/nixos/semi/extra-users.nix` — additional users
+- `hosts/nixos/semi/default.nix` - main config
+- `hosts/nixos/semi/disk.nix` - disko partitioning
+- `hosts/nixos/semi/hardware.nix` - auto-generated
+- `hosts/nixos/semi/extra-users.nix` - additional users

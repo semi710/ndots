@@ -10,7 +10,7 @@ All NixOS hosts are managed declaratively via flakes. Each host has its own dire
 | [dsd](dsd.md) | x86_64 | Intel i9-12900KS (16c/24t) | 64 GB | NVMe | nikhil.singh | FileBrowser, Beszel agent, Docker, Minecraft |
 | [semi](semi.md) | x86_64 | Intel i9-14900K (24c/32t) | 128 GB | NVMe | nikhil.singh | FileBrowser, Beszel agent, Docker |
 | [obox](obox.md) | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | 200G | nikhil | Beszel hub, Stirling PDF, FileBrowser, Caddy |
-| [jp-mbp](jp-mbp.md) | aarch64 | Apple M4 | — | — | nikhil.singh | Yabai, Aerospace, Karabiner |
+| [jp-mbp](jp-mbp.md) | aarch64 | Apple M4 | - | - | nikhil.singh | Yabai, Aerospace, Karabiner |
 
 ## Darwin Hosts
 
@@ -38,7 +38,7 @@ All NixOS hosts are managed declaratively via flakes. Each host has its own dire
 Workstations (semi, dsd) share `hosts/nixos/common/workstation.nix` which imports:
 
 - [base](../modules/nixos.md#basenix-defaultnix) (`nixosModules.default`)
-- [juspay](../modules/nixos.md#juspay) (`nixosModules.juspay`) — workspace config (zsh, openssh, docker, tailscale, postgres, redis)
+- [juspay](../modules/nixos.md#juspay) (`nixosModules.juspay`) - workspace config (zsh, openssh, docker, tailscale, postgres, redis)
 - sops-nix for secrets
 - disko for disk management
 - [Beszel](../modules/nixos.md#beszelnix) agent

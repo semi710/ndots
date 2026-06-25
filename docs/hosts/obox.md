@@ -1,4 +1,4 @@
-# obox — Oracle Cloud VPS
+# obox - Oracle Cloud VPS
 
 | | |
 |---|---|
@@ -12,14 +12,14 @@
 
 ## Services
 
-This is the **hub host** — runs central services for the network.
+This is the **hub host** - runs central services for the network.
 
-- **[Beszel hub](../services/beszel.md)** — monitoring dashboard, agents from all hosts connect here
-- **[Stirling PDF](../services/stirling-pdf.md)** — self-hosted PDF tools, branded "semi.sh PDF"
-- **[FileBrowser Quantum](../services/filebrowser.md)** — serves `/` + user home
-- **[Caddy](../services/caddy.md)** — reverse proxy (imperative config, no rebuild needed)
-- **[Tailscale](../services/tailscale.md)** — mesh VPN
-- **Docker** — system only (for OCI containers)
+- **[Beszel hub](../services/beszel.md)** - monitoring dashboard, agents from all hosts connect here
+- **[Stirling PDF](../services/stirling-pdf.md)** - self-hosted PDF tools, branded "semi.sh PDF"
+- **[FileBrowser Quantum](../services/filebrowser.md)** - serves `/` + user home
+- **[Caddy](../services/caddy.md)** - reverse proxy (imperative config, no rebuild needed)
+- **[Tailscale](../services/tailscale.md)** - mesh VPN
+- **Docker** - system only (for OCI containers)
 
 ## Modules Imported
 
@@ -37,7 +37,7 @@ imports = [
 ```
 
 !!! note "No base module"
-    obox does **not** import `nixosModules.default` — it's a server, so it skips stylix, home-manager default modules, and the cachyos kernel overlay. It imports `flakeModules.nix` directly for nix settings.
+    obox does **not** import `nixosModules.default` - it's a server, so it skips stylix, home-manager default modules, and the cachyos kernel overlay. It imports `flakeModules.nix` directly for nix settings.
 
 ## Beszel Hub Setup
 
@@ -77,7 +77,7 @@ curl "http://localhost:3090/api/beszel/universal-token?enable=1&permanent=1&toke
 
 ## Caddy
 
-Imperative config at `/etc/caddy/Caddyfile` — edit directly on the box, `systemctl reload caddy`. No rebuild needed.
+Imperative config at `/etc/caddy/Caddyfile` - edit directly on the box, `systemctl reload caddy`. No rebuild needed.
 
 ## Firewall
 
@@ -97,6 +97,6 @@ Uses `secrets/server.yaml` (office age key):
 
 ## Files
 
-- `hosts/nixos/obox/default.nix` — main config
-- `hosts/nixos/obox/disk.nix` — disko partitioning
-- `hosts/nixos/obox/hardware.nix` — QEMU guest hardware
+- `hosts/nixos/obox/default.nix` - main config
+- `hosts/nixos/obox/disk.nix` - disko partitioning
+- `hosts/nixos/obox/hardware.nix` - QEMU guest hardware

@@ -4,7 +4,7 @@
 
 ## Module
 
-`modules/nixos/tailscale.nix` — just enables the service:
+`modules/nixos/tailscale.nix` - just enables the service:
 
 ```nix
 { ... }: {

@@ -8,8 +8,8 @@
 
 - Devices: mach, dsd, semi, obox
 - Synced folders:
-  - `~/.notes` — notes
-  - `~/.dump` — general sync/dump
+  - `~/.notes` - notes
+  - `~/.dump` - general sync/dump
 
 ## Path Handling
 

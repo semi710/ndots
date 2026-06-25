@@ -78,7 +78,7 @@ jobs:
           fi
 
           if [ ! -f .drv-hashes/previous ]; then
-            echo "No previous hashes found — first run or cache miss"
+            echo "No previous hashes found - first run or cache miss"
             echo "changed=true" >> "$GITHUB_OUTPUT"
             cp .drv-hashes/current .drv-hashes/previous
             exit 0
@@ -93,10 +93,10 @@ jobs:
           echo "Current:  x86=$CURR_X86 aarch=$CURR_AARCH"
 
           if [ "$PREV_X86" != "$CURR_X86" ] || [ "$PREV_AARCH" != "$CURR_AARCH" ]; then
-            echo "Derivation changed — will rebuild"
+            echo "Derivation changed - will rebuild"
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
-            echo "Derivation unchanged — skipping build"
+            echo "Derivation unchanged - skipping build"
             echo "changed=false" >> "$GITHUB_OUTPUT"
           fi
 

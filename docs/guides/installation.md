@@ -4,7 +4,7 @@ Two methods: ISO (physical access) or nixos-anywhere (remote, SSH only). Both wo
 
 ## Method 1: nixos-anywhere (recommended)
 
-For any machine reachable over SSH — servers, VMs, or physical boxes. Fully unattended: partitions, installs, reboots.
+For any machine reachable over SSH - servers, VMs, or physical boxes. Fully unattended: partitions, installs, reboots.
 
 ### 1. Create the host config
 
@@ -18,7 +18,7 @@ Set the platform arch in `hosts/nixos/<name>/default.nix`:
 nixpkgs.hostPlatform = "x86_64-linux"; # or "aarch64-linux"
 ```
 
-Adjust disk config in `hosts/nixos/<name>/disk.nix` — set the correct device path.
+Adjust disk config in `hosts/nixos/<name>/disk.nix` - set the correct device path.
 
 ### 2. Add services and secrets
 
@@ -50,7 +50,7 @@ nix run github:nix-community/nixos-anywhere -- \
   --target-host root@<ip>
 ```
 
-This partitions the disk, installs the system, and reboots — fully unattended.
+This partitions the disk, installs the system, and reboots - fully unattended.
 
 ### 4. Deploy future updates
 

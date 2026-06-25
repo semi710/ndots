@@ -8,7 +8,7 @@ Before writing code, documentation, tests, or making changes:
    - `README.md`, `CONTRIBUTING.md`, `CONVENTIONS.md`
    - `.github/`, `docs/`, or similar directories
    - Any files mentioning code style, standards, or guidelines
-3. **Match existing style** — observe how the project currently does things:
+3. **Match existing style** - observe how the project currently does things:
    - Naming conventions (camelCase vs snake_case)
    - Indentation and formatting patterns
    - Error handling approaches

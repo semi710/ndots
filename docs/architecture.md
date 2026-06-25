@@ -89,7 +89,7 @@ modules/
 
 ## How Hosts Inherit
 
-Each host `default.nix` imports the modules it needs. There is **no forced inheritance** — each host explicitly lists its imports. This gives full control per host.
+Each host `default.nix` imports the modules it needs. There is **no forced inheritance** - each host explicitly lists its imports. This gives full control per host.
 
 ### Workstation pattern (semi, dsd)
 
@@ -153,8 +153,8 @@ overlays/
 ```
 
 `overlays/default.nix` composes:
-1. `overlays/packages.nix` — local custom packages (from `packages/`), `stable` nixpkgs, `nsearch-adv`, `opencode-vim` (with patched hashes), `appstream` Darwin fix
-2. `inputs.llm-agents.overlays.default` — AI agent tooling
+1. `overlays/packages.nix` - local custom packages (from `packages/`), `stable` nixpkgs, `nsearch-adv`, `opencode-vim` (with patched hashes), `appstream` Darwin fix
+2. `inputs.llm-agents.overlays.default` - AI agent tooling
 
 The overlay is applied globally via `nix-wire` so `pkgs.copy`, `pkgs.road-rage`, `pkgs.stremio-enhanced`, etc. are available everywhere.
 
@@ -220,14 +220,14 @@ creation_rules:
 |---|---|---|---|
 | `secrets/office.yaml` | office | semi, dsd | Tailscale auth, nix access token, syncthing certs, filebrowser passwords |
 | `secrets/server.yaml` | office | obox, mach | Tailscale auth, beszel creds/SSH key, filebrowser passwords |
-| `secrets/keys.yaml` | personal | — | Age key generation |
+| `secrets/keys.yaml` | personal | - | Age key generation |
 
 !!! note "Same key, separate files"
     Both `office.yaml` and `server.yaml` use the office age key. The split is about **trust boundaries** (work context vs infrastructure), not key separation.
 
 ## config.nix
 
-The root `config.nix` holds shared user and builder data (not a NixOS module — it's plain nix imported with `import (flake + "/config.nix")`):
+The root `config.nix` holds shared user and builder data (not a NixOS module - it's plain nix imported with `import (flake + "/config.nix")`):
 
 ```nix
 {

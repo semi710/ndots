@@ -8,7 +8,7 @@ type: skill
 
 ## Rules for Git Operations
 
-### MERGE / REBASE / CHERRY-PICK — CONFLICT RESOLUTION PROTOCOL
+### MERGE / REBASE / CHERRY-PICK - CONFLICT RESOLUTION PROTOCOL
 
 1. **NEVER run `git commit` during active merge/rebase/cherry-pick**
 2. **NEVER run `git merge --continue`, `git rebase --continue`, or `git cherry-pick --continue`**

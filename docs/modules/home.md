@@ -43,7 +43,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 
 ---
 
-## base.nix — `default.nix`
+## base.nix - `default.nix`
 
 The base home setup every user gets. Platform-agnostic (works on NixOS, Darwin, standalone).
 
@@ -173,7 +173,7 @@ Shell aliases + the `nxbuild` helper.
 
 - Aliases: `c` (clear), `d` (background), `cp`/`rm`/`rcp` (colored/verbose), `mkdir -pv`, `isodate`, `matrix`, `fetch` (fastfetch), `font-family`
 - `help` command (pipes `--help` through bat)
-- **`nxbuild`** — build nix packages on remote builders. Usage:
+- **`nxbuild`** - build nix packages on remote builders. Usage:
   ```bash
   nxbuild semi .#iso          # ad-hoc builder
   nxbuild .#iso               # configured builders
@@ -291,7 +291,7 @@ Shared Juspay LLM provider config (for both opencode and pi).
 
 ### combined-system-prompt.nix
 
-A helper (not a module) — combines numbered markdown files in `system-prompts/` (01-git-wisdom through 07-code-comments) into a single prompt string. Used by claude.nix, pi.nix, and opencode.
+A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git-wisdom through 07-code-comments) into a single prompt string. Used by claude.nix, pi.nix, and opencode.
 
 **Usage:**
 
@@ -469,9 +469,9 @@ Full keybinds with `cmd-alt` mod (capslock mapped to cmd-alt via Karabiner):
 
 Floating window management via AppleScript:
 
-- `movefloating` — move floating window by offset (shift+arrows)
-- `resizefloating` — resize floating window (ctrl+hjkl)
-- `centerfloating` — center + 3/5 size floating window (ctrl+shift+c)
+- `movefloating` - move floating window by offset (shift+arrows)
+- `resizefloating` - resize floating window (ctrl+hjkl)
+- `centerfloating` - center + 3/5 size floating window (ctrl+shift+c)
 
 ### karabiner.nix
 
@@ -550,7 +550,7 @@ stylix.cliOnly = true;  # disables gtk, gtksourceview, gnome, gnome-text-editor,
 
 ## packages.nix
 
-GUI packages + nixcord. **Not meant for external use** — contains personal app preferences.
+GUI packages + nixcord. **Not meant for external use** - contains personal app preferences.
 
 - Both platforms: google-chrome, telegram-desktop
 - Darwin: mas, bruno, ytmdesktop

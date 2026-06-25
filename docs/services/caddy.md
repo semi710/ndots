@@ -4,7 +4,7 @@
 
 ## Configuration
 
-Imperative — the Caddyfile is at `/etc/caddy/Caddyfile` and can be edited directly on the box without a NixOS rebuild.
+Imperative - the Caddyfile is at `/etc/caddy/Caddyfile` and can be edited directly on the box without a NixOS rebuild.
 
 ```nix
 services.caddy = {
@@ -37,7 +37,7 @@ subdomain.semi.sh {
 }
 ```
 
-Caddy handles TLS automatically. WebSocket support is built-in — no extra config needed.
+Caddy handles TLS automatically. WebSocket support is built-in - no extra config needed.
 
 ## Firewall
 

@@ -7,7 +7,7 @@ Container runtimes managed via a shared virtualisation module.
 `modules/nixos/virtualisation.nix` enables:
 
 - **Docker** (system + rootless)
-- **Podman** (without `dockerSocket` — conflicts with Docker's socket)
+- **Podman** (without `dockerSocket` - conflicts with Docker's socket)
 
 ```nix
 virtualisation.docker = {
@@ -47,4 +47,4 @@ On obox, the agent keeps `DynamicUser=true` but sets `PrivateUsers=false` for Do
 
 ## Podman Limitation
 
-`podman.dockerSocket.enable` conflicts with `docker.enable` — both try to own `/var/run/docker.sock`. The module enables podman without the docker socket compat. Beszel can't monitor podman containers on obox.
+`podman.dockerSocket.enable` conflicts with `docker.enable` - both try to own `/var/run/docker.sock`. The module enables podman without the docker socket compat. Beszel can't monitor podman containers on obox.

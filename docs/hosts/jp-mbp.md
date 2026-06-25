@@ -1,4 +1,4 @@
-# jp-mbp — MacBook Pro M4
+# jp-mbp - MacBook Pro M4
 
 | | |
 |---|---|
@@ -23,14 +23,14 @@ The [darwin default](../modules/darwin.md#basenix-defaultnix) module wires: [nix
 
 Two tiling window managers are available:
 
-- **[Yabai](../modules/darwin.md#yabai)** + skhd-zig (active) — BSP layout, scripting additions, hyper key bindings
-- **[AeroSpace](../modules/home.md#darwin)** (home-manager) — alternative tiling WM with cmd-alt bindings (capslock mapped to cmd-alt via Karabiner)
-- **[Janky Borders](../modules/home.md#darwin)** — window focus borders
+- **[Yabai](../modules/darwin.md#yabai)** + skhd-zig (active) - BSP layout, scripting additions, hyper key bindings
+- **[AeroSpace](../modules/home.md#darwin)** (home-manager) - alternative tiling WM with cmd-alt bindings (capslock mapped to cmd-alt via Karabiner)
+- **[Janky Borders](../modules/home.md#darwin)** - window focus borders
 
 ## Input
 
-- **[Karabiner-Elements](../modules/home.md#darwin)** — keyboard remapping (quick_hyper complex modification, capslock → hyper)
-- **[Hammerspoon](../modules/home.md#darwin)** — automation: VimMode (system-wide `jk` enter), Hammerspoon Mode, SKHD special mode indicator, password/Firenvim/Homerow guards
+- **[Karabiner-Elements](../modules/home.md#darwin)** - keyboard remapping (quick_hyper complex modification, capslock → hyper)
+- **[Hammerspoon](../modules/home.md#darwin)** - automation: VimMode (system-wide `jk` enter), Hammerspoon Mode, SKHD special mode indicator, password/Firenvim/Homerow guards
 
 ## Packages
 
@@ -40,7 +40,7 @@ betterdisplay, homerow, hiddenbar, hyperkey, shottr, maccy, imageoptim, localsen
 
 ## Theming
 
-- **[Stylix](../modules/darwin.md#stylixnix)** — kanagawa-dragon theme, Monaspace fonts, shared across platforms
+- **[Stylix](../modules/darwin.md#stylixnix)** - kanagawa-dragon theme, Monaspace fonts, shared across platforms
 - CLI-only theme is **not** used on jp-mbp (it's a desktop machine)
 
 ## Remote Builders
@@ -78,6 +78,6 @@ Uses `secrets/office.yaml` (office age key):
 
 ## Files
 
-- `hosts/darwin/jp-mbp/default.nix` — main config
-- `modules/darwin/` — Darwin system modules
-- `modules/home/darwin/` — Darwin home-manager modules
+- `hosts/darwin/jp-mbp/default.nix` - main config
+- `modules/darwin/` - Darwin system modules
+- `modules/home/darwin/` - Darwin home-manager modules

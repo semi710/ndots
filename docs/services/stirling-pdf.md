@@ -7,7 +7,7 @@
 - Branded as **"semi.sh PDF"**
 - Update notifications disabled for all users
 - Behind Caddy reverse proxy
-- Admin configured via UI (not env vars — env-based admin only works on first boot with empty DB)
+- Admin configured via UI (not env vars - env-based admin only works on first boot with empty DB)
 
 ## NixOS Config
 
@@ -38,7 +38,7 @@ Then set admin password from the UI.
 
 ## Google Drive Integration
 
-Google Drive integration is a **paid feature** (Server plan, $99/mo). `PREMIUM_ENABLED=true` only turns on license key checks — it doesn't bypass the license. Not configured.
+Google Drive integration is a **paid feature** (Server plan, $99/mo). `PREMIUM_ENABLED=true` only turns on license key checks - it doesn't bypass the license. Not configured.
 
 ## Free Alternative for Drive Access
 

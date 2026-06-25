@@ -4,7 +4,7 @@
 When asked to solve a complex problem, do NOT jump to implementation.
 
 1. **Restate the problem** in your own words
-2. **Identify constraints** — what must be true, what must not happen
+2. **Identify constraints** - what must be true, what must not happen
 3. **Explore 2-3 approaches** briefly with tradeoffs
 4. **Ask clarifying questions** if requirements are ambiguous
 5. **Recommend the best approach** with justification

@@ -28,13 +28,13 @@ Record of architectural decisions and their rationale. Update when making new de
 
 ## Caddy config is imperative
 
-**Decision:** `configFile = "/etc/caddy/Caddyfile"` — editable on the box, no rebuild.
+**Decision:** `configFile = "/etc/caddy/Caddyfile"` - editable on the box, no rebuild.
 
 **Why:** Adding/removing routes shouldn't require a NixOS rebuild. Caddy reloads with `systemctl reload caddy`. Trade-off: config isn't declaratively tracked, but operational speed matters more here.
 
 ## Sops split: office vs server
 
-**Decision:** Two sops files — `office.yaml` (semi, dsd) and `server.yaml` (obox, mach). Both encrypted with the office age key.
+**Decision:** Two sops files - `office.yaml` (semi, dsd) and `server.yaml` (obox, mach). Both encrypted with the office age key.
 
 **Why:** Different trust boundaries. Office machines share Juspay work context. Servers share infrastructure creds. Using the same key for both simplifies key management while keeping the secret sets separate.
 
@@ -54,7 +54,7 @@ Record of architectural decisions and their rationale. Update when making new de
 
 **Decision:** Use MkDocs Material (not custom HTML, not Jekyll, not Docusaurus).
 
-**Why:** Docs are content-driven, not UI-driven. Material is a polished, production-grade theme with search, sidebar nav, dark mode — all from markdown. Building custom HTML for docs would be over-engineering. One config file + GitHub Action to deploy.
+**Why:** Docs are content-driven, not UI-driven. Material is a polished, production-grade theme with search, sidebar nav, dark mode - all from markdown. Building custom HTML for docs would be over-engineering. One config file + GitHub Action to deploy.
 
 ## nix-wire for auto-wiring
 
@@ -66,7 +66,7 @@ Record of architectural decisions and their rationale. Update when making new de
 
 **Decision:** obox imports `flakeModules.nix` directly, not `nixosModules.default`.
 
-**Why:** obox is a headless server. The base module pulls in stylix, home-manager default (with tons of fonts), and the cachyos kernel overlay — all unnecessary on a VPS. Importing just the nix settings keeps it lean.
+**Why:** obox is a headless server. The base module pulls in stylix, home-manager default (with tons of fonts), and the cachyos kernel overlay - all unnecessary on a VPS. Importing just the nix settings keeps it lean.
 
 ## Custom packages via overlay, not per-module
 
@@ -84,7 +84,7 @@ Record of architectural decisions and their rationale. Update when making new de
 
 **Decision:** Use DeathChest 1.5.7 instead of GraveSafe 1.0.0.
 
-**Why:** GraveSafe duped armor — it collected `getContents()` (all 41 slots incl armor+offhand) then re-collected `getArmorContents()` + `getItemInOffHand()`, adding them twice. DeathChest doesn't have this bug.
+**Why:** GraveSafe duped armor - it collected `getContents()` (all 41 slots incl armor+offhand) then re-collected `getArmorContents()` + `getItemInOffHand()`, adding them twice. DeathChest doesn't have this bug.
 
 ## vim-motions-pi with clipboard + escape sequence
 

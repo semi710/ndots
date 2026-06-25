@@ -22,7 +22,7 @@ nix run nixpkgs#age-keygen -y ~/.config/sops/age/keys.txt
 |------|-----|-------|----------|
 | `secrets/office.yaml` | office age key | semi, dsd | Tailscale auth, nix access token, syncthing certs, filebrowser passwords |
 | `secrets/server.yaml` | office age key | obox, mach | Tailscale auth, beszel creds/SSH key, filebrowser passwords |
-| `secrets/keys.yaml` | personal age key | — | Age key generation |
+| `secrets/keys.yaml` | personal age key | - | Age key generation |
 
 ## .sops.yaml
 

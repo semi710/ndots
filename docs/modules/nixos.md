@@ -34,7 +34,7 @@ NixOS system modules live in `modules/nixos/`. Each is exposed as `flake.nixosMo
 
 ---
 
-## base.nix — `default.nix`
+## base.nix - `default.nix`
 
 The base NixOS module. Imported by nearly every host.
 
@@ -48,7 +48,7 @@ The base NixOS module. Imported by nearly every host.
 - Installs base system packages: bash, coreutils, curl, wget, git, gnutar, gzip, xz, xdg-utils, openssh
 - Applies the `nix-cachyos-kernel` overlay
 
-**Options:** none — it's a plain module, not an option-bearing one.
+**Options:** none - it's a plain module, not an option-bearing one.
 
 **Usage:**
 
@@ -77,7 +77,7 @@ Beszel monitoring **agent**. Reports system + Docker stats to the hub on obox.
 
 | Setting | Default | Host override |
 |---|---|---|
-| `HUB_URL` | `http://obox:3090` | — |
+| `HUB_URL` | `http://obox:3090` | - |
 | `DOCKER_HOST` | `unix:///var/run/docker.sock` | workstations: `unix:///run/user/1000/docker.sock` |
 | `TOKEN_FILE` | (unset) | set from sops per-host |
 
@@ -112,7 +112,7 @@ Beszel monitoring **agent**. Reports system + Docker stats to the hub on obox.
 
 ## filebrowser.nix
 
-FileBrowser Quantum — a web-based file manager. Runs as root for full filesystem access, Tailscale-only.
+FileBrowser Quantum - a web-based file manager. Runs as root for full filesystem access, Tailscale-only.
 
 **Options:**
 
@@ -165,7 +165,7 @@ virtualisation.podman.enable = true;
 
 **Notes:**
 
-- `podman.dockerSocket.enable` is **not** set — it conflicts with `docker.enable` (both claim `/var/run/docker.sock`)
+- `podman.dockerSocket.enable` is **not** set - it conflicts with `docker.enable` (both claim `/var/run/docker.sock`)
 - `oci-containers` defaults to podman if both are enabled. Force docker with `virtualisation.oci-containers.backend = "docker"`
 - Rootless Docker socket is at `/run/user/<uid>/docker.sock` (inside a `0700` dir)
 
@@ -181,7 +181,7 @@ virtualisation.podman.enable = true;
 
 ## tailscale.nix
 
-A minimal module — just enables the Tailscale service. Hosts wire the auth key from sops.
+A minimal module - just enables the Tailscale service. Hosts wire the auth key from sops.
 
 **What it does:**
 
@@ -250,7 +250,7 @@ The actual theme config (kanagawa-dragon, fonts, wallpaper, opacity) is in `modu
 ```nix
 { flake, ... }: {
   imports = [ flake.nixosModules.stylix ];
-  # Theme is set in modules/home/stylix/config.nix — override there or per-host:
+  # Theme is set in modules/home/stylix/config.nix - override there or per-host:
   # stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
 }
 ```

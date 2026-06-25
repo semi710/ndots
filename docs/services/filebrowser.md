@@ -5,8 +5,8 @@
 ## Configuration
 
 - Runs as **root** for full filesystem access
-- **Tailscale-only** — port not opened in firewall, `tailscale0` is a trusted interface
-- Admin credentials per-host via sops — user is hostname, password is `<host>@filebrowser`
+- **Tailscale-only** - port not opened in firewall, `tailscale0` is a trusted interface
+- Admin credentials per-host via sops - user is hostname, password is `<host>@filebrowser`
 - Update checks disabled
 - Sources: `/` (filesystem root) + user home (auto-added)
 
@@ -16,8 +16,8 @@
 |------|---------------|
 | mach | `/run/media/niksingh710/` (external media) |
 | dsd | `/home` (all users) |
-| semi | — (default `/` + home) |
-| obox | — (default `/` + home) |
+| semi | - (default `/` + home) |
+| obox | - (default `/` + home) |
 
 ## Access
 

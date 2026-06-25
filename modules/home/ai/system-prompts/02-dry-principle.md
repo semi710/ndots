@@ -6,7 +6,7 @@ Do NOT Repeat Yourself. Every piece of knowledge must have a single, unambiguous
 ### Application
 - Before creating anything new, check if it already exists in the codebase
 - Reuse existing utilities, functions, components, or patterns
-- If something seems like it should already exist, it probably does — search first
+- If something seems like it should already exist, it probably does - search first
 - Prefer importing over copying/pasting
 - Extract shared logic into reusable abstractions
 

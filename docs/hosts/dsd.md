@@ -1,4 +1,4 @@
-# dsd — Work Desktop
+# dsd - Work Desktop
 
 | | |
 |---|---|
@@ -10,11 +10,11 @@
 
 ## Services
 
-- **FileBrowser Quantum** — serves `/` + `/home` (all users) + user home
-- **Beszel agent** — system + rootless Docker
-- **Tailscale** — mesh VPN
-- **Docker** — system + rootless
-- **Minecraft** — Paper server with plugins (via [nix-minecraft](../modules/nixos.md#minecraft))
+- **FileBrowser Quantum** - serves `/` + `/home` (all users) + user home
+- **Beszel agent** - system + rootless Docker
+- **Tailscale** - mesh VPN
+- **Docker** - system + rootless
+- **Minecraft** - Paper server with plugins (via [nix-minecraft](../modules/nixos.md#minecraft))
 
 ## Modules Imported
 
@@ -62,7 +62,7 @@ Known hosts are wired via `programs.ssh.knownHosts` in `workstation.nix`.
 
 ## Files
 
-- `hosts/nixos/dsd/default.nix` — main config
-- `hosts/nixos/dsd/disk.nix` — disko partitioning
-- `hosts/nixos/dsd/hardware.nix` — auto-generated
-- `hosts/nixos/dsd/extra-users.nix` — additional Juspay users
+- `hosts/nixos/dsd/default.nix` - main config
+- `hosts/nixos/dsd/disk.nix` - disko partitioning
+- `hosts/nixos/dsd/hardware.nix` - auto-generated
+- `hosts/nixos/dsd/extra-users.nix` - additional Juspay users

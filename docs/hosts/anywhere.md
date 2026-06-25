@@ -1,6 +1,6 @@
-# anywhere — Generic Host Template
+# anywhere - Generic Host Template
 
-A bare NixOS server template for bootstrapping new machines via [nixos-anywhere](https://github.com/nix-community/nixos-anywhere). No services, no sops, no home-manager — just enough to boot and SSH in.
+A bare NixOS server template for bootstrapping new machines via [nixos-anywhere](https://github.com/nix-community/nixos-anywhere). No services, no sops, no home-manager - just enough to boot and SSH in.
 
 ## Usage
 
@@ -14,7 +14,7 @@ A bare NixOS server template for bootstrapping new machines via [nixos-anywhere]
    nixpkgs.hostPlatform = "x86_64-linux"; # or "aarch64-linux"
    ```
 
-3. **Adjust disk config** in `hosts/nixos/<name>/disk.nix` — set the correct device path.
+3. **Adjust disk config** in `hosts/nixos/<name>/disk.nix` - set the correct device path.
 
 4. **Install via nixos-anywhere:**
    ```bash
@@ -24,7 +24,7 @@ A bare NixOS server template for bootstrapping new machines via [nixos-anywhere]
      --target-host root@<ip>
    ```
 
-   This partitions the disk, installs the system, and reboots — fully unattended.
+   This partitions the disk, installs the system, and reboots - fully unattended.
 
 5. **Deploy future updates:**
    ```bash

@@ -2,9 +2,9 @@
 
 A declarative **NixOS + nix-darwin** configuration built with [flakes](https://nixos.wiki/wiki/Flakes), modularized via [Flake-Parts](https://flake.parts), and auto-wired with [nix-wire](https://nix-wire.semi.sh) <a href="https://github.com/semi710/nix-wire" target="_blank"><sub>:fontawesome-brands-github:</sub></a>.
 
-Utilities and scripts from [utils](https://utils.semi.sh) <a href="https://github.com/niksingh710/utils" target="_blank"><sub>:fontawesome-brands-github:</sub></a>.
+Utilities and scripts from [utils](https://utils.semi.sh) <a href="https://github.com/semi710/utils" target="_blank"><sub>:fontawesome-brands-github:</sub></a>.
 
-Fully CLI-based — all hosts are managed via SSH + Tailscale. No GUI required for administration.
+Fully CLI-based - all hosts are managed via SSH + Tailscale. No GUI required for administration.
 
 ## At a Glance
 
@@ -27,34 +27,34 @@ Fully CLI-based — all hosts are managed via SSH + Tailscale. No GUI required f
 | **dsd** | Intel i9-12900KS (16c/24t) | 64 GB | Work desktop |
 | **semi** | Intel i9-14900K (24c/32t) | 128 GB | Semi-personal |
 | **obox** | Ampere Neoverse-N1 (4c/4t) | 24 GB | Oracle Cloud VPS |
-| **jp-mbp** | Apple M4 | — | MacBook Pro |
+| **jp-mbp** | Apple M4 | - | MacBook Pro |
 
 See [Hosts](hosts/index.md) for per-host details.
 
 ## Services
 
-- [Beszel](services/beszel.md) — system monitoring hub + agents
-- [Stirling PDF](services/stirling-pdf.md) — self-hosted PDF tools
-- [FileBrowser Quantum](services/filebrowser.md) — web file manager
-- [Caddy](services/caddy.md) — reverse proxy
-- [Syncthing](services/syncthing.md) — cross-device file sync
-- [Tailscale](services/tailscale.md) — mesh VPN
-- [Docker & Podman](services/docker.md) — container runtimes
+- [Beszel](services/beszel.md) - system monitoring hub + agents
+- [Stirling PDF](services/stirling-pdf.md) - self-hosted PDF tools
+- [FileBrowser Quantum](services/filebrowser.md) - web file manager
+- [Caddy](services/caddy.md) - reverse proxy
+- [Syncthing](services/syncthing.md) - cross-device file sync
+- [Tailscale](services/tailscale.md) - mesh VPN
+- [Docker & Podman](services/docker.md) - container runtimes
 
 ## Modules
 
 The flake exposes reusable modules you can import into your own configuration:
 
-- [NixOS Modules](modules/nixos.md) — system services, hardware, window manager
-- [Home Modules](modules/home.md) — shell, editor, AI, browser, terminal, theming
-- [Darwin Modules](modules/darwin.md) — macOS system settings, window managers, Homebrew
-- [Flake Modules](modules/flake.md) — nix settings, binary caches
+- [NixOS Modules](modules/nixos.md) - system services, hardware, window manager
+- [Home Modules](modules/home.md) - shell, editor, AI, browser, terminal, theming
+- [Darwin Modules](modules/darwin.md) - macOS system settings, window managers, Homebrew
+- [Flake Modules](modules/flake.md) - nix settings, binary caches
 
 ## Packages
 
 Custom packages exposed via the flake and overlays:
 
-- [Custom Packages](packages/index.md) — `copy`, `aria2tui`, `sklauncher`, `stremio-enhanced`, etc.
+- [Custom Packages](packages/index.md) - `copy`, `aria2tui`, `sklauncher`, `stremio-enhanced`, etc.
 
 ## Quick Start
 

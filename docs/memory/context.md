@@ -8,7 +8,7 @@ Declarative NixOS + nix-darwin configuration with self-hosted services, monitori
 
 ## Constraints & Preferences
 
-- **Ponytail mode** (lazy senior dev) — minimal code, no over-engineering
+- **Ponytail mode** (lazy senior dev) - minimal code, no over-engineering
 - No clutter comments (no `---` dividers, no ASCII art), comments explain why not what
 - Secrets: `office.yaml` for office machines, `server.yaml` for servers
 - Sops modules only enable services; hosts declare secrets and wire paths
@@ -34,8 +34,8 @@ Declarative NixOS + nix-darwin configuration with self-hosted services, monitori
 - Architecture docs expanded with nix-wire, overlays, packages, justfile, .sops.yaml
 
 ### Deferred
-- Excalidraw (docker + room server) — deferred, not deployed
-- Stirling PDF Google Drive integration — paid feature, not configured
+- Excalidraw (docker + room server) - deferred, not deployed
+- Stirling PDF Google Drive integration - paid feature, not configured
 
 ## Architecture Summary
 
@@ -54,15 +54,15 @@ Declarative NixOS + nix-darwin configuration with self-hosted services, monitori
 
 ## Key Gotchas
 
-- `config.users.users.<name>.uid` causes infinite recursion in NixOS eval — use hardcoded 1000
-- Syncthing doesn't expand `~` — use `config.home.homeDirectory` for absolute paths
+- `config.users.users.<name>.uid` causes infinite recursion in NixOS eval - use hardcoded 1000
+- Syncthing doesn't expand `~` - use `config.home.homeDirectory` for absolute paths
 - Stirling PDF env-based admin only works on first boot with empty DB
 - Beszel agent needs to run as user for rootless Docker (0700 on `/run/user/<uid>/`)
 - AMD GPU bug: SKIP_GPU=true on mach (beszel issue #1799)
 - `podman.dockerSocket.enable` conflicts with `docker.enable`
-- `oci-containers` defaults to podman if both enabled — set `backend = "docker"` to force
-- Excalidraw `REACT_APP_BACKEND_V2_WS_BASE_URL` is browser-side — must be public URL
-- FileBrowser Quantum indexing `/` can fail if DB is corrupt — clear `/var/lib/filebrowser-quantum/*`
+- `oci-containers` defaults to podman if both enabled - set `backend = "docker"` to force
+- Excalidraw `REACT_APP_BACKEND_V2_WS_BASE_URL` is browser-side - must be public URL
+- FileBrowser Quantum indexing `/` can fail if DB is corrupt - clear `/var/lib/filebrowser-quantum/*`
 - obox does NOT import `nixosModules.default` (server, skips stylix/home-default/cachy kernel)
 - ISO forces `nvix.variant = "bare"` and disables android module (scrcpy fails on aarch64)
 - `nix-wire` auto-sets `networking.hostName` from the host directory name

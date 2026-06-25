@@ -25,7 +25,7 @@ nix run github:semi710/ndots#copy -- "hello"
 {
   inputs.ndots.url = "github:semi710/ndots";
   outputs = { self, nixpkgs, ndots, ... }: {
-    # Via overlay (recommended — gives pkgs.copy etc.)
+    # Via overlay (recommended - gives pkgs.copy etc.)
     nixpkgs.overlays = [ ndots.overlays.default ];
 
     # Or directly
@@ -81,7 +81,7 @@ nix run github:semi710/ndots#aria2tui
 
 `packages/sklauncher.nix`
 
-[SKLauncher](https://skmedix.pl/) — a Minecraft launcher. Builds for both Linux and Darwin with platform-specific packaging.
+[SKLauncher](https://skmedix.pl/) - a Minecraft launcher. Builds for both Linux and Darwin with platform-specific packaging.
 
 **Linux:**
 
@@ -108,7 +108,7 @@ nix run github:semi710/ndots#sklauncher
 
 `packages/stremio-enhanced.nix`
 
-[Stremio Enhanced](https://github.com/REVENGE977/stremio-enhanced) — Stremio with premium addons. macOS arm64 only (fetches a pre-built `.zip`).
+[Stremio Enhanced](https://github.com/REVENGE977/stremio-enhanced) - Stremio with premium addons. macOS arm64 only (fetches a pre-built `.zip`).
 
 ```bash
 nix run github:semi710/ndots#stremio-enhanced
@@ -121,7 +121,7 @@ nix run github:semi710/ndots#stremio-enhanced
 
 `packages/airsync.nix`
 
-[AirSync](https://github.com/sameerasw/airsync-mac) — Android-to-Mac file transfer (KDE Connect alternative). macOS only, fetches a `.dmg`.
+[AirSync](https://github.com/sameerasw/airsync-mac) - Android-to-Mac file transfer (KDE Connect alternative). macOS only, fetches a `.dmg`.
 
 ```bash
 nix run github:semi710/ndots#airsync
@@ -134,7 +134,7 @@ nix run github:semi710/ndots#airsync
 
 `packages/hammerspoon.nix`
 
-[Hammerspoon](https://www.hammerspoon.org/) — macOS desktop automation with Lua. Fetches the official release zip.
+[Hammerspoon](https://www.hammerspoon.org/) - macOS desktop automation with Lua. Fetches the official release zip.
 
 This packages just the `.app` bundle. The actual `init.lua` config is in [modules/home/darwin/hammerspoon.nix](../modules/home.md#hammerspoonnix).
 

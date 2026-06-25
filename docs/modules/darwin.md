@@ -26,7 +26,7 @@ nix-darwin system modules live in `modules/darwin/`. Each is exposed as `flake.d
 
 ---
 
-## base.nix — `default.nix`
+## base.nix - `default.nix`
 
 The base Darwin module. Wires together all the pieces:
 
@@ -119,7 +119,7 @@ Auto-imported directory (`modules/darwin/yabai/`). Import via `darwinModules.yab
 
 **Mod:** `cmd + alt + ctrl` (Hyper key)
 
-- Special mode (`0x29` / backtick): resize, rotate, balance, split, warp cursor — with Hammerspoon visual indicator
+- Special mode (`0x29` / backtick): resize, rotate, balance, split, warp cursor - with Hammerspoon visual indicator
 - App toggles: return → kitty, b → Zen, s → Slack
 - hjkl focus/move (via utils helpers), n/p workspace cycle
 - space → monitor cycle, shift+space → move to monitor
@@ -159,7 +159,7 @@ handmirror, gifski, gladys, tailscale, amphetamine
 - `global.brewfile = true`, `greedyCasks = true`
 
 !!! note "Karabiner not in brew"
-    Karabiner-Elements is intentionally not in the cask list (it's managed separately — see [home/darwin/karabiner.nix](home.md#karabinernix)).
+    Karabiner-Elements is intentionally not in the cask list (it's managed separately - see [home/darwin/karabiner.nix](home.md#karabinernix)).
 
 ---
 

@@ -56,4 +56,4 @@ Host dsd
     User nikhil.singh
 ```
 
-Tailscale MagicDNS resolves hostnames automatically — no `/etc/hosts` entries needed.
+Tailscale MagicDNS resolves hostnames automatically - no `/etc/hosts` entries needed.

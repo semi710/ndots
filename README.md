@@ -16,9 +16,9 @@
 
 My **[NixOS](https://nixos.org) + [nix-darwin](https://github.com/LnL7/nix-darwin)** configuration built with flakes.<br>
 Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[nix-wire](https://github.com/semi710/nix-wire)**.<br>
-<small>**Fully CLI-based** — accessed via SSH + Tailscale</small><br>
+<small>**Fully CLI-based** - accessed via SSH + Tailscale</small><br>
 <br><br>
-<h3>📚 <a href="https://ndots.semi.sh">ndots.semi.sh</a> — Full Documentation</h3>
+<h3>📚 <a href="https://ndots.semi.sh">ndots.semi.sh</a> - Full Documentation</h3>
 <br>
 <sub>Architecture · Modules · Hosts · Services · Guides · Secrets · Packages · ISO</sub><br>
 
@@ -54,7 +54,7 @@ Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[ni
 | **dsd** | NixOS | x86_64 | Intel i9-12900KS (16c/24t) | 64 GB | Work desktop |
 | **semi** | NixOS | x86_64 | Intel i9-14900K (24c/32t) | 128 GB | Semi-personal |
 | **obox** | NixOS | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | Oracle Cloud VPS |
-| **jp-mbp** | Darwin | aarch64 | Apple M4 | — | MacBook Pro |
+| **jp-mbp** | Darwin | aarch64 | Apple M4 | - | MacBook Pro |
 
 ---
 
@@ -80,10 +80,10 @@ just iso                 # Build installer ISO
 
 ## Related
 
-- **[Utils](https://github.com/semi710/utils)** — Utility scripts (Hyprland, Yabai, Rofi)
-- **[nvix](https://github.com/semi710/nvix)** — Neovim configuration
-- **[nix-wire](https://github.com/semi710/nix-wire)** — Flake auto-wiring library
-- **[OG Branch](https://github.com/semi710/ndots/tree/OG)** — Full ricing with Hyprland/Wayland
+- **[Utils](https://github.com/semi710/utils)** - Utility scripts (Hyprland, Yabai, Rofi)
+- **[nvix](https://github.com/semi710/nvix)** - Neovim configuration
+- **[nix-wire](https://github.com/semi710/nix-wire)** - Flake auto-wiring library
+- **[OG Branch](https://github.com/semi710/ndots/tree/OG)** - Full ricing with Hyprland/Wayland
 
 ### Acknowledgments
 
