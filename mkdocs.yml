@@ -1,0 +1,88 @@
+site_name: ndots
+site_url: https://ndots.semi.sh
+site_description: NixOS + nix-darwin configuration built with flakes
+site_author: Nikhil Singh
+repo_name: niksingh710/ndots
+repo_url: https://github.com/niksingh710/ndots
+
+theme:
+  name: material
+  font:
+    text: Inter
+    code: JetBrains Mono
+  features:
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.tracking
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - content.tabs.link
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - Hosts:
+      - Overview: hosts/index.md
+      - mach (Laptop): hosts/mach.md
+      - dsd (Work Desktop): hosts/dsd.md
+      - semi (Semi-Personal): hosts/semi.md
+      - obox (Oracle VPS): hosts/obox.md
+      - jp-mbp (MacBook Pro): hosts/jp-mbp.md
+      - anywhere (Template): hosts/anywhere.md
+  - Services:
+      - Overview: services/index.md
+      - Beszel: services/beszel.md
+      - Stirling PDF: services/stirling-pdf.md
+      - FileBrowser Quantum: services/filebrowser.md
+      - Caddy: services/caddy.md
+      - Syncthing: services/syncthing.md
+      - Tailscale: services/tailscale.md
+      - Docker & Podman: services/docker.md
+  - Guides:
+      - Installation: guides/installation.md
+      - Deployment: guides/deployment.md
+      - Secrets Management: guides/secrets.md
+      - Building an ISO: guides/iso.md
+  - Memory:
+      - Context: memory/context.md
+      - Decisions: memory/decisions.md
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - toc:
+      permalink: true
+
+plugins:
+  - search
