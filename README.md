@@ -16,11 +16,10 @@
 
 My **[NixOS](https://nixos.org) + [nix-darwin](https://github.com/LnL7/nix-darwin)** configuration built with flakes.<br>
 Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[nix-wire](https://github.com/semi710/nix-wire)**.<br>
-<small>**Fully CLI-based** - accessed via SSH + Tailscale</small><br>
-<br><br>
+<small>**Fully CLI-based** - accessed via SSH + Tailscale</small>
+
 <h3>📚 <a href="https://ndots.semi.sh">ndots.semi.sh</a> - Full Documentation</h3>
-<br>
-<sub>Architecture · Modules · Hosts · Services · Guides · Secrets · Packages · ISO</sub><br>
+<sub>Architecture · Modules · Hosts · Services · Guides · Secrets · Packages · ISO</sub>
 
 ![GitHub repo size](https://img.shields.io/github/repo-size/semi710/ndots)
 ![GitHub Org's stars](https://img.shields.io/github/stars/semi710%2Fndots)
