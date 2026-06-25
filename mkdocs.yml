@@ -2,8 +2,8 @@ site_name: ndots
 site_url: https://ndots.semi.sh
 site_description: NixOS + nix-darwin configuration built with flakes
 site_author: Nikhil Singh
-repo_name: niksingh710/ndots
-repo_url: https://github.com/niksingh710/ndots
+repo_name: semi710/ndots
+repo_url: https://github.com/semi710/ndots
 
 theme:
   name: material
@@ -96,7 +96,7 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/niksingh710/ndots
+      link: https://github.com/semi710/ndots
   generator: false
 
 copyright: "Made with <span style=\"color: #ff6e40\">&hearts;</span> by Nikhil · <a href=\"https://semi.sh\">semi.sh</a>"
