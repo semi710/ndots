@@ -18,9 +18,6 @@ My **[NixOS](https://nixos.org) + [nix-darwin](https://github.com/LnL7/nix-darwi
 Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[nix-wire](https://github.com/semi710/nix-wire)**.<br>
 <small>**Fully CLI-based** - accessed via SSH + Tailscale</small>
 
-<h3>📚 <a href="https://ndots.semi.sh">ndots.semi.sh</a> - Full Documentation</h3>
-<sub>Architecture · Modules · Hosts · Services · Guides · Secrets · Packages · ISO</sub>
-
 ![GitHub repo size](https://img.shields.io/github/repo-size/semi710/ndots)
 ![GitHub Org's stars](https://img.shields.io/github/stars/semi710%2Fndots)
 ![GitHub forks](https://img.shields.io/github/forks/semi710/ndots)
@@ -35,6 +32,9 @@ Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[ni
    <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=semi710/ndots&type=date&legend=top-left" />
  </picture>
 </a>
+
+<h3>📚 <a href="https://ndots.semi.sh">ndots.semi.sh</a> - Full Documentation</h3>
+<sub>Architecture · Modules · Hosts · Services · Guides · Secrets · Packages · ISO</sub>
 
 <img width="2000" height="0">
 </td>
