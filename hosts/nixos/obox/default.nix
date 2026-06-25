@@ -46,6 +46,9 @@ in
     enable = true;
     host = "0.0.0.0";
     port = 3090;
+    # Used for links in notifications. Without it PocketBase defaults to
+    # http://localhost:8090, which is what showed up in the notification test.
+    environment.APP_URL = "https://beszel.semi.sh";
   };
 
   users.groups.beszel-hub-key = { };
