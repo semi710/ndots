@@ -1,0 +1,212 @@
+/* terminal-refined dark — shared theme across all semi.sh docs */
+
+:root {
+  --md-primary-fg-color: #7c4dff;
+  --md-primary-fg-color--light: #b39ddb;
+  --md-primary-fg-color--dark: #651fff;
+  --md-accent-fg-color: #ff6e40;
+  --md-accent-fg-color--transparent: rgba(255, 110, 64, 0.1);
+  --md-default-bg-color: #0d0d12;
+  --md-default-fg-color: #e8e8ec;
+  --md-default-fg-color--light: #b4b4c0;
+  --md-default-fg-color--lighter: #9090a0;
+  --md-typeset-font-family: "Sora", "Inter", system-ui, sans-serif;
+  --md-code-font-family: "JetBrains Mono", "Fira Code", monospace;
+  --md-card-bg: rgba(255, 255, 255, 0.03);
+  --md-card-border: rgba(255, 255, 255, 0.08);
+  --md-glass-blur: 12px;
+  --md-gradient: linear-gradient(135deg, #7c4dff 0%, #ff6e40 100%);
+}
+
+[data-md-color-scheme="default"] {
+  --md-default-bg-color: #faf9fb;
+  --md-default-fg-color: #1a1a2e;
+  --md-default-fg-color--light: #4a4a5e;
+  --md-default-fg-color--lighter: #7a7a8e;
+  --md-card-bg: rgba(0, 0, 0, 0.02);
+  --md-card-border: rgba(0, 0, 0, 0.06);
+}
+
+/* gradient hero on home page */
+.md-typeset .md-hero {
+  background: linear-gradient(135deg, #0d0d12 0%, #1a1528 50%, #1e1420 100%);
+  color: #e8e8ec;
+  padding: 3rem 1rem 2.5rem;
+}
+
+[data-md-color-scheme="default"] .md-typeset .md-hero {
+  background: linear-gradient(135deg, #faf9fb 0%, #f0edf8 50%, #fff5f0 100%);
+  color: #1a1a2e;
+}
+
+/* glassmorphism cards (admonitions, content blocks) */
+.md-typeset .admonition,
+.md-typeset details {
+  background: var(--md-card-bg);
+  backdrop-filter: blur(var(--md-glass-blur));
+  border: 1px solid var(--md-card-border);
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* code blocks — terminal feel */
+.md-typeset code,
+.md-typeset pre code {
+  font-family: var(--md-code-font-family);
+  font-size: 0.85em;
+}
+
+.md-typeset pre {
+  border-radius: 10px;
+  border: 1px solid var(--md-card-border);
+  background: #12121a !important;
+}
+
+[data-md-color-scheme="default"] .md-typeset pre {
+  background: #1e1e2e !important;
+}
+
+.highlight .p,
+.highlight .n {
+  color: #e8e8ec;
+}
+
+/* inline code pill */
+.md-typeset :is(h1, h2, h3, h4) code {
+  background: var(--md-card-bg);
+  border: 1px solid var(--md-card-border);
+  border-radius: 6px;
+  padding: 0.1em 0.4em;
+}
+
+/* nav sidebar — refined */
+.md-sidebar--primary .md-nav__item {
+  margin: 2px 0;
+}
+
+.md-sidebar--primary .md-nav__link {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.md-sidebar--primary .md-nav__link:hover,
+.md-sidebar--primary .md-nav__link--active {
+  background: var(--md-card-bg);
+  border: 1px solid var(--md-card-border);
+}
+
+/* header bar — subtle gradient line */
+.md-header {
+  background: var(--md-default-bg-color);
+  border-bottom: 1px solid var(--md-card-border);
+  backdrop-filter: blur(var(--md-glass-blur));
+}
+
+.md-header__title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* tabs — modern pill style */
+.md-typeset .tabbed-set > .tabbed-labels {
+  border-radius: 10px;
+  background: var(--md-card-bg);
+  border: 1px solid var(--md-card-border);
+  padding: 4px;
+  gap: 2px;
+}
+
+.md-typeset .tabbed-labels > label {
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+/* table of contents — floating glass */
+.md-sidebar--secondary .md-nav {
+  background: transparent;
+}
+
+/* footer */
+.md-footer {
+  background: var(--md-default-bg-color);
+  border-top: 1px solid var(--md-card-border);
+}
+
+/* custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--md-card-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--md-primary-fg-color--light);
+}
+
+/* links — gradient underline on hover */
+.md-typeset a {
+  transition: color 0.15s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--md-accent-fg-color);
+}
+
+/* tasklist checkboxes — custom styled */
+.md-typeset .tasklist-control .tasklist-indicator::before {
+  background: var(--md-gradient);
+}
+
+/* content area max-width for readability */
+.md-content {
+  max-width: 900px;
+}
+
+/* section headings — gradient accent */
+.md-typeset h1 {
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset h2 {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  border-bottom: 1px solid var(--md-card-border);
+  padding-bottom: 0.3em;
+}
+
+/* animated page transitions */
+.md-main__inner {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* search overlay — glass */
+.md-search__overlay {
+  backdrop-filter: blur(var(--md-glass-blur));
+  background: rgba(13, 13, 18, 0.7);
+}
+
+[data-md-color-scheme="default"] .md-search__overlay {
+  background: rgba(250, 249, 251, 0.7);
+}
+
+/* badge-like elements */
+.md-typeset .md-badge {
+  background: var(--md-gradient);
+  border-radius: 20px;
+  font-size: 0.65em;
+  padding: 0.2em 0.6em;
+}

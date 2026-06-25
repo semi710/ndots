@@ -8,7 +8,7 @@ repo_url: https://github.com/niksingh710/ndots
 theme:
   name: material
   font:
-    text: Inter
+    text: Sora
     code: JetBrains Mono
   features:
     - navigation.sections
@@ -16,6 +16,7 @@ theme:
     - navigation.indexes
     - navigation.top
     - navigation.tracking
+    - navigation.instant
     - search.suggest
     - search.highlight
     - content.code.copy
@@ -25,14 +26,14 @@ theme:
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: deep purple
-      accent: indigo
+      accent: deep orange
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
       primary: deep purple
-      accent: indigo
+      accent: deep orange
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
@@ -89,6 +90,12 @@ markdown_extensions:
   - md_in_html
   - toc:
       permalink: true
+
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
 
 plugins:
   - search
