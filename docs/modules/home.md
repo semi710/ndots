@@ -6,7 +6,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 
 | Module | Flake output | Description |
 |---|---|---|
-| [base](#basenix--defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
+| [base](#basenix-defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
 | [shell](#shell) | `homeModules.shell` | zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android |
 | [editor](#editor) | `homeModules.editor` | Helix, nvix (Neovim) |
 | [ai](#ai) | `homeModules.ai` | opencode, claude, mcp, pi, office provider config |

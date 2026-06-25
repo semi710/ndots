@@ -2,7 +2,7 @@
 
 ## Flake Structure
 
-The entire configuration is a single flake, auto-wired by [nix-wire](https://github.com/semi710/nix-wire):
+The entire configuration is a single flake, auto-wired by [nix-wire](https://nix-wire.semi.sh) <a href="https://github.com/semi710/nix-wire" target="_blank"><sub>:fontawesome-brands-github:</sub></a>:
 
 ```nix
 # flake.nix (simplified)
@@ -31,7 +31,7 @@ flake.nix
 
 ## nix-wire Auto-wiring
 
-[nix-wire](https://github.com/semi710/nix-wire) auto-imports modules and host configs based on directory conventions:
+[nix-wire](https://nix-wire.semi.sh) <a href="https://github.com/semi710/nix-wire" target="_blank"><sub>:fontawesome-brands-github:</sub></a> auto-imports modules and host configs based on directory conventions:
 
 | Source path | Flake output |
 |---|---|

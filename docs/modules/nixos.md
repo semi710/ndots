@@ -6,11 +6,11 @@ NixOS system modules live in `modules/nixos/`. Each is exposed as `flake.nixosMo
 
 | Module | Flake output | Description |
 |---|---|---|
-| [base](#basenix--defaultnix) | `nixosModules.default` | Base system: nix settings, stylix, home-manager, base packages |
+| [base](#basenix-defaultnix) | `nixosModules.default` | Base system: nix settings, stylix, home-manager, base packages |
 | [beszel](#beszelnix) | `nixosModules.beszel` | Beszel monitoring agent |
 | [filebrowser](#filebrowsernix) | `nixosModules.filebrowser` | FileBrowser Quantum web file manager |
 | [virtualisation](#virtualisationnix) | `nixosModules.virtualisation` | Docker (system + rootless) + Podman |
-| [tailscale](#tailscaletailnix) | `nixosModules.tailscale` | Tailscale mesh VPN |
+| [tailscale](#tailscalenix) | `nixosModules.tailscale` | Tailscale mesh VPN |
 | [intel](#intelnix) | `nixosModules.intel` | Intel graphics + microcode |
 | [stylix](#stylixnix) | `nixosModules.stylix` | Stylix theming wiring |
 | [hardware](#hardware) | `nixosModules.hardware` | Audio (pipewire), bluetooth, touchpad |

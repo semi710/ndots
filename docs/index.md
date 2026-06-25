@@ -1,6 +1,8 @@
 # ndots
 
-A declarative **NixOS + nix-darwin** configuration built with [flakes](https://nixos.wiki/wiki/Flakes), modularized via [Flake-Parts](https://flake.parts), and auto-wired with [nix-wire](https://github.com/semi710/nix-wire).
+A declarative **NixOS + nix-darwin** configuration built with [flakes](https://nixos.wiki/wiki/Flakes), modularized via [Flake-Parts](https://flake.parts), and auto-wired with [nix-wire](https://nix-wire.semi.sh) <a href="https://github.com/semi710/nix-wire" target="_blank"><sub>:fontawesome-brands-github:</sub></a>.
+
+Utilities and scripts from [utils](https://utils.semi.sh) <a href="https://github.com/niksingh710/utils" target="_blank"><sub>:fontawesome-brands-github:</sub></a>.
 
 Fully CLI-based — all hosts are managed via SSH + Tailscale. No GUI required for administration.
 

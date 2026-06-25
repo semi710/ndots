@@ -17,7 +17,7 @@ imports = [
 ];
 ```
 
-The [darwin default](../modules/darwin.md#basenix--defaultnix) module wires: [nix settings](../modules/flake.md), [system settings](../modules/darwin.md#settings), [Homebrew](../modules/darwin.md#brewnix), [stylix](../modules/darwin.md#stylixnix), and [shared home-manager modules](../modules/darwin.md#sharedmodulesnix) (default, packages, terminal, mpv, zathura, browser).
+The [darwin default](../modules/darwin.md#basenix-defaultnix) module wires: [nix settings](../modules/flake.md), [system settings](../modules/darwin.md#settings), [Homebrew](../modules/darwin.md#brewnix), [stylix](../modules/darwin.md#stylixnix), and [shared home-manager modules](../modules/darwin.md#sharedmodulesnix) (default, packages, terminal, mpv, zathura, browser).
 
 ## Window Management
 

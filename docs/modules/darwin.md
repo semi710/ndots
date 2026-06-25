@@ -6,7 +6,7 @@ nix-darwin system modules live in `modules/darwin/`. Each is exposed as `flake.d
 
 | Module | Flake output | Description |
 |---|---|---|
-| [base](#basenix--defaultnix) | `darwinModules.default` | Base macOS: nix settings, settings, brew, stylix, sharedModules |
+| [base](#basenix-defaultnix) | `darwinModules.default` | Base macOS: nix settings, settings, brew, stylix, sharedModules |
 | [settings](#settings) | `darwinModules.settings` | macOS system defaults, fonts, keyboard, PAM |
 | [yabai](#yabai) | `darwinModules.yabai` | Yabai tiling WM + skhd keybindings |
 | [brew](#brewnix) | `darwinModules.brew` | Homebrew casks, formulae, mas apps |

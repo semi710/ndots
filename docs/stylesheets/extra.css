@@ -74,11 +74,21 @@
   background: transparent;
 }
 
-/* header */
+/* header — liquid glass */
 .md-header {
-  background: var(--md-default-bg-color);
-  border-bottom: 1px solid var(--md-card-border);
-  backdrop-filter: blur(var(--md-glass-blur));
+  background: rgba(13, 13, 18, 0.45);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.04) inset,
+              0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.md-header[data-md-state="shadow"] {
+  background: rgba(13, 13, 18, 0.55);
+  backdrop-filter: blur(28px) saturate(180%);
+  box-shadow:  0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+              0 12px 40px rgba(0, 0, 0, 0.3);
 }
 
 .md-header__title {
@@ -195,6 +205,14 @@
 
 .md-search-result__meta {
   border-radius: 16px 16px 0 0 !important;
+}
+
+/* nav labels — fade subtitle */
+.md-nav__link .nav-sub {
+  color: var(--md-default-fg-color--lighter);
+  font-weight: 400;
+  opacity: 0.5;
+  margin-left: 0.4em;
 }
 
 /* badges */

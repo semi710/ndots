@@ -28,7 +28,7 @@ imports = [
 ];
 ```
 
-The `common/workstation.nix` base imports: [default](../modules/nixos.md#basenix--defaultnix), [juspay](../modules/nixos.md#juspay), sops, disko, [beszel](../modules/nixos.md#beszelnix), [tailscale](../modules/nixos.md#tailscaletailnix), [virtualisation](../modules/nixos.md#virtualisationnix), [filebrowser](../modules/nixos.md#filebrowsernix).
+The `common/workstation.nix` base imports: [default](../modules/nixos.md#basenix-defaultnix), [juspay](../modules/nixos.md#juspay), sops, disko, [beszel](../modules/nixos.md#beszelnix), [tailscale](../modules/nixos.md#tailscalenix), [virtualisation](../modules/nixos.md#virtualisationnix), [filebrowser](../modules/nixos.md#filebrowsernix).
 
 ## Notable Config
 

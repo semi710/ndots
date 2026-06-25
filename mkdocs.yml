@@ -40,12 +40,13 @@ nav:
   - Packages: packages/index.md
   - Hosts:
       - Overview: hosts/index.md
-      - mach (Laptop): hosts/mach.md
-      - dsd (Work Desktop): hosts/dsd.md
-      - semi (Semi-Personal): hosts/semi.md
-      - obox (Oracle VPS): hosts/obox.md
-      - jp-mbp (MacBook Pro): hosts/jp-mbp.md
-      - anywhere (Template): hosts/anywhere.md
+      - "mach <span class=\"nav-sub\">Laptop</span>": hosts/mach.md
+      - "dsd <span class=\"nav-sub\">Work Desktop</span>": hosts/dsd.md
+      - "semi <span class=\"nav-sub\">Semi-Personal</span>": hosts/semi.md
+      - "obox <span class=\"nav-sub\">Oracle VPS</span>": hosts/obox.md
+      - "virt <span class=\"nav-sub\">VM</span>": hosts/index.md
+      - "jp-mbp <span class=\"nav-sub\">MacBook Pro</span>": hosts/jp-mbp.md
+      - "anywhere <span class=\"nav-sub\">Template</span>": hosts/anywhere.md
   - Services:
       - Overview: services/index.md
       - Beszel: services/beszel.md
@@ -75,6 +76,9 @@ markdown_extensions:
       alternate_style: true
   - pymdownx.tasklist:
       custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - attr_list
   - md_in_html
   - toc:

@@ -37,12 +37,12 @@ All NixOS hosts are managed declaratively via flakes. Each host has its own dire
 
 Workstations (semi, dsd) share `hosts/nixos/common/workstation.nix` which imports:
 
-- [base](../modules/nixos.md#basenix--defaultnix) (`nixosModules.default`)
+- [base](../modules/nixos.md#basenix-defaultnix) (`nixosModules.default`)
 - [juspay](../modules/nixos.md#juspay) (`nixosModules.juspay`) — workspace config (zsh, openssh, docker, tailscale, postgres, redis)
 - sops-nix for secrets
 - disko for disk management
 - [Beszel](../modules/nixos.md#beszelnix) agent
-- [Tailscale](../modules/nixos.md#tailscaletailnix)
+- [Tailscale](../modules/nixos.md#tailscalenix)
 - [Virtualisation](../modules/nixos.md#virtualisationnix) (docker + podman)
 - [FileBrowser Quantum](../modules/nixos.md#filebrowsernix)
 
