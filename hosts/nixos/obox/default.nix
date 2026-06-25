@@ -24,6 +24,8 @@ in
     flake.flakeModules.nix
     flake.nixosModules.tailscale
     flake.nixosModules.beszel
+    flake.nixosModules.virtualisation
+    flake.nixosModules.filebrowser
 
     # Shorthand: config.hm.* → config.home-manager.users.${username}.*
     (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" username ])
@@ -82,7 +84,25 @@ in
     '';
   };
 
-  virtualisation.docker.enable = true;
+  # Stirling PDF — NixOS native service
+  services.stirling-pdf = {
+    enable = true;
+    environment = {
+      SERVER_PORT = 4080;
+      UI_APPNAME = "semi.sh PDF";
+      UI_HOMEDESCRIPTION = "Privacy-first PDF tools, hosted on semi.sh";
+      UI_APPNAVBARNAME = "semi.sh PDF";
+      SYSTEM_SHOWUPDATE = "false";
+      SYSTEM_SHOWUPDATEONLYADMIN = "false";
+    };
+  };
+
+  services.filebrowser-quantum = {
+    enable = true;
+    home = "/home/${username}";
+  };
+  sops.secrets."filebrowser/obox" = { };
+  services.filebrowser-quantum.passwordFile = config.sops.secrets."filebrowser/obox".path;
 
   services.caddy = {
     enable = true;

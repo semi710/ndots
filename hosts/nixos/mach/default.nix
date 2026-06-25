@@ -17,6 +17,7 @@ in
     flake.nixosModules.filebrowser
     flake.nixosModules.beszel
     flake.nixosModules.tailscale
+    flake.nixosModules.virtualisation
     flake.inputs.sops-nix.nixosModules.sops
 
     # Important for the hardware
@@ -32,12 +33,13 @@ in
     ];
     allowedUDPPorts = [ 22000 ];
   };
-  services.filebrowser = {
-    user = me.username;
-    settings = {
-      root = "/run/media/${me.username}/";
-    };
+  services.filebrowser-quantum = {
+    enable = true;
+    sources = [ "/run/media/${me.username}/" ];
+    home = "/home/${me.username}";
   };
+  sops.secrets."filebrowser/mach" = { };
+  services.filebrowser-quantum.passwordFile = config.sops.secrets."filebrowser/mach".path;
 
   services.getty.autologinUser = "${me.username}";
 
@@ -97,13 +99,6 @@ in
       ''
         AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* CLAUDE_*
       '';
-  };
-  virtualisation.docker = {
-    enable = true;
-    rootless = {
-      enable = true;
-      setSocketVariable = true;
-    };
   };
   networking = {
     stevenblack.enable = true;

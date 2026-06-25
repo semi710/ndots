@@ -1,4 +1,4 @@
-{ flake, ... }:
+{ flake, config, ... }:
 {
   imports = [
     ../common/workstation.nix
@@ -6,5 +6,10 @@
     ./hardware.nix
     ./extra-users.nix
     flake.nixosModules.minecraft
+  ];
+
+  services.filebrowser-quantum.sources = [
+    "/"
+    "/home"
   ];
 }
