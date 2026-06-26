@@ -27,6 +27,7 @@ let
       bruno
       ytmdesktop
       bruno-cli
+      drag
 
       # Mac ui apps are preferred to be from homebrew via or mas
       # check ./../../modules/darwin/brew.nix for more apps

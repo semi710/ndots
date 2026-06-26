@@ -28,6 +28,7 @@ in
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
+  drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
 
   # opencode-vim with corrected npm deps hash and bun version workaround
   # Upstream hashes.json has stale hash(s) for the node_modules fixed-output drv.

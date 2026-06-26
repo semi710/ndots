@@ -14,6 +14,7 @@ Custom packages live in `packages/` and are auto-discovered by nix-wire, exposed
 | [hammerspoon](#hammerspoon) | darwin | macOS automation (Hammerspoon app) |
 | [skhd-zig](#skhd-zig) | darwin | Zig port of skhd hotkey daemon |
 | [road-rage](#road-rage) | all | Punky display font (used in hyprlock) |
+| [drag](#drag) | darwin | Drag-and-drop from the command line |
 
 ## Using Packages
 
@@ -170,5 +171,21 @@ Used by the [hyprlock](../modules/home.md#hyprlocknix) screen lock for the large
 { pkgs, ... }: {
   home.packages = [ pkgs.road-rage ];
   # Font is available system-wide via fontconfig
+}
+```
+
+---
+
+## drag
+
+`flake input: github:semi710/dragterm`
+
+[dragterm](https://github.com/semi710/dragterm), drag-and-drop from the command line. Run `drag <files>` and a file icon follows your cursor; click-hold to drop. Hold **Shift** to fade the icon and let clicks pass through to apps behind it. Darwin only. Fork of [Wevah/dragterm](https://github.com/Wevah/dragterm).
+
+Unlike the `packages/*.nix` packages above, this comes from an external flake input, re-exposed into `pkgs` via the [overlay](../../overlays/packages.nix) (`drag = inputs.dragterm.packages.${system}.drag`). Added to the darwin home package list in [modules/home/packages.nix](../modules/home.md#packagesnix).
+
+```nix
+{ pkgs, ... }: {
+  home.packages = [ pkgs.drag ];
 }
 ```
