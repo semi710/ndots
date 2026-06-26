@@ -71,8 +71,8 @@ in
       serviceConfig = {
         User = cfg.user;
         StateDirectory = "filebrowser-quantum";
-        ExecStartPre = "${pkgs.bash}/bin/bash -c 'PASS=$(cat ${cfg.passwordFile}) && ${pkgs.filebrowser-quantum}/bin/filebrowser-quantum set -u ${host},$PASS -a -c ${configFile}'";
-        ExecStart = "${pkgs.filebrowser-quantum}/bin/filebrowser-quantum -c ${configFile}";
+        ExecStartPre = "${lib.getExe pkgs.bash} -c 'PASS=$(cat ${cfg.passwordFile}) && ${lib.getExe pkgs.filebrowser-quantum} set -u ${host},$PASS -a -c ${configFile}'";
+        ExecStart = "${lib.getExe pkgs.filebrowser-quantum} -c ${configFile}";
         Restart = "on-failure";
       };
     };

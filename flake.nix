@@ -78,6 +78,7 @@
     nsearch.url = "github:semi710/nsearch";
     nvix.url = "github:semi710/nvix";
     utils.url = "github:niksingh710/utils";
+    naste.url = "github:semi710/naste";
   };
 
   outputs =

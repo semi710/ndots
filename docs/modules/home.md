@@ -19,6 +19,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [syncthing](#syncthingnix) | `homeModules.syncthing` | Cross-device file sync |
 | [sops](#sopsnix) | `homeModules.sops` | Home-level sops secrets |
 | [ssh](#sshnix) | `homeModules.ssh` | SSH client config + agent |
+| [naste](#nastenix) | `homeModules.naste` | naste CLI client (endpoint pre-configured) |
 | [mpv](#mpvnix) | `homeModules.mpv` | Media player with modernx OSC |
 | [zathura](#zathuranix) | `homeModules.zathura` | PDF/document viewer |
 | [aria2](#aria2nix) | `homeModules.aria2` | aria2 download manager |
@@ -653,3 +654,21 @@ For standalone home-manager (not NixOS/Darwin). Adds `homeModules.default` + `fl
   imports = [ flake.homeModules.home-only ];
 }
 ```
+
+---
+
+## naste.nix
+
+naste CLI client with endpoint pre-configured. Imported by `homeModules.default` (all users). Hosts with sops add `private.userFile`/`passFile` in their user config.
+
+```nix
+{ flake, ... }: {
+  imports = [ flake.inputs.naste.homeModules.default ];
+  programs.naste-client = {
+    enable = true;
+    endpoint = "https://paste.semi.sh";
+  };
+}
+```
+
+See [naste service docs](../services/naste.md) for private credential setup per host.

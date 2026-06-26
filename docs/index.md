@@ -37,6 +37,7 @@ See [Hosts](hosts/index.md) for per-host details.
 - [Stirling PDF](services/stirling-pdf.md) - self-hosted PDF tools
 - [FileBrowser Quantum](services/filebrowser.md) - web file manager
 - [Caddy](services/caddy.md) - reverse proxy
+- [naste](services/naste.md) - self-hosted paste service
 - [Syncthing](services/syncthing.md) - cross-device file sync
 - [Tailscale](services/tailscale.md) - mesh VPN
 - [Docker & Podman](services/docker.md) - container runtimes

@@ -24,6 +24,7 @@ Declarative NixOS + nix-darwin configuration with self-hosted services, monitori
 - FileBrowser Quantum on all NixOS hosts (root, Tailscale-only, sops passwords)
 - Stirling PDF on obox (branded "semi.sh PDF", update notifications off)
 - Caddy on obox (imperative config)
+- naste paste service on obox (server) + all hosts (client via home-manager)
 - Syncthing: `.notes` + `.dump` synced across all devices
 - Tailscale on all hosts
 - Shared virtualisation module (docker system+rootless, podman)
@@ -32,6 +33,8 @@ Declarative NixOS + nix-darwin configuration with self-hosted services, monitori
 - Full module documentation: NixOS, Home, Darwin, Flake modules
 - Package documentation: all custom packages documented
 - Architecture docs expanded with nix-wire, overlays, packages, justfile, .sops.yaml
+- obox services restructured into `hosts/nixos/obox/services/` dir
+- obox uses nix-wire `autoImport` for host files + services dir
 
 ### Deferred
 - Excalidraw (docker + room server) - deferred, not deployed
@@ -68,3 +71,9 @@ Declarative NixOS + nix-darwin configuration with self-hosted services, monitori
 - `nix-wire` auto-sets `networking.hostName` from the host directory name
 - The `hm` shorthand is created via `mkAliasOptionModule` per-host
 - opencode-vim overlay patches stale node_modules hashes + relaxes bun version check
+- naste modules must use `let` bindings inside `config`, not at module top level (flake-parts recursion)
+- naste module `package` option defaults via `withPackages` wrapper - no overlay needed by consumers
+- naste sops secrets need `group` + `mode` set so the service user can read them
+- `ProtectSystem = "strict"` in systemd blocks sops-nix secret reads from `/run/secrets/`
+- After deploying naste secrets, relogin to load `PASTE_USER_FILE`/`PASTE_PASS_FILE` session vars
+- naste metadata is per-scope (`metadata/public/`, `metadata/private/`) - same slug can exist in both

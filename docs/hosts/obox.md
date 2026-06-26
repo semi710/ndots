@@ -19,6 +19,7 @@ This is the **hub host** - runs central services for the network.
 - **[FileBrowser Quantum](../services/filebrowser.md)** - serves `/` + user home
 - **[Caddy](../services/caddy.md)** - reverse proxy (imperative config, no rebuild needed)
 - **[Tailscale](../services/tailscale.md)** - mesh VPN
+- **naste** - self-hosted paste service
 - **Docker** - system only (for OCI containers)
 
 ## Modules Imported
@@ -97,6 +98,7 @@ Uses `secrets/server.yaml` (office age key):
 
 ## Files
 
-- `hosts/nixos/obox/default.nix` - main config
+- `hosts/nixos/obox/default.nix` - main config (host setup, imports service modules)
 - `hosts/nixos/obox/disk.nix` - disko partitioning
 - `hosts/nixos/obox/hardware.nix` - QEMU guest hardware
+- `hosts/nixos/obox/services/` - service configs (beszel, stirling-pdf, filebrowser, caddy, tailscale, naste)

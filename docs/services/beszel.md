@@ -58,4 +58,4 @@ AMD GPU sysfs reading causes a kernel panic in beszel. `SKIP_GPU=true` disables 
 ## Module
 
 - `modules/nixos/beszel.nix` - agent module with options for HUB_URL, KEY, LISTEN, DOCKER_HOST, TOKEN_FILE
-- Hub config is in `hosts/nixos/obox/default.nix`
+- Hub config is in `hosts/nixos/obox/services/beszel.nix`

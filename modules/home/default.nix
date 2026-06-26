@@ -17,6 +17,7 @@
     flake.homeModules.nix-index
     flake.homeModules.aria2
     flake.homeModules.nix-conf-fix
+    flake.homeModules.naste
   ];
   home.packages =
     with pkgs;

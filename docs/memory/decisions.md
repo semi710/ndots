@@ -86,6 +86,48 @@ Record of architectural decisions and their rationale. Update when making new de
 
 **Why:** GraveSafe duped armor - it collected `getContents()` (all 41 slots incl armor+offhand) then re-collected `getArmorContents()` + `getItemInOffHand()`, adding them twice. DeathChest doesn't have this bug.
 
+## obox services directory
+
+**Decision:** obox service configs live in `hosts/nixos/obox/services/` with a `default.nix` that auto-imports all service files.
+
+**Why:** Keeps `default.nix` focused on host setup. Adding a new service means dropping a `.nix` file in `services/` - no manual import list to maintain.
+
+## nix-wire autoImport for obox
+
+**Decision:** `default.nix` uses `flake.inputs.nix-wire.lib.autoImport ./.` for host-level files (disk, hardware, services dir). `services/default.nix` uses `autoImport ./.` for service files.
+
+**Why:** No manual import lists. Files are auto-discovered. Explicit flake module imports (tailscale, beszel, etc.) stay in the manual list since they come from flake outputs, not local files.
+
+## naste: package option with withPackages wrapper
+
+**Decision:** naste modules expose a `package` option with a default set via a `withPackages` wrapper that applies the overlay internally.
+
+**Why:** Consumers import the module and it just works - no need to add `naste.overlays.default` to their nixpkgs. The wrapper does `pkgs.extend overlay` and sets `package = lib.mkDefault own.naste-server`. Overrides are still possible via `mkForce`.
+
+## naste: per-scope metadata
+
+**Decision:** Metadata stored per-scope: `metadata/public/slug.json` and `metadata/private/slug.json`.
+
+**Why:** Shared metadata caused bugs when the same slug existed in both scopes - the last-saved metadata would make the other scope's paste invisible or serve it without auth. Per-scope metadata makes public and private pastes fully independent.
+
+## naste: let bindings inside config
+
+**Decision:** `let cfg = config.services.naste-server` lives inside `config = let ... in`, not at the module function top level.
+
+**Why:** When a module is wrapped by flake-parts and consumed via nix-wire, top-level `let` bindings force `config` evaluation before the module system finishes merging. This causes infinite recursion. Moving inside `config` makes it lazy.
+
+## naste: sops secrets need group + mode
+
+**Decision:** sops secrets for naste set `group = "naste"` and `mode = "0440"`. The service config also needs `StateDirectory` so systemd creates the data dir before sandbox setup.
+
+**Why:** Default sops secrets are root:root 0400. The naste service user can't read them. `ProtectSystem = "strict"` was removed because it blocked sops-nix secret reads from `/run/secrets/`. `StateDirectory` ensures the data dir exists before `ReadWritePaths` namespace setup (otherwise systemd fails with 226/NAMESPACE).
+
+## naste: client in shared home module, creds per-host
+
+**Decision:** `modules/home/naste.nix` enables `programs.naste-client` with endpoint only (no private creds). Hosts with sops add `private.userFile`/`passFile` in their user config.
+
+**Why:** All users get the CLI client. Private credentials are host-specific (different sops files, different trust boundaries). Standalone home users get public paste access only.
+
 ## vim-motions-pi with clipboard + escape sequence
 
 **Decision:** Use a forked vim-motions-pi (`feat/clipboard-and-escape` branch) with OSC52 clipboard + `jk` escape.

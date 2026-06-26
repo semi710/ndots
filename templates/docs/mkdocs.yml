@@ -34,6 +34,9 @@ theme:
 
 nav:
   - Home: index.md
+  - Memory:
+      - Context: memory/context.md
+      - Decisions: memory/decisions.md
 
 markdown_extensions:
   - admonition

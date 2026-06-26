@@ -9,7 +9,7 @@ All NixOS hosts are managed declaratively via flakes. Each host has its own dire
 | [mach](mach.md) | x86_64 | Intel i7-10510U (4c/8t) | 24 GB | NVMe | niksingh710 | FileBrowser, Beszel agent, Docker |
 | [dsd](dsd.md) | x86_64 | Intel i9-12900KS (16c/24t) | 64 GB | NVMe | nikhil.singh | FileBrowser, Beszel agent, Docker, Minecraft |
 | [semi](semi.md) | x86_64 | Intel i9-14900K (24c/32t) | 128 GB | NVMe | nikhil.singh | FileBrowser, Beszel agent, Docker |
-| [obox](obox.md) | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | 200G | nikhil | Beszel hub, Stirling PDF, FileBrowser, Caddy |
+| [obox](obox.md) | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | 200G | nikhil | Beszel hub, Stirling PDF, FileBrowser, Caddy, naste |
 | [jp-mbp](jp-mbp.md) | aarch64 | Apple M4 | - | - | nikhil.singh | Yabai, Aerospace, Karabiner |
 
 ## Darwin Hosts

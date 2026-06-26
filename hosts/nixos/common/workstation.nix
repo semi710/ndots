@@ -77,6 +77,14 @@ in
   };
   nix.extraOptions = "!include ${config.hm.sops.secrets."private-keys/nix_access_token".path}";
 
+  # naste private paste creds (shared by dsd + semi)
+  hm.sops.secrets."naste/user".sopsFile = "${flake}/secrets/server.yaml";
+  hm.sops.secrets."naste/pass".sopsFile = "${flake}/secrets/server.yaml";
+  hm.programs.naste-client.private = {
+    userFile = config.hm.sops.secrets."naste/user".path;
+    passFile = config.hm.sops.secrets."naste/pass".path;
+  };
+
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.11";
 

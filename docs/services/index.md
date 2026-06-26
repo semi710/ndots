@@ -8,6 +8,7 @@ Self-hosted services running across the NixOS fleet. All services are Tailscale-
 | [Stirling PDF](stirling-pdf.md) | obox | Caddy (public) | NixOS native |
 | [FileBrowser Quantum](filebrowser.md) | All NixOS hosts | Tailscale | `modules/nixos/filebrowser.nix` |
 | [Caddy](caddy.md) | obox | Public (80/443) | NixOS native |
+| [naste](naste.md) | obox (server) + all (client) | Caddy (public) | `hosts/nixos/obox/services/naste.nix` |
 | [Syncthing](syncthing.md) | All devices | Tailscale | `modules/home/syncthing.nix` |
 | [Tailscale](tailscale.md) | All hosts | - | `modules/nixos/tailscale.nix` |
 | [Docker & Podman](docker.md) | obox, semi, dsd, mach | - | `modules/nixos/virtualisation.nix` |
