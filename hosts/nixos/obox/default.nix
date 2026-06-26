@@ -33,6 +33,7 @@ in
 
   home-manager.sharedModules = [
     { home.stateVersion = "26.05"; }
+    flake.homeModules.naste
   ];
   home-manager.backupFileExtension = "backup";
 
