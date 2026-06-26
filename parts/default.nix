@@ -35,6 +35,20 @@
         '';
       };
 
+      apps.docs =
+        let
+          env = pkgs.python3.withPackages (
+            ps: with ps; [
+              mkdocs
+              mkdocs-material
+            ]
+          );
+        in
+        {
+          type = "app";
+          program = "${env}/bin/mkdocs";
+        };
+
       pre-commit.settings = {
         hooks.treefmt = {
           enable = true;

@@ -16,3 +16,6 @@
 
 # Python linter cache
 /.ruff_cache/
+
+# Mkdocs build output
+/site
