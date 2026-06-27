@@ -4,6 +4,7 @@
     git-addnospace = "git diff -U0 -w --no-color --src-prefix=a/ --dst-prefix=b/ | git apply --cached --ignore-whitespace --unidiff-zero -";
   };
   home.packages = with pkgs; [
+    # Juspay uses merge-based workflow - keep gfm for company repos.
     (writeShellApplication {
       name = "gfm";
       text = ''
@@ -17,6 +18,21 @@
 
         git fetch "$remote" "$branch" &&
         git merge "$remote/$branch"
+      '';
+    })
+    (writeShellApplication {
+      name = "gfr";
+      text = ''
+        if [ -z "$1" ]; then
+          echo "Usage: gfr <branch> [remote]"
+          exit 1
+        fi
+
+        branch="$1"
+        remote="''${2:-origin}"
+
+        git fetch "$remote" "$branch" &&
+        git rebase "$remote/$branch"
       '';
     })
 
@@ -45,7 +61,8 @@
         init.defaultBranch = "master";
         core.editor = "nvim";
         core.sharedRepository = "group";
-        credential.helper = "store --file ~/.git-credentials";
+        credential.helper =
+          if pkgs.stdenv.isDarwin then "osxkeychain" else "store --file ~/.git-credentials";
         pull.rebase = "true";
         diff.wsErrorHighlight = "none";
         apply.whitespace = "nowarn";

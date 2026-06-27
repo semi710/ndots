@@ -293,7 +293,7 @@ Auto-imported directory of opencode provider definitions. One file per provider,
 
 ### combined-system-prompt.nix
 
-A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git-wisdom through 07-code-comments) into a single prompt string. Used by claude.nix, pi.nix, and opencode.
+A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git, 02-before-you-code, 03-code-comments) into a single prompt string. Used by claude.nix, pi.nix, and opencode. Ponytail lives as a toggleable plugin, not a static prompt.
 
 **Usage:**
 
