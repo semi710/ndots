@@ -105,10 +105,10 @@ in
     networkmanager.enable = true;
   };
 
-  hm.sops.secrets."private-keys/nix_access_token" = { };
+  hm.sops.secrets."tokens/nix-access" = { };
   nix.extraOptions = # conf
     ''
-      !include ${config.hm.sops.secrets."private-keys/nix_access_token".path}
+      !include ${config.hm.sops.secrets."tokens/nix-access".path}
     '';
 
   time.timeZone = "Asia/Kolkata";

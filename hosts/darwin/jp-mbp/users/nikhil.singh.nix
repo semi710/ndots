@@ -37,15 +37,17 @@ in
   };
 
   sops.secrets = {
-    "private-keys/gemini_api" = { };
-    "private-keys/openai_api" = { };
-    "private-keys/github_token" = { };
-    "private-keys/cachix_token" = { };
-    "private-keys/ssh" = {
+    "tokens/ai/gemini" = { };
+    "tokens/ai/openai" = { };
+    "tokens/ai/openrouter" = { };
+    "tokens/ai/opencode-zen" = { };
+    "tokens/github" = { };
+    "tokens/cachix" = { };
+    "ssh/private" = {
       path = "${config.home.homeDirectory}/.ssh/id_ed25519";
       mode = "0600";
     };
-    "private-keys/ssh-office" = {
+    "ssh/office" = {
       path = "${config.home.homeDirectory}/.ssh/id_ed25519_work";
       mode = "0600";
     };
@@ -71,12 +73,14 @@ in
 
   home.sessionVariables = {
     OPENAI_API_BASE = "https://api.githubcopilot.com";
-    OPENAI_API_KEY = "$(cat ${config.sops.secrets."private-keys/openai_api".path})";
-    GEMINI_API_KEY = "$(cat ${config.sops.secrets."private-keys/gemini_api".path})";
-    GITHUB_TOKEN = "$(cat ${config.sops.secrets."private-keys/github_token".path})";
+    OPENAI_API_KEY = "$(cat ${config.sops.secrets."tokens/ai/openai".path})";
+    OPENROUTER_API_KEY = "$(cat ${config.sops.secrets."tokens/ai/openrouter".path})";
+    OPENCODE_API_KEY = "$(cat ${config.sops.secrets."tokens/ai/opencode-zen".path})";
+    GEMINI_API_KEY = "$(cat ${config.sops.secrets."tokens/ai/gemini".path})";
+    GITHUB_TOKEN = "$(cat ${config.sops.secrets."tokens/github".path})";
     JUSPAY_API_KEY = "$(cat ${config.sops.secrets."private-keys/jp-key".path})";
 
-    CACHIX_AUTH_TOKEN = "$(cat ${config.sops.secrets."private-keys/cachix_token".path})";
+    CACHIX_AUTH_TOKEN = "$(cat ${config.sops.secrets."tokens/cachix".path})";
   };
 
   # comes from homeModules.editor

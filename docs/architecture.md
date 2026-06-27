@@ -69,7 +69,7 @@ modules/
     default.nix          # base home: shell, editor, ssh, nix-index, aria2, fonts
     shell/               # zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android
     editor/              # helix, nvix (Neovim via nvix flake)
-    ai/                  # opencode, claude, mcp, pi, office, combined-system-prompt
+    ai/                  # opencode, claude, mcp, pi, providers/, combined-system-prompt
     browser/             # Zen browser (base, extensions, keymaps, search)
     terminal/            # kitty
     hyprland/            # Hyprland home config, rofi, hypridle, hyprlock, keymaps, monitor, rules
@@ -220,7 +220,7 @@ creation_rules:
 |---|---|---|---|
 | `secrets/office.yaml` | office | semi, dsd | Tailscale auth, nix access token, syncthing certs, filebrowser passwords |
 | `secrets/server.yaml` | office | obox, mach | Tailscale auth, beszel creds/SSH key, filebrowser passwords |
-| `secrets/keys.yaml` | personal | - | Age key generation |
+| `secrets/keys.yaml` | personal | - | User password, tokens (github, cachix, nix-access, ai/*), SSH keys, syncthing certs, rclone config |
 
 !!! note "Same key, separate files"
     Both `office.yaml` and `server.yaml` use the office age key. The split is about **trust boundaries** (work context vs infrastructure), not key separation.

@@ -9,7 +9,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [base](#basenix-defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
 | [shell](#shell) | `homeModules.shell` | zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android |
 | [editor](#editor) | `homeModules.editor` | Helix, nvix (Neovim) |
-| [ai](#ai) | `homeModules.ai` | opencode, claude, mcp, pi, office provider config |
+| [ai](#ai) | `homeModules.ai` | opencode, claude, mcp, pi, providers (anthropic, office, zen, openrouter) |
 | [browser](#browser) | `homeModules.browser` | Zen browser (base, extensions, keymaps, search) |
 | [terminal](#terminal) | `homeModules.terminal` | kitty terminal |
 | [hyprland](#hyprland) | `homeModules.hyprland` | Hyprland home config, rofi, hypridle, hyprlock, keymaps |
@@ -242,11 +242,11 @@ Sets `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = 1` globally.
 
 - Package: `pkgs.opencode-vim` (patched node_modules hash + bun version check bypass)
 - Default agent: `OpenAgent` with the combined system prompt
-- Models: claude-opus-4-7 ("gawwd"), claude-sonnet-4-6 ("worker"), claude-haiku-4-5 ("haiya")
 - Plugin: ponytail (lazy dev skill)
 - TUI: vim system clipboard, `jk` escape, enter-to-submit, insert-after-submit
 - Skills: local (`git-wisdom`, `think-deeper`), ponytail suite, frontend-design (from claude-code)
 - Registry: wires openagents-control "developer" profile components to `~/.config/opencode/`
+- Providers are defined in `providers/` (see below), not inline
 
 ### claude.nix
 
@@ -282,13 +282,14 @@ MCP (Model Context Protocol) servers. All set to `lifecycle = "eager"`.
 - Packages: nodejs, bun, copy
 - System prompt: combined system prompt
 
-### office.nix
+### providers/
 
-Shared Juspay LLM provider config (for both opencode and pi).
+Auto-imported directory of opencode provider definitions. One file per provider, drop a new `.nix` to add a provider.
 
-- Provider `litellm` → Juspay grid (`https://grid.ai.juspay.net`)
-- Models: open-large, open-fast, open-vision, claude-opus-4-5/6, claude-sonnet-4-5/6, glm, gemini, minimax, kimi
-- Opencode default model: `litellm/open-large`, explore agent uses `open-fast`
+- `anthropic.nix` - built-in Anthropic (env `ANTHROPIC_API_KEY`), models: claude-opus-4-7 ("gawwd"), claude-sonnet-4-6 ("worker"), claude-haiku-4-5 ("haiya")
+- `office.nix` - shared Juspay LLM provider (litellm, `@ai-sdk/openai-compatible`), used by both opencode and pi. Default model `litellm/open-large`, explore agent uses `open-fast`. 13 models: open-large/fast/vision, claude-opus/sonnet, glm, gemini, minimax, kimi
+- `zen.nix` - opencode Zen gateway (`provider.opencode`, built-in, env `OPENCODE_API_KEY`). Free models work without a key; with a key all 71 models load
+- `openrouter.nix` - OpenRouter (`provider.openrouter`, built-in, env `OPENROUTER_API_KEY`)
 
 ### combined-system-prompt.nix
 
@@ -299,7 +300,7 @@ A helper (not a module) - combines numbered markdown files in `system-prompts/` 
 ```nix
 { flake, ... }: {
   imports = [ flake.homeModules.ai ];
-  # opencode + claude + mcp + pi + office provider
+  # opencode + claude + mcp + pi + providers
 }
 ```
 

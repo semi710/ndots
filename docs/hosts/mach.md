@@ -55,13 +55,28 @@ services.getty.autologinUser = "niksingh710";
 
 ## Secrets
 
-Uses `secrets/server.yaml` (office age key):
+System level uses `secrets/server.yaml` (office age key):
 
 - `tailscale_auth_key`
 - `beszel/token`
 - `filebrowser/mach`
 - `user-password`
-- `private-keys/nix_access_token`
+
+Home level uses `secrets/keys.yaml` (personal age key):
+
+- `tokens/ai/gemini`, `tokens/ai/openai`, `tokens/ai/openrouter`, `tokens/ai/opencode-zen`
+- `tokens/github`, `tokens/cachix`, `tokens/nix-access`
+- `ssh/private`
+- `rclone/conf`, `rclone/locked-conf`
+- `syncthing/mach/{password,cert,key}`
+
+Home level also pulls from `secrets/office.yaml`:
+
+- `private-keys/jp-key` (Juspay API key)
+
+And from `secrets/server.yaml`:
+
+- `naste/user`, `naste/pass`
 
 ## Files
 

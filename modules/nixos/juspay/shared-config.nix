@@ -14,7 +14,7 @@
       PermitRootLogin = "no";
       PasswordAuthentication = false;
     };
-    extraConfig = "AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* CLAUDE_*";
+    extraConfig = "AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* OPENROUTER_* OPENCODE_* CLAUDE_*";
   };
 
   virtualisation.docker = {

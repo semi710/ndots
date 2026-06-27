@@ -14,6 +14,8 @@
           "JUSPAY_*"
           "GITHUB_*"
           "ANTHROPIC_*"
+          "OPENROUTER_*"
+          "OPENCODE_*"
           "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS"
         ];
       }

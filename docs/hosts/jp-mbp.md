@@ -71,10 +71,24 @@ System settings via [darwin settings module](../modules/darwin.md#settings):
 
 ## Secrets
 
-Uses `secrets/office.yaml` (office age key):
+System level uses `secrets/office.yaml` (office age key):
 
 - `private-keys/nix-builder` (SSH key for remote builds)
-- `private-keys/nix_access_token`
+
+Home level uses `secrets/keys.yaml` (personal age key):
+
+- `tokens/ai/gemini`, `tokens/ai/openai`, `tokens/ai/openrouter`, `tokens/ai/opencode-zen`
+- `tokens/github`, `tokens/cachix`, `tokens/nix-access`
+- `ssh/private`, `ssh/office`
+- `syncthing/jp-mbp/{password,cert,key}`
+
+Home level also pulls from `secrets/office.yaml`:
+
+- `private-keys/jp-key` (Juspay API key)
+
+And from `secrets/server.yaml`:
+
+- `naste/user`, `naste/pass`
 
 ## Files
 
