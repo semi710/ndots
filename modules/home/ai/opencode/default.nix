@@ -1,4 +1,5 @@
-# Opencode — agent config, providers, TUI, plugins.
+# Opencode - runtime, TUI, plugins. Agent + model config lives in
+# auto-imported siblings (agents.nix, providers/*).
 {
   inputs,
   pkgs,
@@ -7,13 +8,17 @@
 }:
 let
   ponytail = inputs.ponytail;
-  combinedSystemPrompt = import ../combined-system-prompt.nix { inherit lib; };
   skillsMod = import ./skills.nix { inherit inputs lib; };
   registryFiles = import ./registry.nix { inherit inputs lib; };
 in
 {
   home.sessionVariables.OPENCODE_ENABLE_EXA = 1;
   home.file = registryFiles // skillsMod.files;
+
+  imports = inputs.nix-wire.lib.autoImportExcept ./. [
+    "skills.nix"
+    "registry.nix"
+  ];
 
   programs.opencode = {
     enable = true;
@@ -24,13 +29,8 @@ in
       extraArgs = [ "--mdns" ];
     };
     settings = {
-      default_agent = "OpenAgent";
       autoupdate = true;
       plugin = [ "${ponytail}/.opencode/plugins/ponytail.mjs" ];
-      agent.OpenAgent = {
-        prompt = combinedSystemPrompt;
-        skills = skillsMod.skills;
-      };
     };
     tui = {
       vim_system_clipboard_register = true;

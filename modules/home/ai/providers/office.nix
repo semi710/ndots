@@ -46,12 +46,6 @@ in
 {
   programs.opencode.settings = {
     model = "litellm/open-large";
-    agent = {
-      explore = {
-        mode = "subagent";
-        model = "litellm/open-fast";
-      };
-    };
 
     provider.litellm = {
       npm = "@ai-sdk/openai-compatible";
