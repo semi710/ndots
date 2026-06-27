@@ -241,12 +241,19 @@ Sets `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = 1` globally.
 [Opencode](https://github.com/leohenon/opencode-vim) agent configuration.
 
 - Package: `pkgs.opencode-vim` (patched node_modules hash + bun version check bypass)
-- Default agent: `OpenAgent` with the combined system prompt
-- Plugin: ponytail (lazy dev skill)
+- Plugin: ponytail (lazy dev skill, toggleable via `/ponytail`)
 - TUI: vim system clipboard, `jk` escape, enter-to-submit, insert-after-submit
-- Skills: local (`git-wisdom`, `think-deeper`), ponytail suite, frontend-design (from claude-code)
-- Registry: wires openagents-control "developer" profile components to `~/.config/opencode/`
-- Providers are defined in `providers/` (see below), not inline
+- Registry: wires openagents-control "developer" profile (8 agents + 10 subagents + commands + contexts) to `~/.config/opencode/`
+- System rules: written to `~/.config/opencode/AGENTS.md` from `system-prompts/` (applies to every agent globally)
+- Auto-imports siblings: drop a new `.nix` in `opencode/` to add config (agents.nix, providers/*)
+
+### agents.nix
+
+Agent config that layers on top of the registry's agents.
+
+- `default_agent = "OpenAgent"` (registry provides the base agent + prompt; our rules layer via `AGENTS.md`)
+- `OpenAgent.skills` - adds local skills on top of the registry's openagent
+- `explore` - subagent pinned to `litellm/open-fast` (cheap model for read-only search)
 
 ### claude.nix
 
@@ -293,7 +300,7 @@ Auto-imported directory of opencode provider definitions. One file per provider,
 
 ### combined-system-prompt.nix
 
-A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git, 02-before-you-code, 03-code-comments) into a single prompt string. Used by claude.nix, pi.nix, and opencode. Ponytail lives as a toggleable plugin, not a static prompt.
+A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git, 02-before-you-code, 03-code-comments, 04-docs) into a single prompt string. Written to `~/.config/opencode/AGENTS.md` by `opencode/default.nix` so it applies to every agent globally. Also used by claude.nix and pi.nix. Ponytail lives as a toggleable plugin, not a static prompt.
 
 **Usage:**
 
