@@ -28,6 +28,8 @@ let
       ytmdesktop
       bruno-cli
       drag
+      tart
+      softnet
 
       # Mac ui apps are preferred to be from homebrew via or mas
       # check ./../../modules/darwin/brew.nix for more apps
@@ -47,6 +49,7 @@ in
   ];
   programs.nixcord = {
     enable = true;
+    discord.vencord.enable = true;
     config = {
       useQuickCss = true;
       frameless = true;

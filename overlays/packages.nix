@@ -69,6 +69,9 @@ in
   # Overrides
   # Fix appstream build on Darwin: meson's pthread detection returns
   # "none required" which gets passed to the linker as separate args.
+  # Upstream fix: https://github.com/NixOS/nixpkgs/pull/533354 (appstream 1.1.2 -> 1.1.3)
+  # Track until merged into our nixpkgs-unstable pin:
+  #   nixpkgs-track 533354
   appstream = prev.appstream.overrideAttrs (oldAttrs: {
     postConfigure =
       (oldAttrs.postConfigure or "")
@@ -79,4 +82,17 @@ in
       (oldAttrs.mesonFlags or [ ])
       ++ prev.lib.optional prev.stdenv.hostPlatform.isDarwin "-Dcompose=false";
   });
+
+  # Fix telegram-desktop build on Darwin: QSB (Qt Shader Baker) not found.
+  # qtshadertools provides the qsb binary needed to compile Telegram shaders.
+  # Upstream fix: https://github.com/NixOS/nixpkgs/pull/534779
+  # Track until merged into our nixpkgs-unstable pin:
+  #   nixpkgs-track 534779
+  telegram-desktop = prev.telegram-desktop.override {
+    unwrapped = prev.telegram-desktop.unwrapped.overrideAttrs (oldAttrs: {
+      nativeBuildInputs =
+        (oldAttrs.nativeBuildInputs or [ ])
+        ++ prev.lib.optional prev.stdenv.hostPlatform.isDarwin prev.qt6.qtshadertools;
+    });
+  };
 }

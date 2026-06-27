@@ -554,9 +554,9 @@ stylix.cliOnly = true;  # disables gtk, gtksourceview, gnome, gnome-text-editor,
 
 GUI packages + nixcord. **Not meant for external use** - contains personal app preferences.
 
-- Both platforms: google-chrome, telegram-desktop
+- Both platforms: google-chrome, telegram-desktop, tart, softnet
 - Darwin: mas, bruno, ytmdesktop
-- nixcord: Discord client with messageLogger, showMeYourName, fakeNitro plugins
+- nixcord: Discord client with messageLogger, showMeYourName, fakeNitro plugins, vencord enabled
 
 ---
 

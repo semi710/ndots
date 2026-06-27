@@ -153,7 +153,7 @@ overlays/
 ```
 
 `overlays/default.nix` composes:
-1. `overlays/packages.nix` - local custom packages (from `packages/`), `stable` nixpkgs, `nsearch-adv`, `opencode-vim` (with patched hashes), `appstream` Darwin fix
+1. `overlays/packages.nix` - local custom packages (from `packages/`), `stable` nixpkgs, `nsearch-adv`, `opencode-vim` (with patched hashes), `appstream` + `telegram-desktop` Darwin build fixes
 2. `inputs.llm-agents.overlays.default` - AI agent tooling
 
 The overlay is applied globally via `nix-wire` so `pkgs.copy`, `pkgs.road-rage`, `pkgs.stremio-enhanced`, etc. are available everywhere.

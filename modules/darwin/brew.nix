@@ -5,8 +5,14 @@
   # packages for darwin those are installed via homebrew
   homebrew = {
     taps = [
-      "xykong/tap"
-      "thusvill/livewallpaper"
+      {
+        name = "xykong/tap";
+        trusted = true;
+      }
+      {
+        name = "thusvill/livewallpaper";
+        trusted = true;
+      }
     ];
     casks = [
       "betterdisplay"
@@ -37,9 +43,7 @@
       "windows-app"
       "zulip"
     ];
-    brews = [
-      "cirruslabs/cli/tart"
-    ];
+    brews = [ ];
     masApps = {
       # only mac apps supported not iOS one
       "handmirror" = 1502839586;

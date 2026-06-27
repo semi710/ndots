@@ -141,13 +141,17 @@ Auto-imported directory (`modules/darwin/yabai/`). Import via `darwinModules.yab
 
 Homebrew management via nix-darwin.
 
+**Taps:**
+
+- `xykong/tap`, `thusvill/livewallpaper` (both `trusted = true`)
+
 **Casks (GUI apps):**
 
 betterdisplay, blip, cleanupbuddy, element, homerow, hiddenbar, hyperkey, pronotes, finetune, imageoptim, shottr, keycastr, localsend, flux-markdown, livewallpaper, fliqlo, maccy, numi, protonvpn, steam, utm, whatsapp, whisky, windows-app, zulip
 
 **Brews (CLI):**
 
-`tart` (cirruslabs CLI)
+None currently (tart moved to nix home packages - see [home/packages.nix](home.md#packagesnix)).
 
 **Mas (App Store):**
 
