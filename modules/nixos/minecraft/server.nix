@@ -14,7 +14,7 @@
 
     servers.dsd = {
       enable = true;
-      package = pkgs.paperServers.paper;
+      package = pkgs.paperServers.paper-26_2;
 
       serverProperties = {
         server-port = 25565;
