@@ -10,8 +10,9 @@
   ...
 }:
 let
-  me = (import (flake + "/config.nix")).users.me;
-  username = "nikhil";
+  cfg = import (flake + "/config.nix");
+  me = cfg.users.me;
+  username = cfg.users.obox.username;
 in
 {
   imports = [

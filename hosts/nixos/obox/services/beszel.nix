@@ -4,8 +4,12 @@
 {
   config,
   lib,
+  flake,
   ...
 }:
+let
+  username = (import (flake + "/config.nix")).users.obox.username;
+in
 {
   # One-time setup after a fresh hub DB: enable the universal token so agents
   # can self-register. Login to get a JWT, then GET with query params:
@@ -66,4 +70,5 @@
     mode = "0440";
   };
   services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
+  services.beszel.agent.user = username;
 }

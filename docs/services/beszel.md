@@ -37,25 +37,20 @@ curl "http://localhost:<port>/api/beszel/universal-token?enable=1&permanent=1&to
 
 ## Agent (all hosts)
 
-Agent config varies by host type:
+The shared module (`modules/nixos/beszel.nix`) exposes a `services.beszel.agent.user` option:
 
-| Host | Runs as | Docker socket | Notes |
-|------|---------|---------------|-------|
-| obox | DynamicUser | system (`/var/run/docker.sock`) | PrivateUsers=false |
-| semi, dsd | user (nikhil.singh) | rootless (`/run/user/1000/docker.sock`) | DynamicUser=false |
-| mach | user (niksingh710) | rootless (`/run/user/1000/docker.sock`) | SKIP_GPU=true |
+- **Set** (rootless docker hosts): agent targets `/run/user/1000/docker.sock`, runs as that user with `DynamicUser=false`, and enables native `users.users.<user>.linger` so the socket exists at boot without a login session.
+- **Unset / null** (system docker): agent targets `/var/run/docker.sock` as a DynamicUser.
 
-### Why agents run as user on workstations
+Per-host config is limited to the user, secrets, and host-specific env vars:
 
-Rootless Docker socket is at `/run/user/<uid>/docker.sock` inside a `0700` directory. The agent must run as that user to traverse the path. `DynamicUser=false` + `User=<username>` fixes this.
-
-### mach GPU workaround
-
-AMD GPU sysfs reading causes a kernel panic in beszel. `SKIP_GPU=true` disables GPU monitoring.
-
-- Bug: https://github.com/henrygd/beszel/issues/1799
+| Host | `agent.user` | Extra env | Notes |
+|------|-------------|-----------|-------|
+| obox | `nikhil` | — | Also runs the hub |
+| semi, dsd | `nikhil.singh` | — | — |
+| mach | `niksingh710` | `SKIP_GPU=true` | AMD GPU sysfs panic workaround ([#1799](https://github.com/henrygd/beszel/issues/1799)) |
 
 ## Module
 
-- `modules/nixos/beszel.nix` - agent module with options for HUB_URL, KEY, LISTEN, DOCKER_HOST, TOKEN_FILE
+- `modules/nixos/beszel.nix` - agent module with `user` option (drives socket, run-as, linger) plus HUB_URL, KEY, LISTEN, DOCKER_HOST defaults
 - Hub config is in `hosts/nixos/obox/services/beszel.nix`
