@@ -103,7 +103,7 @@ Auto-imported directory (`modules/darwin/yabai/`). Import via `darwinModules.yab
 
 ### default.nix
 
-[Yabai](https://github.com/koekeishiya/yabai) tiling window manager.
+[Yabai](https://github.com/koekeishiya/yabai) tiling window manager. `enableScriptingAddition = true` unlocks focus/stacking control beyond macOS defaults (requires partial SIP disable - the trade-off for Linux-WM-level window management on macOS).
 
 - `enableScriptingAddition = true` (requires partial SIP disable)
 - BSP layout, focus follows mouse (autofocus), mouse follows focus

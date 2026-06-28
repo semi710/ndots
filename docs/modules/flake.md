@@ -31,7 +31,7 @@ Darwin-specific: `extra-platforms = "aarch64-darwin x86_64-darwin"` (Rosetta).
 
 ### caches.nix
 
-Binary cache configuration. Sets substituters + trusted keys for faster builds:
+Binary cache configuration - tells nix to pull pre-built binaries from these caches instead of compiling from source. Faster first builds, less local CPU. Sets substituters + trusted keys in parallel:
 
 | Cache | Key |
 |---|---|

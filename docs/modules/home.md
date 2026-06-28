@@ -42,11 +42,21 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 !!! note "In NixOS/Darwin hosts"
     When used inside a NixOS or Darwin host, home modules are added via `home-manager.sharedModules`. The NixOS `default.nix` and Darwin `sharedModules.nix` wire this automatically.
 
+## Design Philosophy
+
+A few deliberate choices repeat across these modules. They explain the per-module details below:
+
+- **vi-mode / hjkl everywhere** - zsh, tmux, kitty, hyprland, mpv, zathura, rofi, aerospace, and skhd share the same motion keys. One muscle memory set works across shell, terminal, window manager, and media apps.
+- **`jk` escape** - the same escape chord in zsh, opencode, pi, and Hammerspoon's system-wide vim mode. Leaving insert mode is identical everywhere.
+- **OSC52 clipboard** - visual yank reaches the local clipboard over SSH and inside tmux, with no xclip forwarding or extra config.
+- **Shared stylix theme** - kanagawa-dragon colors and Monaspace fonts flow from NixOS to Darwin to home-manager, so every app reads the same theme - no per-app configuration.
+- **nix-wire auto-import** - drop a `.nix` into a module directory and it's wired automatically. That's why `shell/`, `editor/`, `ai/`, etc. are directories with a `default.nix` that imports its siblings - no import list to maintain.
+
 ---
 
 ## base.nix - `default.nix`
 
-The base home setup every user gets. Platform-agnostic (works on NixOS, Darwin, standalone).
+The base home setup every user gets - the foundation all other home modules layer on. Platform-agnostic on purpose: one module works on NixOS, Darwin, and standalone home-manager, so there's no per-OS fork of the common user environment.
 
 **What it does:**
 
@@ -71,13 +81,15 @@ Auto-imported directory (`modules/home/shell/`). Import via `homeModules.shell`.
 
 ### default.nix
 
+The shell bundle - everything that makes the terminal usable. Adding `foo.nix` here wires it automatically (no import list to touch); `nix-your-shell` so `nix-shell -p` works inside zsh.
+
 - Imports all shell sub-modules via `nix-wire.lib.autoImport`
 - Enables `nix-your-shell`
 - Installs: `devenv`, `nixpkgs-track`, `nixpkgs-manual`, `nixpkgs-review`, `nh`, `duf`
 
 ### zsh.nix
 
-Zsh with vi-mode, OSC52 clipboard, fzf-tab.
+Zsh as the primary shell, configured so editor muscle memory carries over and the clipboard works remotely. vi-mode + `jk` escape match the editor/tmux chords; OSC52 so visual yank reaches the local clipboard over SSH and tmux; fzf-tab so completion is fuzzy instead of prefix-only.
 
 - `zsh-vi-mode` plugin (escape with `jk`)
 - `zsh-fzf-tab` plugin (`Alt+j`/`Alt+k` complete)
@@ -88,7 +100,7 @@ Zsh with vi-mode, OSC52 clipboard, fzf-tab.
 
 ### tmux.nix
 
-Tmux with vi mode, custom status, plugins.
+Tmux as the session/pane layer, kept consistent with the shell and editor. Vi mode for hjkl navigation; `Ctrl+a` prefix (easier to reach than the default `Ctrl+b`); OSC52 copy so yanks work over SSH without xclip forwarding; minimal status line so panes get the screen space.
 
 - `baseIndex = 1`, `keyMode = "vi"`, `shortcut = "a"` (prefix is `Ctrl+a`)
 - Plugins: `minimal-tmux-status`, `better-mouse-mode`, `fzf-tmux-url` (`u`), `vim-tmux-navigator`
@@ -100,7 +112,7 @@ Tmux with vi mode, custom status, plugins.
 
 ### fzf.nix
 
-Fzf with custom options, fd integration, ripgrep.
+Fzf as the universal fuzzy picker, wired into shell, tmux, and git. `fd` replaces `find` (faster, respects gitignore by default); ripgrep powers preview content search.
 
 - Default options: 60% height, reverse layout, highlight line, custom colors
 - `fd` as the file finder (hidden, follow symlinks)
@@ -111,7 +123,7 @@ Fzf with custom options, fd integration, ripgrep.
 
 ### starship.nix
 
-Custom starship prompt with git icons, file/folder counts, nix shell indicator.
+Custom starship prompt that surfaces git state and dev-shell context at a glance. Two-line so the verbose git info (branch, last commit, status counts) sits on its own line and never eats into the command line.
 
 - Shows: directory icon, file count, folder count, disk usage
 - Git: branch, host icon (github/gitlab/etc), last commit message, status with counts
@@ -121,7 +133,7 @@ Custom starship prompt with git icons, file/folder counts, nix shell indicator.
 
 ### git.nix
 
-Git + gh + lazygit.
+Git with the surrounding tooling (`gh`, `lazygit`) and defaults that keep history clean and resolvable. `pull.rebase` for linear history; `diff3` conflict style so the original context is visible during merges; `rerere` so repeated conflicts auto-resolve.
 
 - `pull.rebase = true`, `merge.conflictStyle = "diff3"`, `rerere.enabled`
 - `init.defaultBranch = "master"`, `core.editor = "nvim"`
@@ -133,34 +145,46 @@ Git + gh + lazygit.
 
 ### bat.nix
 
+`cat` replacement that adds syntax highlighting and line numbers for free. Aliased so `cat` muscle memory carries over - pipe to it or read a file, same invocation.
+
 - `bat` enabled
 - `cat` aliased to `bat --paging=never --style=plain`
 
 ### btop.nix
 
+`top`/`htop` replacement, configured with vim keys so you navigate processes with hjkl - same motions as the shell and editor.
+
 - `btop` with `vim_keys = true`, transparent background
 
 ### direnv.nix
 
+Auto-loads the nix dev shell when you `cd` into a project, so there's no manual `nix-shell`/`nix develop` per visit. `nix-direnv` keeps the shell cached (fast reloads).
+
 - `direnv` + `nix-direnv`, silent, zsh integration
 
 ### eza.nix
+
+`ls` replacement that adds git status per file, icons, and colors. Aliased onto `ls`/`lt` so the same muscle memory gives a richer view with zero retraining.
 
 - `eza` with colors, git, icons, group/header/smart-group
 - Aliases: `ls` → `eza -s modified --reverse`, `lt`/`tree` → tree view
 
 ### zoxide.nix
 
+`cd` replacement that learns your frequent directories - `cd proj` jumps to the right one instead of typing the full path. Bound as `cd` directly; `/nix` excluded because store paths aren't useful jump targets.
+
 - `zoxide` with `--cmd cd` (replaces `cd` with zoxide)
 - Excludes `/nix`
 
 ### jq.nix
 
+JSON CLI. Enabled so it's on PATH and available to the fzf/nsearch tooling above for ad-hoc JSON inspection.
+
 - `jq` enabled
 
 ### sesh.nix
 
-[sesh](https://github.com/joshmedeski/sesh) tmux session manager.
+[sesh](https://github.com/joshmedeski/sesh) tmux session manager - so you don't recreate the same sessions every time you switch projects. Predefined sessions (`todo`, `notes`, `LeetCode`, `main`) mean one keystroke opens the full workflow.
 
 - Pinned to v2.25.0 (overridden hash)
 - `tmuxKey = "c-o"` (open sesh from tmux)
@@ -170,7 +194,7 @@ Git + gh + lazygit.
 
 ### aliases.nix
 
-Shell aliases + the `nxbuild` helper.
+Shell aliases + the `nxbuild` helper. `nxbuild` exists to offload nix builds to remote machines (semi/dsd) so the local machine doesn't melt - the rest are shortening aliases (`c`, `d`, colored `cp`/`rm`) and a `help` that pipes through bat.
 
 - Aliases: `c` (clear), `d` (background), `cp`/`rm`/`rcp` (colored/verbose), `mkdir -pv`, `isodate`, `matrix`, `fetch` (fastfetch), `font-family`
 - `help` command (pipes `--help` through bat)
@@ -182,6 +206,8 @@ Shell aliases + the `nxbuild` helper.
   ```
 
 ### android.nix
+
+Android device tooling: `android-tools` for `adb`/`fastboot`, `scrcpy` for low-latency screen mirroring and control over USB.
 
 - Installs `android-tools` + `scrcpy`
 
@@ -201,6 +227,8 @@ Shell aliases + the `nxbuild` helper.
 Auto-imported directory (`modules/home/editor/`). Import via `homeModules.editor`.
 
 ### helix.nix
+
+A second editor alongside nvix. Relative line numbers so `5j`/`3k` motions stay accurate; LSP messages surfaced inline.
 
 - `helix` with relative line numbers, LSP display messages
 
@@ -315,7 +343,7 @@ A helper (not a module) - combines numbered markdown files in `system-prompts/` 
 
 ## browser
 
-Auto-imported directory. Import via `homeModules.browser`.
+Auto-imported directory. Import via `homeModules.browser`. Web browser config - Zen (Firefox-based); containers keep Personal and Work logins from bleeding into each other.
 
 ### zen/
 

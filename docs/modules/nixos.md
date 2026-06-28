@@ -210,7 +210,7 @@ services.tailscale.enable = true;
 
 ## intel.nix
 
-Intel CPU microcode + graphics drivers.
+Intel CPU microcode + graphics drivers, tuned for the modern media stack. `LIBVA_DRIVER_NAME = "iHD"` forces intel-media-driver (not the legacy i965) so VA-API hardware video encode/decode works out of the box.
 
 **What it does:**
 
@@ -277,6 +277,8 @@ PipeWire audio server (replaces PulseAudio).
 - Disables `telephony_client` (workaround for nixpkgs#114222)
 
 ### touchpad.nix
+
+Libinput trackpad tuned for comfort: natural scrolling (content moves with the finger, not against) and disable-while-typing so palm brushes don't jitter the pointer.
 
 - `services.libinput` with natural scrolling + disable while typing
 
