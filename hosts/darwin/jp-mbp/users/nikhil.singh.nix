@@ -25,7 +25,7 @@ in
     flake.homeModules.syncthing
   ];
 
-  home.packages = with pkgs; [ sklauncher ];
+  home.packages = with pkgs; [ sklauncher-beta ];
 
   services.syncthing = {
     guiCredentials = {

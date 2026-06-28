@@ -25,6 +25,7 @@ in
   aria2tui = selfPkgs.aria2tui;
   copy = selfPkgs.copy;
   sklauncher = selfPkgs.sklauncher;
+  sklauncher-beta = selfPkgs.sklauncher-beta;
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
