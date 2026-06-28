@@ -60,7 +60,7 @@
         ApplePressAndHoldEnabled = false;
         NSWindowShouldDragOnGesture = true;
         NSAutomaticWindowAnimationsEnabled = false;
-        _HIHideMenuBar = false;
+        _HIHideMenuBar = true;
         "com.apple.sound.beep.feedback" = 0;
         "com.apple.sound.beep.volume" = 0.000;
       };
