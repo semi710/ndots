@@ -31,48 +31,33 @@ in
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
 
-  # opencode-vim with corrected npm deps hash and bun version workaround
-  # Upstream hashes.json has stale hash(s) for the node_modules fixed-output drv.
-  # Upstream's nixpkgs-unstable also regressed to bun 1.3.13, but opencode's
-  # build script requires ^1.3.14. We patch the overly-strict version check.
+  # opencode-vim: override stale node_modules hash.
+  # Upstream's nix-hashes workflow (PRs #192, #196) is configured for ocv but
+  # disabled_manually, so hashes.json drifts stale when bun.lock changes.
+  # Bun version check is now handled upstream (opencode.nix postPatch).
+  # FIX: remove this override once the dev enables the nix-hashes workflow on ocv.
   opencode-vim =
     let
       pkg = inputs.opencode-vim.packages.${final.stdenv.hostPlatform.system}.default;
-
-      # Read upstream hashes.json and patch only the stale platform(s).
-      # Corrected hashes discovered from actual build output.
       upstreamHashes = builtins.fromJSON (builtins.readFile "${inputs.opencode-vim}/nix/hashes.json");
       correctedNodeModuleHashes = upstreamHashes.nodeModules // {
-        # Override stale hash for x86_64-linux
-        x86_64-linux = "sha256-SM30m9rSSuR1dvF/9lBCIMoJoUPkq9wpHcbhECErJfI=";
-        # Add other platforms here when tested:
-        # aarch64-linux = "sha256-...";
+        x86_64-linux = "sha256-Yh6lxJkJPH7c5WYGTW9lI4nfVx2+ZxVmH7ni0CVqbxw=";
         aarch64-darwin = "sha256-7C6mqePW6m+IgLB/B033sESgh3vyCzrg+VFh6OzcVYo=";
-        # x86_64-darwin = "sha256-...";
       };
-
       node_modules = final.callPackage "${inputs.opencode-vim}/nix/node_modules.nix" {
         hash =
-          correctedNodeModuleHashes.${final.stdenv.hostPlatform.system} or (
-            throw "opencode-vim: no corrected node_modules hash for ${final.stdenv.hostPlatform.system}. "
-            + "Build with 'lib.fakeHash' to discover the correct one."
-          );
+          correctedNodeModuleHashes.${final.stdenv.hostPlatform.system}
+            or (throw "opencode-vim: no corrected node_modules hash for ${final.stdenv.hostPlatform.system}.");
       };
     in
-    (pkg.override { inherit node_modules; }).overrideAttrs (oldAttrs: {
-      postPatch = (oldAttrs.postPatch or "") + ''
-        # Relax bun version check — 1.3.13 works fine for building
-        substituteInPlace packages/script/src/index.ts \
-          --replace-fail 'throw new Error(`This script requires bun@' '// relaxed: bun version check bypassed - '
-      '';
-    });
+    pkg.override { inherit node_modules; };
 
   # Overrides
   # Fix appstream build on Darwin: meson's pthread detection returns
   # "none required" which gets passed to the linker as separate args.
   # Upstream fix: https://github.com/NixOS/nixpkgs/pull/533354 (appstream 1.1.2 -> 1.1.3)
   # Track until merged into our nixpkgs-unstable pin:
-  #   nixpkgs-track 533354
+  #   FIX: nixpkgs-track 533354
   appstream = prev.appstream.overrideAttrs (oldAttrs: {
     postConfigure =
       (oldAttrs.postConfigure or "")
@@ -88,7 +73,7 @@ in
   # qtshadertools provides the qsb binary needed to compile Telegram shaders.
   # Upstream fix: https://github.com/NixOS/nixpkgs/pull/534779
   # Track until merged into our nixpkgs-unstable pin:
-  #   nixpkgs-track 534779
+  #   FIX: nixpkgs-track 534779
   telegram-desktop = prev.telegram-desktop.override {
     unwrapped = prev.telegram-desktop.unwrapped.overrideAttrs (oldAttrs: {
       nativeBuildInputs =
