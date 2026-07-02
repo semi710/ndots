@@ -34,7 +34,7 @@
           path = "~/.notes";
           startup_command = # sh
             ''
-              nvim --cmd 'let g:auto_session_enabled = v:false' -c 'cd ~/.notes/' -c 'lua vim.schedule(function() vim.cmd("ObsidianQuickSwitch") end)'
+              nvim --cmd 'let g:auto_session_enabled = v:false' -c 'cd ~/.notes/' -c 'edit index.md'
             '';
           preview_command = "${lib.getExe pkgs.fzf-preview} ${path}";
         }
