@@ -11,16 +11,12 @@ let
 in
 {
   programs.opencode.settings = {
-    default_agent = "OpenAgent";
+    # OmO plugin registers all agents (sisyphus, hephaestus, etc.).
+    # We only add skills to the built-in agents here; the plugin's
+    # config handler merges these on top of its own agent definitions.
+    default_agent = "sisyphus";
     agent = {
-      # Registry's openagent.md is the base (prompt, tools, permissions).
-      # Our rules live in AGENTS.md (global, applied on top of every agent).
-      # Skills survive the merge - they add to whatever the registry provides.
-      OpenAgent.skills = skillsMod.skills;
-      explore = {
-        mode = "subagent";
-        model = "litellm/open-fast";
-      };
+      sisyphus.skills = skillsMod.skills;
     };
   };
 }

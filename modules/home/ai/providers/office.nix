@@ -42,10 +42,11 @@ let
 
   # Pi format: flat list of { id }.
   piJuspayModels = map (name: { id = name; }) modelNames;
+  defaultModel = "litellm/glm-latest";
 in
 {
   programs.opencode.settings = {
-    model = "litellm/open-large";
+    model = defaultModel;
 
     provider.litellm = {
       npm = "@ai-sdk/openai-compatible";
