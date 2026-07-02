@@ -20,11 +20,6 @@ let
       command = getExe pkgs.mcp-server-filesystem;
       args = [ "${config.home.homeDirectory}" ];
     };
-    # context7 = {
-    #   type = "remote";
-    #   url = "https://mcp.context7.com/mcp";
-    #   headers.CONTEXT7_API_KEY = "{env:CONTEXT7_API_KEY}";
-    # };
     gitnexus = {
       command = getExe pkgs.llm-agents.gitnexus;
       args = [ "mcp" ];

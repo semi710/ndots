@@ -15,7 +15,10 @@ let
   defaultModel = "litellm/glm-latest";
   omoConfig = builtins.toJSON {
     default_run_agent = "sisyphus";
-    team_mode.enabled = true;
+    team_mode = {
+      enabled = true;
+      tmux_visualization = true;
+    };
     agents = {
       sisyphus = {
         model = defaultModel;
