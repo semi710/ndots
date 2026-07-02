@@ -26,6 +26,7 @@ in
   copy = selfPkgs.copy;
   sklauncher = selfPkgs.sklauncher;
   sklauncher-beta = selfPkgs.sklauncher-beta;
+  bitbucket-mcp = selfPkgs.bitbucket-mcp;
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
