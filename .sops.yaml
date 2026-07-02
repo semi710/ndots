@@ -6,7 +6,7 @@ creation_rules:
   - path_regex: ^secrets/keys\.yaml$
     key_groups:
       - age: [*personal]
-  - path_regex: ^secrets/office\.yaml$
+  - path_regex: ^secrets/(office|server)\.yaml$
     key_groups:
       - age:
           - *office

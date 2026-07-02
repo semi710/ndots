@@ -3,6 +3,7 @@
   flake,
   lib,
   config,
+  pkgs,
   ...
 }:
 let
@@ -77,6 +78,26 @@ in
     userFile = config.hm.sops.secrets."naste/user".path;
     passFile = config.hm.sops.secrets."naste/pass".path;
   };
+
+  # Bitbucket CLI + MCP - creds from sops (shared by all workstations)
+  hm.sops.secrets."bitbucket/url".sopsFile = "${flake}/secrets/server.yaml";
+  hm.sops.secrets."bitbucket/username".sopsFile = "${flake}/secrets/server.yaml";
+  hm.sops.secrets."bitbucket/token".sopsFile = "${flake}/secrets/server.yaml";
+  hm.home.packages = [
+    (pkgs.writeShellScriptBin "bb" ''
+      export BITBUCKET_URL="$(cat ${config.hm.sops.secrets."bitbucket/url".path})/rest"
+      export BITBUCKET_ACCESS_TOKEN="$(cat ${config.hm.sops.secrets."bitbucket/token".path})"
+      export BITBUCKET_USERNAME="$(cat ${config.hm.sops.secrets."bitbucket/username".path})"
+      exec ${pkgs.bitbucket-cli}/bin/bitbucket-cli "$@"
+    '')
+    (pkgs.writeShellScriptBin "bitbucket-mcp" ''
+      export BITBUCKET_URL="$(cat ${config.hm.sops.secrets."bitbucket/url".path})"
+      export BITBUCKET_TOKEN="$(cat ${config.hm.sops.secrets."bitbucket/token".path})"
+      export BITBUCKET_USERNAME="$(cat ${config.hm.sops.secrets."bitbucket/username".path})"
+      exec ${pkgs.nodejs}/bin/node ${pkgs.bitbucket-mcp}/lib/bitbucket-server-mcp/build/index.js "$@"
+    '')
+  ];
+  hm.programs.mcp.servers.bitbucket.command = "${config.hm.home.profileDirectory}/bin/bitbucket-mcp";
 
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.11";
