@@ -30,27 +30,7 @@ in
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
-
-  # opencode-vim: override stale node_modules hash.
-  # Upstream's nix-hashes workflow (PRs #192, #196) is configured for ocv but
-  # disabled_manually, so hashes.json drifts stale when bun.lock changes.
-  # Bun version check is now handled upstream (opencode.nix postPatch).
-  # FIX: remove this override once the dev enables the nix-hashes workflow on ocv.
-  opencode-vim =
-    let
-      pkg = inputs.opencode-vim.packages.${final.stdenv.hostPlatform.system}.default;
-      upstreamHashes = builtins.fromJSON (builtins.readFile "${inputs.opencode-vim}/nix/hashes.json");
-      correctedNodeModuleHashes = upstreamHashes.nodeModules // {
-        x86_64-linux = "sha256-Yh6lxJkJPH7c5WYGTW9lI4nfVx2+ZxVmH7ni0CVqbxw=";
-        aarch64-darwin = "sha256-7C6mqePW6m+IgLB/B033sESgh3vyCzrg+VFh6OzcVYo=";
-      };
-      node_modules = final.callPackage "${inputs.opencode-vim}/nix/node_modules.nix" {
-        hash =
-          correctedNodeModuleHashes.${final.stdenv.hostPlatform.system}
-            or (throw "opencode-vim: no corrected node_modules hash for ${final.stdenv.hostPlatform.system}.");
-      };
-    in
-    pkg.override { inherit node_modules; };
+  opencode-vim = inputs.opencode-vim.packages.${final.stdenv.hostPlatform.system}.default;
 
   # Overrides
   # Fix appstream build on Darwin: meson's pthread detection returns

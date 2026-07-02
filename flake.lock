@@ -1951,11 +1951,11 @@
         "nixpkgs": "nixpkgs_16"
       },
       "locked": {
-        "lastModified": 1782747771,
-        "narHash": "sha256-1KGmK9d1Hr2h1/WMMFkMs8KJ3eqRyG1vvJqiIOs2NSA=",
+        "lastModified": 1782976949,
+        "narHash": "sha256-VqYpRsLBdYjwLCTs26tMOUM2+lKh/YX1Qs5reGZ6hCA=",
         "owner": "leohenon",
         "repo": "opencode-vim",
-        "rev": "d162aa978075e27d3e0c5b60349cfded397c3157",
+        "rev": "a7972f7c779b5471ae96657c2c9cf15e773bbc24",
         "type": "github"
       },
       "original": {
