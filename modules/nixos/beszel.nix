@@ -5,9 +5,14 @@
 # then runs the agent as that user. Enable linger separately if the
 # rootless socket must exist at boot without a login session.
 #
-# KEY is the hub's public key — safe in the repo, only encrypts metrics.
-# For non-NixOS devices, run the henrygd/beszel-agent Docker image with
-# KEY, HUB_URL (https://beszel.semi.sh), and TOKEN (from sops).
+# For non-NixOS devices, run the Docker image:
+#   docker run -d --network host --restart unless-stopped \
+#     -v /var/run/docker.sock:/var/run/docker.sock:ro \
+#     -e KEY='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYwmNqGPWjYdAoVH2IM3tp/liL8sHNF4/kladhQUzSQ' \
+#     -e HUB_URL='https://beszel.semi.sh' \
+#     -e TOKEN='<from sops: secrets/server.yaml beszel.token>' \
+#     henrygd/beszel-agent:latest
+# KEY is public (encrypts metrics), TOKEN is secret (from sops).
 {
   config,
   lib,
