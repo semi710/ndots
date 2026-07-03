@@ -9,3 +9,16 @@ Priorities: explicit over implicit, preserve observability (logs/metrics/error h
 
 ### Hygiene
 Prefer rebase over merge for feature branches. Imperative mood in commits ("Add feature" not "Added"). Atomic, focused commits. Stage selectively with `git add -p`. Check `git log` for the project's commit conventions before writing a message. NEVER commit without explicit approval - "go" means make changes, not commit. NEVER push without explicit separate approval.
+
+### Commit messages
+Format: `<type>: <description>`. Types: feat, fix, chore, refactor, docs.
+
+Good:
+- `feat: wire bitbucket CLI and MCP with sops creds on workstations`
+- `fix: remove opencode-vim hash override, upstream nix-hashes workflow now works`
+- `chore(flake): update lock`
+
+Bad:
+- `Allow non-GPT hephaestus, set ponytail ultra, document beszel docker agent setup` (no type prefix, three unrelated changes)
+- `Added feature` (past tense, no type)
+- `Update file` (no type, vague)
