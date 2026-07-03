@@ -5,7 +5,7 @@
     ./disk.nix
     ./hardware.nix
     ./extra-users.nix
-    flake.nixosModules.minecraft
+    # flake.nixosModules.minecraft
   ];
 
   services.filebrowser-quantum.sources = [
