@@ -34,6 +34,7 @@ let
       };
       hephaestus = {
         model = defaultModel;
+        allow_non_gpt_model = true;
       };
       oracle = {
         model = defaultModel;
@@ -57,7 +58,10 @@ let
   };
 in
 {
-  home.sessionVariables.OPENCODE_ENABLE_EXA = 1;
+  home.sessionVariables = {
+    OPENCODE_ENABLE_EXA = 1;
+    PONYTAIL_DEFAULT_MODE = "ultra";
+  };
 
   home.file =
     registryFiles
