@@ -4,6 +4,10 @@
 # the docker-group username to target the rootless socket; the module
 # then runs the agent as that user. Enable linger separately if the
 # rootless socket must exist at boot without a login session.
+#
+# KEY is the hub's public key — safe in the repo, only encrypts metrics.
+# For non-NixOS devices, run the henrygd/beszel-agent Docker image with
+# KEY, HUB_URL (https://beszel.semi.sh), and TOKEN (from sops).
 {
   config,
   lib,
