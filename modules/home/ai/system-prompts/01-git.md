@@ -8,7 +8,7 @@ For each conflict block, understand BASE (ancestor), OURS (current branch), THEI
 Priorities: explicit over implicit, preserve observability (logs/metrics/error handling), never drop error handling or tests from either branch, keep the more defensive error handling, prefer feature changes over refactoring when they conflict.
 
 ### Hygiene
-Prefer rebase over merge for feature branches. Imperative mood in commits ("Add feature" not "Added"). Atomic, focused commits. Stage selectively with `git add -p`. Check `git log` for the project's commit conventions before writing a message. NEVER commit without explicit approval - "go" means make changes, not commit. NEVER push without explicit separate approval.
+Prefer rebase over merge for feature branches. Imperative mood in commits ("Add feature" not "Added"). Atomic, focused commits. Stage selectively with `git add -p`. Check `git log` for the project's commit conventions before writing a message. NEVER commit without explicit approval - "go" means make changes, not commit. NEVER push without explicit separate approval. NEVER set `--author` to the AI agent or add `Co-authored-by:` trailers for yourself - always commit as the repository's configured git identity.
 
 ### Commit messages
 Format: `<type>: <description>`. Types: feat, fix, chore, refactor, docs.

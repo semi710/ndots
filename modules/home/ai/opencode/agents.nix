@@ -16,7 +16,12 @@ in
     # config handler merges these on top of its own agent definitions.
     default_agent = "sisyphus";
     agent = {
-      sisyphus.skills = skillsMod.skills;
+      sisyphus = {
+        skills = skillsMod.skills;
+        prompt = ''
+          Commit hygiene: NEVER set --author to yourself or add Co-authored-by trailers for the AI agent. Always commit as the repository's configured git identity. Never commit or push without explicit user approval.
+        '';
+      };
     };
   };
 }
