@@ -7,9 +7,7 @@
       hs.allowAppleScript(true)
       hs.console.darkMode(true)
 
-      -- ============================================
       -- HAMMERSPOON MODE (Ctrl+Option+Shift+H)
-      -- ============================================
       local hsmode = {}
       hsmode.active = false
       hsmode.canvas = nil
@@ -156,9 +154,7 @@
 
       -- URL handler for skhd special mode to trigger Hammerspoon mode (defined after skhdmode below)
 
-      -- ============================================
       -- SKHD Special Mode Indicator
-      -- ============================================
       local skhdmode = {}
       skhdmode.canvas = nil
 
@@ -224,9 +220,7 @@
         end
       end)
 
-      -- ============================================
       -- VIM MODE
-      -- ============================================
       local VimMode = hs.loadSpoon('VimMode')
       local vim = VimMode:new()
 
@@ -244,9 +238,7 @@
       vim:enterWithSequence('jk')
       vim:shouldShowAlertInNormalMode(true)
 
-      -- ============================================
       -- Homerow scroll conflict guard
-      -- ============================================
       -- Homerow sends real j/k key events when scrolling, which triggers
       -- the jk enter sequence. We patch the key sequence event handler
       -- to skip detection when Homerow's scroll overlay is visible.
@@ -272,9 +264,7 @@
         end
       end)
 
-      -- ============================================
       -- Hyper key guard
-      -- ============================================
       -- When CapsLock is mapped to Hyper (Ctrl+Opt+Cmd), pressing Hyper+J
       -- triggers the jk enter sequence. We temporarily disable the sequence
       -- while Hyper modifiers are held so the keypress passes through.
@@ -298,9 +288,7 @@
         end
       end)
 
-      -- ============================================
       -- Password field guard
-      -- ============================================
       -- Disable vim mode when a password field is focused to avoid
       -- swallowing keystrokes meant for authentication.
       vim.inPasswordField = false
@@ -335,9 +323,7 @@
         end
       end)
 
-      -- ============================================
       -- Firenvim guard
-      -- ============================================
       -- Disable vim mode when a Firenvim iframe is focused inside the browser,
       -- so Hammerspoon doesn't swallow keystrokes meant for the embedded Neovim.
       -- Detection: Firenvim creates an AXWebArea with moz-extension:// in its
@@ -385,9 +371,7 @@
         end
       end)
 
-      -- ============================================
       -- Spotlight support for vim mode
-      -- ============================================
       vim.spotlightWatcher = hs.window.filter.new(function(win)
         if not win then return false end
         local app = win:application()
@@ -410,9 +394,7 @@
         end
       end)
 
-      -- ============================================
       -- Emoji Picker support for vim mode
-      -- ============================================
       -- Detect emoji picker by monitoring all visible windows
       vim.emojiEnabled = false
       vim.emojiWasDisabled = false
