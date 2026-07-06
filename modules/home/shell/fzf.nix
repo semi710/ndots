@@ -57,32 +57,9 @@ in
         "*.bak"
       ];
     };
-    nix-search-tv = {
-      enable = true;
-      settings.indexes = [
-        "nixpkgs"
-        "home-manager"
-        "nixos"
-        "darwin"
-        "nur"
-        "noogle"
-      ];
-    };
   };
 
-  home.packages = with pkgs; [
-    fzf-preview
-    (writeShellApplication {
-      name = "ns";
-      runtimeInputs = [
-        fzf
-        nix-search-tv
-        gnused
-        gawk
-      ];
-      text = builtins.readFile "${nix-search-tv.src}/nixpkgs.sh";
-    })
-  ];
+  home.packages = with pkgs; [ fzf-preview ];
   home.shellAliases = {
     fzfp = "${lib.getExe pkgs.fzf} --preview='${lib.getExe pkgs.fzf-preview} {}'";
   };
