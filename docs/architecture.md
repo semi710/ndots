@@ -153,14 +153,14 @@ overlays/
 ```
 
 `overlays/default.nix` composes:
-1. `overlays/packages.nix` - local custom packages (from `packages/`), `stable` nixpkgs, `nsearch-adv`, `opencode-vim` (with patched hashes), `appstream` + `telegram-desktop` Darwin build fixes
+1. `overlays/packages.nix` - local custom packages (from `packages/`), `stable` nixpkgs, `opencode-vim` (with patched hashes), `appstream` + `telegram-desktop` Darwin build fixes
 2. `inputs.llm-agents.overlays.default` - AI agent tooling
 
 The overlay is applied globally via `nix-wire` so `pkgs.copy`, `pkgs.road-rage`, `pkgs.stremio-enhanced`, etc. are available everywhere.
 
 !!! tip "Accessing custom packages"
     After the overlay, these are available as `pkgs.<name>`:
-    `copy`, `aria2tui`, `sklauncher`, `stremio-enhanced`, `airsync`, `hammerspoon`, `skhd-zig`, `road-rage`, `stable` (nixpkgs-stable), `nsearch-adv`, `putils` (utils flake), `opencode-vim`.
+    `copy`, `aria2tui`, `sklauncher`, `stremio-enhanced`, `airsync`, `hammerspoon`, `skhd-zig`, `road-rage`, `stable` (nixpkgs-stable), `putils` (utils flake), `opencode-vim`.
 
 ## How Packages Are Exposed
 

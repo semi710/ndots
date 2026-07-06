@@ -117,7 +117,7 @@ Fzf as the universal fuzzy picker, wired into shell, tmux, and git. `fd` replace
 - Default options: 60% height, reverse layout, highlight line, custom colors
 - `fd` as the file finder (hidden, follow symlinks)
 - `fzf-preview` for previews
-- `nsearch-adv` package
+- `nix-search-tv` package (fuzzy nixpkgs search)
 - `Ctrl+R` history, `Ctrl+Space` accept autosuggestion (wired in zsh init)
 - `fzfp` alias for fzf with preview
 
