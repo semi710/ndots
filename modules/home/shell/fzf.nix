@@ -61,7 +61,7 @@ in
 
   home.packages = with pkgs; [
     fzf-preview
-    nsearch-adv
+    nix-search-tv
   ];
   home.shellAliases.fzfp = "${lib.getExe pkgs.fzf} --preview='${lib.getExe pkgs.fzf-preview} {}'";
 }

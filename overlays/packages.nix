@@ -14,7 +14,6 @@ in
     inherit (prev.stdenv.hostPlatform) system;
     overlays = prev.lib.attrValues inputs.self.overlays;
   };
-  nsearch-adv = inputs.nsearch.packages.${final.stdenv.hostPlatform.system}.nsearch-adv;
 
   # From ./packages
   stremio-enhanced = selfPkgs.stremio-enhanced;
