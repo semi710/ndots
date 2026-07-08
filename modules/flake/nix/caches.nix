@@ -16,7 +16,7 @@ let
     "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
     "oss:KO872wNJkCDgmGN3xy9dT89WAhvv13EiKncTtHDItVU="
     "nvix.cachix.org-1:qVYAfj2oiH0DF3pSs8OfPYI6B0mAZ+h5mMajN+EOL2E="
-    "nija.cachix.org-1:REPLACE_WITH_YOUR_PUBLIC_KEY"
+    "nija.cachix.org-1:wJRNRxBn1M1SAgzVv5ZAMe07ky6bkSSznMH0tEOFdcA="
     "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
     "lantian:EeAUQ+W+6r7EtwnmYjeVwx5kOGEBpjlBfPlzGlTNvHc="
     "niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g="
