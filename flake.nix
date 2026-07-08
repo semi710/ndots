@@ -1,6 +1,17 @@
 {
   description = "The Configuration";
 
+  nixConfig = {
+    extra-substituters = [
+      "https://nvix.cachix.org"
+      "https://nija.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nvix.cachix.org-1:qVYAfj2oiH0DF3pSs8OfPYI6B0mAZ+h5mMajN+EOL2E="
+      "nija.cachix.org-1:wJRNRxBn1M1SAgzVv5ZAMe07ky6bkSSznMH0tEOFdcA="
+    ];
+  };
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-25.05";
