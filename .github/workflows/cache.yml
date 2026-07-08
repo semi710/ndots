@@ -1,0 +1,42 @@
+name: cache
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - packages/**
+      - overlays/**
+      - flake.nix
+      - flake.lock
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * 1'
+
+jobs:
+  build-and-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ github.token }}
+            substituters = https://cache.nixos.org/ https://nix-community.cachix.org https://nvix.cachix.org https://nija.cachix.org
+            trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY= nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs= nvix.cachix.org-1:qVYAfj2oiH0DF3pSs8OfPYI6B0mAZ+h5mMajN+EOL2E= nija.cachix.org-1:REPLACE_WITH_YOUR_PUBLIC_KEY
+
+      - uses: cachix/cachix-action@v15
+        with:
+          name: nija
+          authToken: ${{ secrets.NIJA_CACHIX_TOKEN }}
+
+      - name: Build devshell and all packages
+        run: |
+          # Auto-discover all packages, skip 'iso' (has its own workflow)
+          PACKAGES=$(nix eval --raw --apply \
+            'p: builtins.concatStringsSep " " (builtins.map (n: ".#" + n) (builtins.filter (n: n != "iso") (builtins.attrNames p)))' \
+            .#packages.x86_64-linux)
+
+          nix build --no-link --print-out-paths \
+            .#devShells.x86_64-linux.default \
+            $PACKAGES
