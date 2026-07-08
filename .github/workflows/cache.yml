@@ -39,9 +39,23 @@ jobs:
           authToken: ${{ secrets.NIJA_CACHIX_TOKEN }}
 
       - name: Build devshell and all packages
+        env:
+          SYSTEM: ${{ matrix.system }}
         run: |
-          PACKAGES=$(nix eval --raw --apply \
-            'p: builtins.concatStringsSep " " (builtins.map (n: ".#" + n) (builtins.filter (n: n != "iso") (builtins.attrNames p)))' \
+          # Auto-discover packages, skip 'iso' and filter by platform support
+          PACKAGES=$(nix eval --impure --raw --apply \
+            'p: builtins.concatStringsSep " " (
+              builtins.map (n: ".#" + n) (
+                builtins.filter (n:
+                  n != "iso" && (
+                    let pkg = p.${n}; sys = builtins.currentSystem; in
+                    (pkg.meta.platforms or [ ]) == [ ]
+                    || (builtins.elem sys (pkg.meta.platforms or [ ])
+                        && !builtins.elem sys (pkg.meta.badPlatforms or [ ]))
+                  )
+                ) (builtins.attrNames p)
+              )
+            )' \
             .#packages.${{ matrix.system }})
 
           nix build --no-link --print-out-paths \
