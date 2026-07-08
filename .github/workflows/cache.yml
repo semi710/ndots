@@ -12,7 +12,17 @@ on:
 
 jobs:
   build-and-cache:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            system: x86_64-linux
+          - runner: ubuntu-24.04-arm
+            system: aarch64-linux
+          - runner: macos-14
+            system: aarch64-darwin
     steps:
       - uses: actions/checkout@v4
 
@@ -30,11 +40,10 @@ jobs:
 
       - name: Build devshell and all packages
         run: |
-          # Auto-discover all packages, skip 'iso' (has its own workflow)
           PACKAGES=$(nix eval --raw --apply \
             'p: builtins.concatStringsSep " " (builtins.map (n: ".#" + n) (builtins.filter (n: n != "iso") (builtins.attrNames p)))' \
-            .#packages.x86_64-linux)
+            .#packages.${{ matrix.system }})
 
           nix build --no-link --print-out-paths \
-            .#devShells.x86_64-linux.default \
+            .#devShells.${{ matrix.system }}.default \
             $PACKAGES
