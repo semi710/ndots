@@ -79,9 +79,6 @@
     utils.url = "github:niksingh710/utils";
     naste.url = "github:semi710/naste";
     dragterm.url = "github:semi710/dragterm";
-
-    # nixvim - for nix-search-tv experimental options index
-    nixvim.url = "github:nix-community/nixvim";
   };
 
   outputs =

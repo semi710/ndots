@@ -1,7 +1,55 @@
 { flake, pkgs, ... }:
 let
+  nixvim = flake.inputs.nvix.inputs.nixvim;
   nixvimOptions =
-    flake.inputs.nixvim.packages.${pkgs.system}.options-json + "/share/doc/nixos/options.json";
+    nixvim.packages.${pkgs.stdenv.hostPlatform.system}.options-json + "/share/doc/nixos/options.json";
+
+  opener = if pkgs.stdenv.hostPlatform.isDarwin then "open" else "xdg-open";
+
+  mkIndexChannel = index: {
+    metadata = {
+      name = index;
+      description = "Search ${index} packages and options";
+    };
+    source.command = "nix-search-tv print --indexes ${index}";
+    preview.command = ''nix-search-tv preview --indexes ${index} "{}"'';
+    keybindings = {
+      ctrl-r = "actions:run";
+      ctrl-i = "actions:shell";
+      ctrl-s = "actions:source";
+      ctrl-o = "actions:homepage";
+    };
+    actions.run = {
+      description = "Run the package";
+      command = ''nix run {replace:s/\/ /#/g}'';
+      mode = "execute";
+    };
+    actions.shell = {
+      description = "Enter new nix shell with this package";
+      command = ''nix shell {replace:s/\/ /#/g}'';
+      mode = "execute";
+    };
+    actions.source = {
+      description = "Open link to source code";
+      command = ''nix-search-tv source --indexes ${index} "{}" | xargs ${opener}'';
+      mode = "execute";
+    };
+    actions.homepage = {
+      description = "Open link to homepage";
+      command = ''nix-search-tv homepage --indexes ${index} "{}" | xargs ${opener}'';
+      mode = "execute";
+    };
+  };
+
+  indexes = [
+    "nixpkgs"
+    "home-manager"
+    "nixos"
+    "darwin"
+    "nur"
+    "noogle"
+    "nixvim"
+  ];
 in
 {
   programs = {
@@ -49,20 +97,20 @@ in
         ctrl-up = "select_prev_history";
         ctrl-down = "select_next_history";
       };
+
+      channels = builtins.listToAttrs (
+        map (index: {
+          name = index;
+          value = mkIndexChannel index;
+        }) indexes
+      );
     };
 
     nix-search-tv = {
       enable = true;
       enableTelevisionIntegration = true;
       settings = {
-        indexes = [
-          "nixpkgs"
-          "home-manager"
-          "nixos"
-          "darwin"
-          "nur"
-          "noogle"
-        ];
+        indexes = indexes;
         experimental.options_file.nixvim = "${nixvimOptions}";
       };
     };
