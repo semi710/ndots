@@ -22,6 +22,7 @@ let
     "System Settings"
     "Wallnetic"
     "Calculator"
+    "Kaset"
     "Karabiner-Elements"
     "Screen Sharing"
     "iPhone Mirroring"
