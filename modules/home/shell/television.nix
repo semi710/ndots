@@ -110,7 +110,14 @@ in
       enable = true;
       enableTelevisionIntegration = true;
       settings = {
-        indexes = indexes;
+        indexes = [
+          "nixpkgs"
+          "home-manager"
+          "nixos"
+          "darwin"
+          "nur"
+          "noogle"
+        ];
         experimental.options_file.nixvim = "${nixvimOptions}";
       };
     };
