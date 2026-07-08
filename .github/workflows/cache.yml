@@ -9,8 +9,6 @@ on:
       - flake.nix
       - flake.lock
   workflow_dispatch:
-  schedule:
-    - cron: '0 4 * * 1'
 
 jobs:
   build-and-cache:
