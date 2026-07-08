@@ -53,6 +53,7 @@ nav:
       - Stirling PDF: services/stirling-pdf.md
       - FileBrowser Quantum: services/filebrowser.md
       - Caddy: services/caddy.md
+      - naste: services/naste.md
       - Syncthing: services/syncthing.md
       - Tailscale: services/tailscale.md
       - Docker & Podman: services/docker.md

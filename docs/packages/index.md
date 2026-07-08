@@ -15,6 +15,8 @@ Custom packages live in `packages/` and are auto-discovered by nix-wire, exposed
 | [skhd-zig](#skhd-zig) | darwin | Zig port of skhd hotkey daemon |
 | [road-rage](#road-rage) | all | Punky display font (used in hyprlock) |
 | [drag](#drag) | darwin | Drag-and-drop from the command line |
+| [bitbucket-server-mcp](#bitbucket-server-mcp) | unix | MCP server for Bitbucket Server PR management |
+| [sklauncher-beta](#sklauncher-beta) | linux + darwin | SKLauncher 4.0 beta (native Electron, bundled JRE) |
 
 ## Using Packages
 
@@ -189,3 +191,42 @@ Unlike the `packages/*.nix` packages above, this comes from an external flake in
   home.packages = [ pkgs.drag ];
 }
 ```
+
+---
+
+## bitbucket-server-mcp
+
+`packages/bitbucket-mcp.nix`
+
+[MCP server for Bitbucket Server/Data Center](https://github.com/garc33/bitbucket-server-mcp-server) - exposes pull request management (create, review, comment, merge, decline) as MCP tools, so AI agents can interact with Bitbucket PRs directly.
+
+Built with `buildNpmPackage` from source. The binary is `bitbucket-server-mcp`.
+
+```bash
+nix run github:semi710/ndots#bitbucket-mcp
+```
+
+---
+
+## sklauncher-beta
+
+`packages/sklauncher-beta.nix`
+
+[SKLauncher 4.0 Beta](https://next.skmedix.pl/downloads) - the next-gen Minecraft launcher. Unlike the stable `sklauncher` (a JAR wrapped with `steam-run` + JDK 21), 4.0 ships native Electron builds with a bundled JRE, so no external Java is needed.
+
+**Linux:**
+
+- AppImage wrapped with `appimage-run`
+- Desktop entry + icon installed
+
+**Darwin:**
+
+- Native `.app` bundle (unzipped from release)
+- Both x86_64 and aarch64
+
+```bash
+nix run github:semi710/ndots#sklauncher-beta
+```
+
+!!! warning "Unfree license"
+    SKLauncher is unfree. The package sets `meta.license = lib.licenses.unfree`.
