@@ -143,6 +143,6 @@ else
     ];
 
     meta = commonMeta // {
-      platforms = lib.platforms.linux;
+      platforms = [ "x86_64-linux" ];
     };
   }
