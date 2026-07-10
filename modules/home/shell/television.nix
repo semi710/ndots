@@ -55,6 +55,7 @@ in
   programs = {
     television = {
       enable = true;
+      enableZshIntegration = false;
       settings.keybindings = {
         esc = "quit";
         ctrl-c = "quit";

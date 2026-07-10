@@ -38,6 +38,7 @@ in
       ''
         function zvm_after_init() {
           zvm_bindkey viins "^R" fzf-history-widget
+          zvm_bindkey viins "^T" fzf-file-widget
 
           # `ctrl + space` to accept autosuggestions
           # for macOs make sure `ctrl + space` is passed to the terminal
