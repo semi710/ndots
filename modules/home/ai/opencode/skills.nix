@@ -11,18 +11,19 @@ let
 
   skillsDir = ../skills;
   skillsEntries = builtins.readDir skillsDir;
+  ponytailSkillsDir = ponytail + "/skills";
+  ponytailSkillsEntries = builtins.readDir ponytailSkillsDir;
+
+  isPonytailSkillDir =
+    name:
+    ponytailSkillsEntries.${name} == "directory"
+    && builtins.pathExists (ponytailSkillsDir + "/${name}/SKILL.md");
+
   localSkillNames = lib.filter (name: skillsEntries.${name} == "directory") (
     lib.attrNames skillsEntries
   );
 
-  ponytailSkillNames = [
-    "ponytail"
-    "ponytail-review"
-    "ponytail-audit"
-    "ponytail-debt"
-    "ponytail-gain"
-    "ponytail-help"
-  ];
+  ponytailSkillNames = lib.filter isPonytailSkillDir (lib.attrNames ponytailSkillsEntries);
 in
 {
   # Skill name list for the agent config
