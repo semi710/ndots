@@ -87,6 +87,24 @@ in
     };
     settings = {
       autoupdate = true;
+      permission = {
+        read = {
+          "*" = "allow";
+          ".env*" = "ask";
+          "**/.env*" = "ask";
+        };
+        grep = {
+          "*" = "allow";
+          ".env*" = "ask";
+          "**/.env*" = "ask";
+        };
+        glob = "allow";
+        list = "allow";
+        bash = {
+          "*" = "ask";
+          "rm -rf *" = "deny";
+        };
+      };
       plugin = [
         "${ponytail}/.opencode/plugins/ponytail.mjs"
         "oh-my-openagent"
