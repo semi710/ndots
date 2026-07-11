@@ -49,6 +49,7 @@
       ":" = "script-binding console/enable"; # vim-style ex-cmd opener
     };
     config = {
+      osc = "no"; # disable built-in OSC so modernx can render
       save-position-on-quit = "yes";
       ytdl-format = "bestvideo+bestaudio";
       # Let yabai/skhd resize the window freely on macOS. mpv still letterboxes
