@@ -22,7 +22,6 @@ in
     flake.nixosModules.beszel
     flake.nixosModules.tailscale
     flake.nixosModules.virtualisation
-    flake.nixosModules.filebrowser
   ];
 
   sops.secrets."beszel/token" = {
@@ -55,16 +54,6 @@ in
     secrets."tailscale_auth_key" = { };
   };
   services.tailscale.authKeyFile = config.sops.secrets."tailscale_auth_key".path;
-
-  services.filebrowser-quantum = {
-    enable = true;
-    home = "/home/${me.username}";
-  };
-  sops.secrets."filebrowser/${config.networking.hostName}" = {
-    sopsFile = "${flake}/secrets/office.yaml";
-  };
-  services.filebrowser-quantum.passwordFile =
-    config.sops.secrets."filebrowser/${config.networking.hostName}".path;
 
   hm.sops.secrets."private-keys/nix_access_token" = {
     sopsFile = "${flake}/secrets/office.yaml";

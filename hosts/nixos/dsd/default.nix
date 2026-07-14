@@ -7,9 +7,4 @@
     ./extra-users.nix
     # flake.nixosModules.minecraft
   ];
-
-  services.filebrowser-quantum.sources = [
-    "/"
-    "/home"
-  ];
 }
