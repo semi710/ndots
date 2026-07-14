@@ -26,19 +26,13 @@ This is the **hub host** - runs central services for the network.
 
 ```nix
 imports = [
-  flake.flakeModules.nix            # nix settings
-  flake.nixosModules.tailscale
-  flake.nixosModules.beszel
-  flake.nixosModules.virtualisation
-  flake.nixosModules.filebrowser
-  flake.inputs.sops-nix.nixosModules.sops
-  flake.inputs.disko.nixosModules.disko
-  flake.inputs.nix-index-database.nixosModules.nix-index
-];
+  (import ../common/cloud.nix { hostName = "obox"; })
+]
+++ flake.inputs.nix-wire.lib.autoImport ./.;
 ```
 
 !!! note "No base module"
-    obox does **not** import `nixosModules.default` - it's a server, so it skips stylix, home-manager default modules, and the cachyos kernel overlay. It imports `flakeModules.nix` directly for nix settings.
+    `common/cloud.nix` does **not** import `nixosModules.default` - these are servers, so they skip stylix, home-manager default modules, and the cachyos kernel overlay. It imports `flakeModules.nix` directly for Nix settings.
 
 ## Beszel Hub Setup
 
@@ -94,11 +88,16 @@ Uses `secrets/server.yaml` (office age key):
 
 - `tailscale_auth_key`
 - `beszel/token` (agent), `beszel/ssh_key`, `beszel/username`, `beszel/password` (hub)
+- `naste/user`, `naste/pass`
 - `filebrowser/obox`
 
 ## Files
 
-- `hosts/nixos/obox/default.nix` - main config (host setup, imports service modules)
+- `hosts/nixos/common/cloud.nix` - shared cloud server config and services
+- `hosts/nixos/obox/default.nix` - host entrypoint
+- `hosts/nixos/obox/filebrowser.nix` - FileBrowser Quantum service
+- `hosts/nixos/obox/naste.nix` - naste server
+- `hosts/nixos/obox/stirling-pdf.nix` - Stirling PDF service
 - `hosts/nixos/obox/disk.nix` - disko partitioning
 - `hosts/nixos/obox/hardware.nix` - QEMU guest hardware
-- `hosts/nixos/obox/services/` - service configs (beszel, stirling-pdf, filebrowser, caddy, tailscale, naste)
+- `hosts/nixos/obox/users/nikhil.nix` - home-manager imports

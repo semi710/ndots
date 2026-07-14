@@ -1,4 +1,4 @@
-# Stirling PDF — NixOS native service (no Docker).
+# Stirling PDF - NixOS native service (no Docker).
 { ... }:
 {
   services.stirling-pdf = {

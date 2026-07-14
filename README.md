@@ -53,6 +53,7 @@ Modularized via **[Flake-Parts](https://flake.parts)** and auto-wired with **[ni
 | **dsd** | NixOS | x86_64 | Intel i9-12900KS (16c/24t) | 64 GB | Work desktop |
 | **semi** | NixOS | x86_64 | Intel i9-14900K (24c/32t) | 128 GB | Semi-personal |
 | **obox** | NixOS | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | Oracle Cloud VPS |
+| **bbox** | NixOS | aarch64 | Ampere Neoverse-N1 (4c/4t) | 24 GB | Oracle Cloud VPS |
 | **jp-mbp** | Darwin | aarch64 | Apple M4 | - | MacBook Pro |
 
 ---
@@ -69,9 +70,34 @@ sudo nixos-install --no-root-passwd --root /mnt --flake github:semi710/ndots#<ho
 ```
 
 ```bash
+# Remote install with nixos-anywhere and a home-path sops age key
+name=<hostname>
+user=<user>
+ip=<ip>
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+keydir="$tmp/home/$user/.config/sops/age"
+install -d -m 700 "$keydir"
+install -m 600 "$HOME/.config/sops/age/keys.txt" "$keydir/keys.txt"
+
+nix run github:nix-community/nixos-anywhere -- \
+  --build-on remote \
+  --option accept-flake-config true \
+  --option download-buffer-size 536870912 \
+  --extra-files "$tmp" \
+  --chown "/home/$user/.config/sops/age" "$user:users" \
+  --generate-hardware-config nixos-generate-config "./hosts/nixos/$name/hardware.nix" \
+  --flake "path:$PWD#$name" \
+  --target-host "root@$ip"
+```
+
+```bash
 # Deploy
 just deploy              # Current host
 just deploy obox         # Remote host
+just deploy bbox         # Remote host
 just iso                 # Build installer ISO
 ```
 

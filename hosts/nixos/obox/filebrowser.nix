@@ -1,9 +1,12 @@
-# FileBrowser Quantum — serves / + user home (Tailscale-only).
+# FileBrowser Quantum - serves / + user home (Tailscale-only).
 {
   config,
+  flake,
   ...
 }:
 {
+  imports = [ flake.nixosModules.filebrowser ];
+
   services.filebrowser-quantum = {
     enable = true;
     home = config.hm.home.homeDirectory;

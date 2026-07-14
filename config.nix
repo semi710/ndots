@@ -12,6 +12,10 @@
       username = "nikhil";
       inherit (me) fullname email sshPublicKeys;
     };
+    bbox = {
+      username = "nikhil";
+      inherit (me) fullname email sshPublicKeys;
+    };
     jp = rec {
       username = "nikhil.singh";
       fullname = me.fullname;

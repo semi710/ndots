@@ -43,14 +43,36 @@ services.tailscale.authKeyFile = config.sops.secrets."tailscale_auth_key".path;
 
 ### 3. Install
 
+If the host uses `sops.age.keyFile` under the user home, stage that key with `--extra-files` before the first activation. `--extra-files` copies the contents of a local directory into `/` on the target, so the temp directory must mirror the target root path. Passing `~/.config/sops/age` directly would copy `keys.txt` to `/keys.txt`, not `/home/<user>/.config/sops/age/keys.txt`.
+
 ```bash
-nix run github:nix-community/nixos-anywhere -- \
-  --generate-hardware-config nixos-generate-config ./hosts/nixos/<name>/hardware.nix \
-  --flake .#<name> \
-  --target-host root@<ip>
+name=<name>
+user=<user>
+ip=<ip>
+
+tmp="$(mktemp -d)"
+trap 'rm -rf "$tmp"' EXIT
+
+keydir="$tmp/home/$user/.config/sops/age"
+install -d -m 700 "$keydir"
+install -m 600 "$HOME/.config/sops/age/keys.txt" "$keydir/keys.txt"
 ```
 
-This partitions the disk, installs the system, and reboots - fully unattended.
+Do not add `keys.txt` to the repo. If this is a new age key, add its public recipient to `.sops.yaml` and re-encrypt the matching secrets file first.
+
+```bash
+nix run github:nix-community/nixos-anywhere -- \
+  --build-on remote \
+  --option accept-flake-config true \
+  --option download-buffer-size 536870912 \
+  --extra-files "$tmp" \
+  --chown "/home/$user/.config/sops/age" "$user:users" \
+  --generate-hardware-config nixos-generate-config "./hosts/nixos/$name/hardware.nix" \
+  --flake "path:$PWD#$name" \
+  --target-host "root@$ip"
+```
+
+This partitions the disk, installs the system, and reboots - fully unattended. `--chown` keeps the staged age key writable by the final user so home-manager can populate `~/.config`, `--build-on remote` avoids local/target platform mismatches, `accept-flake-config` allows the flake Cachix settings during bootstrap, and the larger download buffer avoids noisy large-copy warnings.
 
 ### 4. Deploy future updates
 

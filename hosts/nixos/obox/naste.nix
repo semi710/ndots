@@ -1,4 +1,4 @@
-# naste — self-hosted paste service (Caddy-proxied, Tailscale-only).
+# naste - self-hosted paste service (Caddy-proxied, Tailscale-only).
 {
   flake,
   config,

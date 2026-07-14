@@ -12,6 +12,8 @@ deploy host="":
         case "{{host}}" in \
             obox) \
                 nh os switch .#obox --target-host nikhil@obox --build-host nikhil@obox --elevation-strategy passwordless ;; \
+            bbox) \
+                nh os switch .#bbox --target-host nikhil@bbox --build-host nikhil@bbox --elevation-strategy passwordless ;; \
             mach) \
                 nh os switch .#mach --target-host niksingh710@mach --elevation-strategy passwordless ;; \
             *) \

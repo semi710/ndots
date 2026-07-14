@@ -44,6 +44,7 @@ nav:
       - "dsd <span class=\"nav-sub\">Work Desktop</span>": hosts/dsd.md
       - "semi <span class=\"nav-sub\">Semi-Personal</span>": hosts/semi.md
       - "obox <span class=\"nav-sub\">Oracle VPS</span>": hosts/obox.md
+      - "bbox <span class=\"nav-sub\">Oracle VPS</span>": hosts/bbox.md
       - "virt <span class=\"nav-sub\">VM</span>": hosts/index.md
       - "jp-mbp <span class=\"nav-sub\">MacBook Pro</span>": hosts/jp-mbp.md
       - "anywhere <span class=\"nav-sub\">Template</span>": hosts/anywhere.md
