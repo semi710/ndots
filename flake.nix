@@ -63,6 +63,10 @@
     ponytail.url = "github:DietrichGebert/ponytail";
     ponytail.flake = false;
 
+    # Cybersecurity skills library (817 skills, 29 domains)
+    cybersecurity-skills.url = "github:mukul975/Anthropic-Cybersecurity-Skills";
+    cybersecurity-skills.flake = false;
+
     # nix-index; `,` command available
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
