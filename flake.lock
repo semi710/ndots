@@ -243,22 +243,6 @@
         "type": "github"
       }
     },
-    "cybersecurity-skills": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1782484655,
-        "narHash": "sha256-CjxBmZGouTOnsKmVUHaZtFBcE1ZiOK46d/rlkUhMaA0=",
-        "owner": "mukul975",
-        "repo": "Anthropic-Cybersecurity-Skills",
-        "rev": "673da1f3b0b7be34ffc9624ef3858fe45f1c3bed",
-        "type": "github"
-      },
-      "original": {
-        "owner": "mukul975",
-        "repo": "Anthropic-Cybersecurity-Skills",
-        "type": "github"
-      }
-    },
     "disko": {
       "inputs": {
         "nixpkgs": [
@@ -1977,7 +1961,6 @@
     "root": {
       "inputs": {
         "claude-code": "claude-code",
-        "cybersecurity-skills": "cybersecurity-skills",
         "disko": "disko",
         "dragterm": "dragterm",
         "firefox-addons": "firefox-addons",
