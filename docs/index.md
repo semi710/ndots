@@ -59,6 +59,8 @@ Custom packages exposed via the flake and overlays:
 
 ## Quick Start
 
+**Install** - see the [Installation guide](guides/installation.md) for both nixos-anywhere (remote) and ISO (physical) methods.
+
 ```bash
 # Deploy to current host
 just deploy
