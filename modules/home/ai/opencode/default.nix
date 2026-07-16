@@ -12,6 +12,7 @@ let
   combinedSystemPrompt = import ../combined-system-prompt.nix { inherit lib; };
   skillsMod = import ./skills.nix { inherit inputs lib; };
   registryFiles = import ./registry.nix { inherit inputs lib; };
+  bashPermissions = builtins.fromJSON (builtins.readFile ./bash-permissions.json);
   defaultModel = "litellm/glm-latest";
   omoConfig = builtins.toJSON {
     default_run_agent = "sisyphus";
@@ -100,10 +101,7 @@ in
         };
         glob = "allow";
         list = "allow";
-        bash = {
-          "*" = "ask";
-          "rm -rf *" = "deny";
-        };
+        bash = bashPermissions;
       };
       plugin = [
         "${ponytail}/.opencode/plugins/ponytail.mjs"
