@@ -5,8 +5,8 @@
     default = "ddg";
     privateDefault = "ddg";
     engines = {
-      "google".metaData.hidden = true;
       "bing".metaData.hidden = true;
+      "google".metaData.hidden = true;
       "amazondotcom-us".metaData.hidden = true;
       "ebay".metaData.hidden = true;
       "nix-packages" = {
@@ -39,8 +39,8 @@
         urls = [ { template = "https://github.com/search?q={searchTerms}&type=repositories"; } ];
         definedAliases = [ "@gh" ];
       };
-      "google" = {
-        name = "Google";
+      "google-search" = {
+        name = "Google Search";
         urls = [ { template = "https://www.google.com/search?q={searchTerms}"; } ];
         icon = "https://www.google.com/favicon.ico";
         updateInterval = 24 * 60 * 60 * 1000;
