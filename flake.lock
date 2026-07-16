@@ -1921,11 +1921,11 @@
         "nixpkgs": "nixpkgs_15"
       },
       "locked": {
-        "lastModified": 1782976949,
-        "narHash": "sha256-VqYpRsLBdYjwLCTs26tMOUM2+lKh/YX1Qs5reGZ6hCA=",
+        "lastModified": 1784226247,
+        "narHash": "sha256-EFG5CNIvE6/SroUbydM1x52Yo/DxiDT6FQWEpv3GNZc=",
         "owner": "leohenon",
         "repo": "opencode-vim",
-        "rev": "a7972f7c779b5471ae96657c2c9cf15e773bbc24",
+        "rev": "4d09e005a5507ad84c0a1f6a9959f56ea37f16f2",
         "type": "github"
       },
       "original": {
