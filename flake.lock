@@ -1187,11 +1187,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1782479849,
-        "narHash": "sha256-SUPX+8w4hcuKyPRCv5gqZe6ak2hKYCBP33j7GhYYvFM=",
+        "lastModified": 1784292083,
+        "narHash": "sha256-pttEnUubmjFQii5FCEfdZ65+KECGrf4eZ52Pnlv430U=",
         "owner": "semi710",
         "repo": "naste",
-        "rev": "ae4b61c00f1ffe49d080d96bf3b87b8f492b2ebf",
+        "rev": "4312639b561c45cd5e558788022add00dfaee25e",
         "type": "github"
       },
       "original": {
