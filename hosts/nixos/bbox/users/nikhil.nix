@@ -6,4 +6,5 @@
     flake.homeModules.editor
     flake.homeModules.nix-index
   ];
+  programs.ssh.settings."*".forwardAgent = false;
 }

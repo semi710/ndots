@@ -23,6 +23,7 @@ in
     flake.homeModules.sops
     flake.homeModules.ai
     flake.homeModules.syncthing
+    flake.homeModules.naste
   ];
 
   home.packages = with pkgs; [ sklauncher-beta ];
