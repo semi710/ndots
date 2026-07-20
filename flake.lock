@@ -1871,11 +1871,11 @@
         "treefmt-nix": "treefmt-nix_4"
       },
       "locked": {
-        "lastModified": 1784249517,
-        "narHash": "sha256-UcmgXY9ZA/kozDLXhp5I3sNfWveKLjulXdUdTqGIjIQ=",
+        "lastModified": 1784291302,
+        "narHash": "sha256-48Xx4W5Myt/6RqYA8XSGaeY1+YOFi/HpD1BGSCWtQUM=",
         "owner": "semi710",
         "repo": "nvix",
-        "rev": "5d6b010e8e26b11b6dd99829e22f375bbaa40c24",
+        "rev": "b92f70efae461c29a5e8275938762f0894df5cb7",
         "type": "github"
       },
       "original": {
