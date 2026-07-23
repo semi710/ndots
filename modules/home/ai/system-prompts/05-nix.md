@@ -16,4 +16,4 @@ nix-shell -p <package>
 nix search nixpkgs <query>
 ```
 
-Prefer `nix run nixpkgs#<pkg>` for one-off commands. This system already has `nix` configured with flakes and the `nixos` MCP server available for package lookups.
+Prefer `nix run nixpkgs#<pkg>` for one-off commands. Never use `nix profile add` or `nix profile install` - it pollutes the user profile and breaks reproducibility. Use `nix-shell -p` for temporary shells instead. This system already has `nix` configured with flakes and the `nixos` MCP server available for package lookups.
