@@ -118,7 +118,7 @@ Fzf as the universal fuzzy picker, wired into shell, tmux, and git. `fd` replace
 - `fd` as the file finder (hidden, follow symlinks)
 - `fzf-preview` for previews
 - `nix-search-tv` package (fuzzy nixpkgs search)
-- `Ctrl+R` history, `Ctrl+Space` accept autosuggestion (wired in zsh init)
+- `Ctrl+R` history, `Alt+;` accept autosuggestion (wired in zsh init; works in all terminals)
 - `fzfp` alias for fzf with preview
 
 ### starship.nix

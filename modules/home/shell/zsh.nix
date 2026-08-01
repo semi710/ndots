@@ -84,6 +84,14 @@
         bindkey -M visual 'y' _visual_yank_with_osc52
       }
 
+      # Alt+; to accept autosuggestions.
+      # Works in all terminals - Alt+; sends ESC+; natively.
+      # precmd fires before every prompt, after zvm's lazy keybindings.
+      _zle_accept_suggestion() {
+        bindkey -M viins '^[;' autosuggest-accept
+      }
+      precmd_functions+=(_zle_accept_suggestion)
+
       [ -f "$HOME/.temp.zsh" ] && source "$HOME/.temp.zsh"
     '';
   };

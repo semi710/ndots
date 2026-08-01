@@ -35,6 +35,11 @@ in
     };
     cert = config.sops.secrets."syncthing/jp-mbp/cert".path;
     key = config.sops.secrets."syncthing/jp-mbp/key".path;
+    # Override notes folder to real iCloud path.
+    # ~/.notes is a symlink to Obsidian's iCloud container; FSEvents doesn't fire
+    # through symlinks, so Syncthing's fs watcher never sees new files.
+    settings.folders."${config.home.homeDirectory}/.notes".path =
+      "${config.home.homeDirectory}/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes";
   };
 
   sops.secrets = {
@@ -182,6 +187,21 @@ in
 
   # color override as it comes from stylix
   services.jankyborders.settings.active_color = "0xff${config.lib.stylix.colors.base06}";
+
+  home.shellAliases.icloud = "cd \"$HOME/Library/Mobile Documents/com~apple~CloudDocs\"";
+
+  # Link ~/.notes -> Obsidian's iCloud container for iPhone/iOS vault access.
+  # Obsidian iOS looks for vaults in iCloud.md.obsidian/Documents/, not general iCloud Drive.
+  # Syncthing watches the real path (see override above), so Linux machines still sync.
+  home.activation.icloudNotesLink = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    iCloudNotes="$HOME/Library/Mobile Documents/iCloud~md~obsidian/Documents/notes"
+    run mkdir -p "$iCloudNotes"
+    if [ -e "$HOME/.notes" ] && [ ! -L "$HOME/.notes" ]; then
+      run cp -a "$HOME/.notes/." "$iCloudNotes/"
+      run rm -rf "$HOME/.notes"
+    fi
+    run ln -sfn "$iCloudNotes" "$HOME/.notes"
+  '';
 
   # Telegram theming via stylix, using walogram package
   home.activation.tg-theme = lib.hm.dag.entryAfter [ "" ] ''

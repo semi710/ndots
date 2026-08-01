@@ -44,6 +44,9 @@ in
           id = "notes";
           name = id;
           devices = allDevices;
+          # .obsidian/ is device-specific (workspace layout, app settings) and
+          # iCloud locks those files on macOS ("resource deadlock avoided").
+          ignorePerms = true;
         };
         "${home}/.dump" = rec {
           id = "dump";
@@ -52,5 +55,11 @@ in
         };
       };
     };
+  };
+
+  # Exclude .obsidian/ from sync - device-specific config that iCloud locks on macOS.
+  home.file.".stignore-notes" = {
+    target = ".notes/.stignore";
+    text = "/.obsidian\n";
   };
 }
