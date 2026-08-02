@@ -109,7 +109,7 @@ in
         name = me.fullname;
         email = me.email;
       };
-      core.sshCommand = "ssh -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes";
+      core.sshCommand = "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes";
     };
     includes = [
       {
@@ -117,7 +117,7 @@ in
         contents = {
           user.name = jp.fullname;
           user.email = "${jp.username}@juspay.in";
-          core.sshCommand = "ssh -i ~/.ssh/id_ed25519_work.pub -o IdentitiesOnly=yes";
+          core.sshCommand = "ssh -i ~/.ssh/id_ed25519_work -o IdentitiesOnly=yes";
         };
       }
     ];
