@@ -5,36 +5,30 @@
   };
   home.packages = with pkgs; [
     # Juspay uses merge-based workflow - keep gfm for company repos.
-    (writeShellApplication {
-      name = "gfm";
-      text = ''
-        if [ -z "$1" ]; then
-          echo "Usage: gfm <branch> [remote]"
-          exit 1
-        fi
+    (writeShellScriptBin "gfm" ''
+      if [ -z "$1" ]; then
+        echo "Usage: gfm <branch> [remote]"
+        exit 1
+      fi
 
-        branch="$1"
-        remote="''${2:-origin}"
+      branch="$1"
+      remote="''${2:-origin}"
 
-        git fetch "$remote" "$branch" &&
-        git merge "$remote/$branch"
-      '';
-    })
-    (writeShellApplication {
-      name = "gfr";
-      text = ''
-        if [ -z "$1" ]; then
-          echo "Usage: gfr <branch> [remote]"
-          exit 1
-        fi
+      git fetch "$remote" "$branch" &&
+      git merge "$remote/$branch"
+    '')
+    (writeShellScriptBin "gfr" ''
+      if [ -z "$1" ]; then
+        echo "Usage: gfr <branch> [remote]"
+        exit 1
+      fi
 
-        branch="$1"
-        remote="''${2:-origin}"
+      branch="$1"
+      remote="''${2:-origin}"
 
-        git fetch "$remote" "$branch" &&
-        git rebase "$remote/$branch"
-      '';
-    })
+      git fetch "$remote" "$branch" &&
+      git rebase "$remote/$branch"
+    '')
 
   ];
   programs = {

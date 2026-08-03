@@ -1,6 +1,6 @@
 # Opencode agent definitions. Add a new agent block here, or drop a new
 # .nix sibling - opencode/default.nix auto-imports all siblings except
-# the helpers (skills.nix, registry.nix).
+# the helpers (skills.nix).
 { ... }:
 {
   programs.opencode.settings = {

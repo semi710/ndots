@@ -48,6 +48,7 @@ in
     enable = true;
     environmentFile = "${config.home.homeDirectory}/.opencode.env";
   };
+  ndots.ai.mcp.workServers = true;
 
   programs.git = {
     settings = {

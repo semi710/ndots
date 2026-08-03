@@ -47,37 +47,36 @@ in
         "10,monitor:${cfg.secondary},default:true"
       ];
       exec = [
-        "sleep 5s && uwsm -- app ${
-          lib.getExe (
-            pkgs.writeShellApplication {
-              name = "ipc";
-              runtimeInputs = with pkgs; [
-                libnotify
-                socat
-                jq
-              ];
-              bashOptions = [ "pipefail" ];
-              text = # bash
-                ''
-                  handle() {
-                    if [[ ''${1:0:14} == "monitorremoved" ]]; then
-                      notify "Monitor removed"
-                      "${lib.getExe pkgs.putils.monitor}"
-                    fi
+        "sleep 5s && uwsm -- app ${lib.getExe (
+          pkgs.writeShellScriptBin "ipc" ''
+            set -o pipefail
+            export PATH="${
+              lib.makeBinPath (
+                with pkgs;
+                [
+                  libnotify
+                  socat
+                  jq
+                ]
+              )
+            }:$PATH"
+            handle() {
+              if [[ ''${1:0:14} == "monitorremoved" ]]; then
+                notify "Monitor removed"
+                "${lib.getExe pkgs.putils.monitor}"
+              fi
 
-                    if [[ ''${1:0:14} == "monitoraddedv2" ]]; then
-                      notify "Monitor added"
-                      "${lib.getExe pkgs.putils.monitor}"
-                    fi
-                  }
-
-                  socat - \
-                  UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | \
-                  while read -r line; do handle "$line"; done
-                '';
+              if [[ ''${1:0:14} == "monitoraddedv2" ]]; then
+                notify "Monitor added"
+                "${lib.getExe pkgs.putils.monitor}"
+              fi
             }
-          )
-        }"
+
+            socat - \
+            UNIX-CONNECT:"$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" | \
+            while read -r line; do handle "$line"; done
+          ''
+        )}"
       ];
     };
   };

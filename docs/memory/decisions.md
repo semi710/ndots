@@ -133,3 +133,15 @@ Record of architectural decisions and their rationale. Update when making new de
 **Decision:** Use a forked vim-motions-pi (`feat/clipboard-and-escape` branch) with OSC52 clipboard + `jk` escape.
 
 **Why:** Upstream vim-motions-pi didn't support clipboard integration or custom escape sequences. The fork adds `VIM_MOTION_PI_ESCAPE_SEQUENCE = "jk"` and `VIM_MOTION_PI_CLIPBOARD_COMMAND = copy` for SSH-friendly clipboard.
+
+## AI module: removed openagents-control registry
+
+**Decision:** Remove the openagents-control "developer" profile registry entirely. Sisyphus (oh-my-openagent) is the only agent used.
+
+**Why:** The registry installed 131KB of agent prompts (openagent.md 30KB, opencoder.md 23KB, 9 subagents 78KB) that were never loaded since the user runs Sisyphus exclusively. This was ~33K tokens of dead context per session. oh-my-openagent provides its own complete agent system (Sisyphus, explore, librarian, oracle, metis, momus, etc.) which fully replaces the registry's agents.
+
+## AI module: MCP server conditional inclusion
+
+**Decision:** Only include universally-needed MCP servers (git, fetch) globally. Work-specific servers (github, gitnexus, newton-hs-prod) are gated behind `ndots.ai.mcp.workServers`. Removed playwright, sequential-thinking, everything/filesystem, deepwiki, nixos from the global config entirely.
+
+**Why:** Opencode spawns every configured MCP server as a child process on startup - it does not support lazy/eager lifecycle. 11 servers meant 8 node/python processes spawning before the TUI rendered. The `everything` filesystem server was redundant (opencode has its own read/glob/grep tools), `sequential-thinking` is rarely useful (the model can reason internally), and `playwright` is only needed for browser automation. These can be added per-project when needed.

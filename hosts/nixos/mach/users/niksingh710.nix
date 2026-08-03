@@ -76,6 +76,7 @@ in
   };
 
   nvix.variant = "full";
+  ndots.ai.mcp.workServers = true;
 
   programs.git = {
     settings = {

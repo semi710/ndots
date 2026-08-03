@@ -91,6 +91,7 @@ in
 
   # comes from homeModules.editor
   nvix.variant = "full";
+  ndots.ai.mcp.workServers = true;
 
   # Color override for tmux plugin
   programs.tmux.plugins = [

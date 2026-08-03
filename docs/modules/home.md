@@ -271,17 +271,17 @@ Sets `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = 1` globally.
 - Package: `pkgs.opencode-vim` (patched node_modules hash + bun version check bypass)
 - Plugin: ponytail (lazy dev skill, toggleable via `/ponytail`)
 - TUI: vim system clipboard, `jk` escape, enter-to-submit, insert-after-submit
-- Registry: wires openagents-control "developer" profile (8 agents + 10 subagents + commands + contexts) to `~/.config/opencode/`
+- Agent: oh-my-openagent (Sisyphus) is the sole agent system; no external agent registry
 - System rules: written to `~/.config/opencode/AGENTS.md` from `system-prompts/` (applies to every agent globally)
+- Skills: wired from three sources - local (`skills/`), ponytail flake, claude-code flake (frontend-design)
 - Auto-imports siblings: drop a new `.nix` in `opencode/` to add config (agents.nix, providers/*)
 
 ### agents.nix
 
-Agent config that layers on top of the registry's agents.
+Agent config for the oh-my-openagent plugin.
 
-- `default_agent = "OpenAgent"` (registry provides the base agent + prompt; our rules layer via `AGENTS.md`)
-- `OpenAgent.skills` - adds local skills on top of the registry's openagent
-- `explore` - subagent pinned to `litellm/open-fast` (cheap model for read-only search)
+- `default_agent = "sisyphus"` (oh-my-openagent provides the agent system + subagents: explore, librarian, oracle, metis, momus, etc.)
+- Commit hygiene prompt: never set `--author` or add `Co-authored-by` trailers for the AI agent
 
 ### claude.nix
 
@@ -293,20 +293,20 @@ Agent config that layers on top of the registry's agents.
 
 ### mcp.nix
 
-MCP (Model Context Protocol) servers. All set to `lifecycle = "eager"`.
+MCP (Model Context Protocol) servers. Opencode spawns every configured server as a child process on startup, so only universally-needed servers are included globally. Work-specific servers are gated behind an option.
 
-| Server | Type | Purpose |
+| Server | When included | Purpose |
 |---|---|---|
-| `git` | command | Git MCP server |
-| `fetch` | command | Fetch MCP server |
-| `sequential-thinking` | command | Chain-of-thought reasoning |
-| `github` | command | GitHub API (needs `GITHUB_TOKEN`) |
-| `everything` | command | Filesystem access to home dir |
-| `gitnexus` | command | Code knowledge graph |
-| `playwright` | command | Browser automation |
-| `newton-hs-prod` | http | Juspay internal code search |
-| `deepwiki` | remote | DeepWiki docs |
-| `nixos` | command | NixOS MCP (runs `mcp-nixos`) |
+| `git` | Always | Git MCP server |
+| `fetch` | Always | Fetch MCP server |
+| `github` | Work hosts only | GitHub API (needs `GITHUB_TOKEN`) |
+| `gitnexus` | Work hosts only | Code knowledge graph |
+| `newton-hs-prod` | Work hosts only | Juspay internal code search |
+| `bitbucket` | Workstation hosts (via `workstation.nix`) | Bitbucket Server API |
+
+**Removed from global config** (were spawning node processes on every launch): `playwright`, `sequential-thinking`, `everything` (filesystem - opencode has its own file tools), `deepwiki`, `nixos`. Add these per-project if needed.
+
+**Option:** `ndots.ai.mcp.workServers` - when `true`, work-tier servers (github, gitnexus, newton-hs-prod) are included. Enabled on work hosts (dsd, semi, jp-mbp, mach).
 
 ### pi.nix
 

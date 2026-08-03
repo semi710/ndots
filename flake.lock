@@ -230,11 +230,11 @@
     "claude-code": {
       "flake": false,
       "locked": {
-        "lastModified": 1782509376,
-        "narHash": "sha256-eVdDeXy/+Tbwv4JvSSdS4rTwvEIvV3gidUw9PSRReWw=",
+        "lastModified": 1784943347,
+        "narHash": "sha256-E18pPkdErB133CIShgLBhdHBiyPALuRl30uOqhy21v0=",
         "owner": "anthropics",
         "repo": "claude-code",
-        "rev": "01f1617f14452ac78bf319cef2236d87c0fe05cb",
+        "rev": "7ef6eec9d9ba84ea6f233f26c45f1df5c5991843",
         "type": "github"
       },
       "original": {
@@ -1884,22 +1884,6 @@
         "type": "github"
       }
     },
-    "openagents-control": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1774390579,
-        "narHash": "sha256-H5O08YjxzJMYva1sjMgCl5GTDrx9pR1ELBtO5bqGV/Y=",
-        "owner": "darrenhinde",
-        "repo": "OpenAgentsControl",
-        "rev": "ef3836efd659e451b6dbb8eee7d3213ba39f5aec",
-        "type": "github"
-      },
-      "original": {
-        "owner": "darrenhinde",
-        "repo": "OpenAgentsControl",
-        "type": "github"
-      }
-    },
     "opencode-vim": {
       "inputs": {
         "nixpkgs": "nixpkgs_15"
@@ -1980,7 +1964,6 @@
         "nixpkgs": "nixpkgs_11",
         "nixpkgs-stable": "nixpkgs-stable",
         "nvix": "nvix",
-        "openagents-control": "openagents-control",
         "opencode-vim": "opencode-vim",
         "ponytail": "ponytail",
         "sops-nix": "sops-nix",

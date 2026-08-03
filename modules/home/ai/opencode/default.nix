@@ -11,7 +11,6 @@ let
   omoPkg = pkgs.llm-agents.oh-my-opencode;
   combinedSystemPrompt = import ../combined-system-prompt.nix { inherit lib; };
   skillsMod = import ./skills.nix { inherit inputs lib; };
-  registryFiles = import ./registry.nix { inherit inputs lib; };
   bashPermissions = builtins.fromJSON (builtins.readFile ./bash-permissions.json);
   defaultModel = "litellm/glm-latest";
   omoConfig = builtins.toJSON {
@@ -64,18 +63,14 @@ in
     PONYTAIL_DEFAULT_MODE = "ultra";
   };
 
-  home.file =
-    registryFiles
-    // skillsMod.files
-    // {
-      ".config/opencode/AGENTS.md".text = combinedSystemPrompt;
-      ".config/opencode/oh-my-openagent.jsonc".text = omoConfig;
-      ".config/opencode/node_modules/oh-my-openagent".source = "${omoPkg}/lib/oh-my-opencode";
-    };
+  home.file = skillsMod.files // {
+    ".config/opencode/AGENTS.md".text = combinedSystemPrompt;
+    ".config/opencode/oh-my-openagent.jsonc".text = omoConfig;
+    ".config/opencode/node_modules/oh-my-openagent".source = "${omoPkg}/lib/oh-my-opencode";
+  };
 
   imports = inputs.nix-wire.lib.autoImportExcept ./. [
     "skills.nix"
-    "registry.nix"
   ];
 
   programs.opencode = {
