@@ -10,7 +10,7 @@
 }:
 let
   pname = "sklauncher-beta";
-  version = "4.0.36";
+  version = "4.0.39";
 
   base = "https://github.com/sklauncher/binaries/releases/download/v${version}";
 
@@ -19,17 +19,17 @@ let
     if stdenvNoCC.hostPlatform.isLinux then
       pkgs.fetchurl {
         url = "${base}/SKlauncher-${version}-x86_64.AppImage";
-        sha256 = "sha256-zdmS3UusOVX3GeUeQa6NWnPOdJieCsxDXcQM2K/9cAQ=";
+        sha256 = "sha256-h+9JI9AMg2Dd65JR2lJJTZtSwwIr9K623qSj6s4Wol8=";
       }
     else if stdenvNoCC.hostPlatform.isDarwin && stdenvNoCC.hostPlatform.isAarch64 then
       pkgs.fetchurl {
         url = "${base}/SKlauncher-${version}-arm64-mac.zip";
-        sha256 = "sha256-JqljRISebUn1fnYKRRP6AXc5ybNoJVhtsaCXG3/OTBg=";
+        sha256 = "sha256-v7FrpiYRgQSMEqoPDSePu1LFWpFKLW41yykrnGvd9qA=";
       }
     else
       pkgs.fetchurl {
         url = "${base}/SKlauncher-${version}-mac.zip";
-        sha256 = "sha256-tGzbAcBp/k1e75BXTVrE1ugcxq2d7LtymoErHsyloL4=";
+        sha256 = "sha256-3qThDnR+5e4erS9HijAibBUafwTZOAj3dMwRY9VNHS4=";
       };
 
   icon = pkgs.fetchurl {

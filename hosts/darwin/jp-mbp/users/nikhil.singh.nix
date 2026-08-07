@@ -150,6 +150,7 @@ in
           postInstall = (oldAttrs.postInstall or "") + ''
             /usr/libexec/PlistBuddy -c "Set :CFBundleIdentifier app.zen-browser.zen-oss" \
               "$out/Applications/Zen Browser (Beta).app/Contents/Info.plist"
+            ln -sf zen "$out/Applications/Zen Browser (Beta).app/Contents/MacOS/zen-beta"
           '';
         });
     package =

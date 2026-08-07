@@ -3,16 +3,6 @@
   programs.fzf.tmux.enableShellIntegration = true;
   programs.sesh = {
     enable = true;
-    package = pkgs.sesh.overrideAttrs (oa: rec {
-      version = "2.25.0";
-      src = pkgs.fetchFromGitHub {
-        owner = "joshmedeski";
-        repo = "sesh";
-        tag = "v${version}";
-        hash = "sha256-azs1tf9eR4MVSdjMdd3U/xdPAANn1Kyamf0TwFrBSTU=";
-      };
-      vendorHash = "sha256-9IiDp/HaxXQAyNzuVBLiO+oIijBbdKBjssCmj8WV9V4=";
-    });
     tmuxKey = "c-o";
     settings = {
       blacklist = [

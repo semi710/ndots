@@ -29,10 +29,14 @@ in
       enable = true;
       inherit defaultOptions;
       defaultCommand = "fd -t f";
-      changeDirWidgetCommand = "fd -t d";
-      fileWidgetCommand = "fd -t f -X ${sortFilesCmd}";
-      fileWidgetOptions = binds ++ [ "--preview='${lib.getExe pkgs.fzf-preview} {}'" ];
-      changeDirWidgetOptions = binds ++ [ "--preview='${lib.getExe pkgs.eza} -T {}'" ];
+      changeDirWidget = {
+        options = binds ++ [ "--preview='${lib.getExe pkgs.eza} -T {}'" ];
+        command = "fd -t d";
+      };
+      fileWidget = {
+        options = binds ++ [ "--preview='${lib.getExe pkgs.fzf-preview} {}'" ];
+        command = "fd -t f -X ${sortFilesCmd}";
+      };
     };
     zsh.initContent = # sh
       ''

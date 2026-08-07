@@ -18,7 +18,6 @@ in
   homebrew = {
     taps = map trustedTap [
       "xykong/tap"
-      "thusvill/livewallpaper"
     ];
     casks = [
       "sozercan/repo/kaset"
