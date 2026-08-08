@@ -17,7 +17,6 @@ in
   # users specific home modules
   imports = [
     (flake.homeModules.darwin + "/jankyborders.nix")
-    (flake.homeModules.darwin + "/karabiner.nix")
     (flake.homeModules.darwin + "/hammerspoon.nix")
 
     flake.homeModules.sops

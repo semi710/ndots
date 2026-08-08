@@ -32,7 +32,6 @@ in
       "finetune"
       "imageoptim"
       "shottr"
-      # "karabiner-elements" # check home/darwin/karabiner.nix
       "keycastr"
       "localsend"
       "flux-markdown"
