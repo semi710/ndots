@@ -58,11 +58,11 @@ in
 
       ${mod} + shift - f : yabai -m window --toggle float --grid 8:8:1:1:6:6
 
-      special < r : yabai -m space --rotate 90 ; default
-      special < x : yabai -m window --toggle split ; default
-      special < b : yabai -m space --balance ; default
+      special < r ; default : yabai -m space --rotate 90
+      special < x ; default : yabai -m window --toggle split
+      special < b ; default : yabai -m space --balance
 
-      special < shift - h ; default : open -g hammerspoon://hammerspoon-mode-enter
+      special < shift - r ; default : open -g hammerspoon://hs-reload
 
       ${mod} - m : \
         case "$(yabai -m query --spaces --space | ${lib.getExe pkgs.jq} -r '.type')" in \
@@ -87,9 +87,9 @@ in
       special < shift - 0x2B : ${lib.getExe pkgs.putils.yabai-resize} smaller
       special < shift - 0x2F : ${lib.getExe pkgs.putils.yabai-resize} bigger
 
-      special < c : [ "$(yabai -m query --windows --window | jq '.["is-floating"]')" = "true" ] && yabai -m window --grid 8:8:1:1:6:6 ; default
+      special < c ; default : [ "$(yabai -m query --windows --window | jq '.["is-floating"]')" = "true" ] && yabai -m window --grid 8:8:1:1:6:6
 
-      special < shift - c : ${lib.getExe pkgs.putils.yabai-warp-cursor} ; default
+      special < shift - c ; default : ${lib.getExe pkgs.putils.yabai-warp-cursor}
 
       ${mod} - 1 : yabai -m space --focus 1
       ${mod} - 2 : yabai -m space --focus 2

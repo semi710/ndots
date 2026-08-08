@@ -2241,17 +2241,17 @@
         "nixpkgs": "nixpkgs_20"
       },
       "locked": {
-        "lastModified": 1782479847,
-        "narHash": "sha256-UWdlPZannCV9YF8i1Fz+TUIqHv2bxD8S8qNib9f1jbo=",
-        "owner": "niksingh710",
-        "repo": "utils",
-        "rev": "4f6a51c21f7ae3ec6902d5916550da0d2893dcab",
-        "type": "github"
+        "lastModified": 1786144849,
+        "narHash": "sha256-zEjAQzKQJzS7N2d7BpwYonMgSkgByfg1L0PoIizI3aw=",
+        "ref": "refs/heads/master",
+        "rev": "452ca8ba3564bb8b0ba49c5708bb2e18d08f01bc",
+        "revCount": 79,
+        "type": "git",
+        "url": "file:../utils"
       },
       "original": {
-        "owner": "niksingh710",
-        "repo": "utils",
-        "type": "github"
+        "type": "git",
+        "url": "file:../utils"
       }
     },
     "xdph": {

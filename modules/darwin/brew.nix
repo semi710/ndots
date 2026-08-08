@@ -37,7 +37,6 @@ in
       "localsend"
       "flux-markdown"
       # "lulu"
-      "livewallpaper"
       "fliqlo"
       "maccy"
       "numi"

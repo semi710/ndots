@@ -7,155 +7,8 @@
       hs.allowAppleScript(true)
       hs.console.darkMode(true)
 
-      -- HAMMERSPOON MODE (Ctrl+Option+Shift+H)
-      local hsmode = {}
-      hsmode.active = false
-      hsmode.canvas = nil
-      hsmode.timers = {}
-
-      function hsmode.keyboardBrightness(direction)
-        local event = require("hs.eventtap").event
-        local key = (direction == "up") and "ILLUMINATION_UP" or "ILLUMINATION_DOWN"
-        event.newSystemKeyEvent(key, true):post()
-        hs.timer.usleep(10000)
-        event.newSystemKeyEvent(key, false):post()
-      end
-
-      function hsmode.startBrightnessRepeat(direction)
-        hsmode.stopBrightnessRepeat()
-        hsmode.keyboardBrightness(direction)
-        hsmode.timers[direction] = hs.timer.doEvery(0.1, function()
-          hsmode.keyboardBrightness(direction)
-        end)
-      end
-
-      function hsmode.stopBrightnessRepeat()
-        for _, timer in pairs(hsmode.timers) do
-          if timer then timer:stop() end
-        end
-        hsmode.timers = {}
-      end
-
-      function hsmode.createIndicator()
-        local canvas = hs.canvas.new { w = 40, h = 28, x = 100, y = 100 }
-
-        canvas:insertElement({
-          type = 'rectangle',
-          action = 'fill',
-          roundedRectRadii = { xRadius = 8, yRadius = 8 },
-          fillColor = { red = 0.2, green = 0.2, blue = 0.2, alpha = 0.85 },
-          strokeColor = { white = 1.0, alpha = 0.4 },
-          strokeWidth = 1.0,
-          frame = { x = 0, y = 0, h = 28, w = 40 },
-          withShadow = true
-        })
-
-        canvas:insertElement({
-          type = 'text',
-          action = 'fill',
-          frame = { x = 4, y = 4, h = 20, w = 32 },
-          text = hs.styledtext.new("🔨", {
-            font = { size = 16 },
-            color = { white = 1.0 },
-            paragraphStyle = { alignment = 'center' }
-          })
-        })
-
-        return canvas
-      end
-
-      function hsmode.showIndicator()
-        if not hsmode.canvas then
-          hsmode.canvas = hsmode.createIndicator()
-        end
-
-        local screen = hs.screen.mainScreen()
-        local frame = screen:frame()
-        hsmode.canvas:topLeft({
-          x = frame.x + (frame.w / 2) - 20,
-          y = frame.y + frame.h - 40
-        })
-        hsmode.canvas:level("overlay")
-        hsmode.canvas:show()
-      end
-
-      function hsmode.hideIndicator()
-        if hsmode.canvas then
-          hsmode.canvas:hide()
-        end
-      end
-
-      hsmode.bindings = {}
-
-      function hsmode.enter()
-        hsmode.active = true
-        hsmode.showIndicator()
-        -- Disable vim mode so its eventtap doesn't consume keys
-        if vim and vim.enabled then
-          hsmode._vimWasEnabled = true
-          vim:exit()
-          if vim.sequence and vim.sequence.enabled then
-            vim.sequence:disable()
-          end
-        end
-
-        hsmode.bindings['comma'] = hs.hotkey.bind({ "shift" }, 43, function()
-          hsmode.startBrightnessRepeat("down")
-        end, function()
-          hsmode.stopBrightnessRepeat()
-        end)
-
-        hsmode.bindings['period'] = hs.hotkey.bind({ "shift" }, 47, function()
-          hsmode.startBrightnessRepeat("up")
-        end, function()
-          hsmode.stopBrightnessRepeat()
-        end)
-
-        hsmode.bindings['r'] = hs.hotkey.bind({}, "r", function()
-          hs.reload()
-          hsmode.exit()
-        end)
-
-        hsmode.bindings['q'] = hs.hotkey.bind({}, "q", function()
-          hsmode.exit()
-        end)
-
-        hsmode.bindings['escape'] = hs.hotkey.bind({}, "escape", function()
-          hsmode.exit()
-        end)
-
-        hs.alert.show("Hammerspoon Mode", 0.5)
-      end
-
-      function hsmode.exit()
-        hsmode.active = false
-        hsmode.hideIndicator()
-
-        for _, binding in pairs(hsmode.bindings) do
-          binding:delete()
-        end
-        hsmode.bindings = {}
-
-        -- Re-enable vim mode
-        if hsmode._vimWasEnabled then
-          hsmode._vimWasEnabled = nil
-          vim:enter()
-          if vim.sequence and not vim.sequence.enabled then
-            vim.sequence:enable()
-          end
-        end
-      end
-
-      hs.hotkey.bind({ "ctrl", "option", "shift" }, "H", function()
-        if not hsmode.active then
-          hsmode.enter()
-        end
-      end)
-
-      -- URL handler for skhd special mode to trigger Hammerspoon mode (defined after skhdmode below)
-
       -- SKHD Special Mode Indicator
-      local skhdmode = {}
+      skhdmode = {}
       skhdmode.canvas = nil
 
       function skhdmode.createIndicator()
@@ -213,84 +66,40 @@
 
       hs.urlevent.bind("skhd-special-on", skhdmode.show)
       hs.urlevent.bind("skhd-special-off", skhdmode.hide)
-
-      hs.urlevent.bind("hammerspoon-mode-enter", function()
-        if not hsmode.active then
-          hsmode.enter()
-        end
-      end)
+      hs.urlevent.bind("hs-reload", function() hs.reload() end)
 
       -- VIM MODE
       local VimMode = hs.loadSpoon('VimMode')
       local vim = VimMode:new()
 
       vim:shouldDimScreenInNormalMode(false)
-      vim:disableForApp('Code')
-      vim:disableForApp('MacVim')
       vim:disableForApp('zoom.us')
       vim:disableForApp('kitty')
-      vim:disableForApp('Maccy')
-      vim:disableForApp('Homerow')
-      -- Disable in Minecraft/SKLauncher to prevent game jitter
-      vim:disableForApp('java')
-      vim:disableForApp('SKLauncher')
-      vim:disableForApp('Minecraft')
-      vim:enterWithSequence('jk')
+      vim:enterWithSequence('jk', 300)
       vim:shouldShowAlertInNormalMode(true)
 
-      -- Homerow scroll conflict guard
-      -- Homerow sends real j/k key events when scrolling, which triggers
-      -- the jk enter sequence. We patch the key sequence event handler
-      -- to skip detection when Homerow's scroll overlay is visible.
-      vim.homerowScrollActive = false
-
-      vim.homerowWatcher = hs.window.filter.new(function(win)
+      -- Spotlight support: re-enable vim mode when Spotlight opens
+      vim.spotlightWatcher = hs.window.filter.new(function(win)
         if not win then return false end
         local app = win:application()
-        return app and app:name() == "Homerow"
+        return app and app:name() == "Spotlight"
       end)
 
-      vim.homerowWatcher:subscribe(hs.window.filter.windowCreated, function()
-        vim.homerowScrollActive = true
-        if vim.sequence and vim.sequence.enabled then
-          vim.sequence:disable()
+      vim.spotlightWatcher:subscribe(hs.window.filter.windowCreated, function()
+        if vim.enabled == false then
+          vim.vimWasDisabledForApp = true
+          vim:enable()
         end
       end)
 
-      vim.homerowWatcher:subscribe(hs.window.filter.windowDestroyed, function()
-        vim.homerowScrollActive = false
-        if vim.sequence and vim.enabled then
-          vim.sequence:enable()
-        end
-      end)
-
-      -- Hyper key guard
-      -- When CapsLock is mapped to Hyper (Ctrl+Opt+Cmd), pressing Hyper+J
-      -- triggers the jk enter sequence. We temporarily disable the sequence
-      -- while Hyper modifiers are held so the keypress passes through.
-      vim.hyperActive = false
-
-      -- Use a background timer to check modifier state since the VimMode spoon's
-      -- eventtap may consume flag change events before a watcher can see them.
-      vim.hyperChecker = hs.timer.doEvery(0.1, function()
-        local flags = hs.eventtap.checkKeyboardModifiers()
-        local isHyper = flags.ctrl and flags.alt and flags.cmd and not flags.shift
-        if isHyper and not vim.hyperActive then
-          vim.hyperActive = true
-          if vim.sequence and vim.sequence.enabled then
-            vim.sequence:disable()
-          end
-        elseif not isHyper and vim.hyperActive then
-          vim.hyperActive = false
-          if vim.sequence and vim.enabled then
-            vim.sequence:enable()
-          end
+      vim.spotlightWatcher:subscribe(hs.window.filter.windowDestroyed, function()
+        if vim.vimWasDisabledForApp then
+          vim.vimWasDisabledForApp = false
+          vim:disable()
         end
       end)
 
       -- Password field guard
-      -- Disable vim mode when a password field is focused to avoid
-      -- swallowing keystrokes meant for authentication.
       vim.inPasswordField = false
 
       vim.passwordChecker = hs.timer.doEvery(0.3, function()
@@ -323,141 +132,6 @@
         end
       end)
 
-      -- Firenvim guard
-      -- Disable vim mode when a Firenvim iframe is focused inside the browser,
-      -- so Hammerspoon doesn't swallow keystrokes meant for the embedded Neovim.
-      -- Detection: Firenvim creates an AXWebArea with moz-extension:// in its
-      -- AXDescription, which does not appear in normal web content iframes.
-      vim.inFirenvim = false
-
-      vim.firenvimChecker = hs.timer.doEvery(0.3, function()
-        local ax = require("hs.axuielement")
-        local systemElement = ax.systemWideElement()
-        if not systemElement then return end
-
-        local currentElement = systemElement:attributeValue("AXFocusedUIElement")
-        if not currentElement then
-          if vim.inFirenvim then
-            vim.inFirenvim = false
-            vim:enable()
-          end
-          return
-        end
-
-        -- Walk up the AX tree looking for a moz-extension:// AXWebArea (Firenvim iframe)
-        local el = currentElement
-        local isFirenvim = false
-        for _ = 1, 10 do
-          if not el then break end
-          local role = el:attributeValue("AXRole") or ""
-          local desc = el:attributeValue("AXDescription") or ""
-          if role == "AXWebArea" and desc:find("moz%-extension://") then
-            isFirenvim = true
-            break
-          end
-          el = el:attributeValue("AXParent")
-        end
-
-        if isFirenvim then
-          if not vim.inFirenvim then
-            vim.inFirenvim = true
-            vim:disable()
-          end
-        else
-          if vim.inFirenvim then
-            vim.inFirenvim = false
-            vim:enable()
-          end
-        end
-      end)
-
-      -- Spotlight support for vim mode
-      vim.spotlightWatcher = hs.window.filter.new(function(win)
-        if not win then return false end
-        local app = win:application()
-        return app and app:name() == "Spotlight"
-      end)
-
-      vim.spotlightWatcher:subscribe(hs.window.filter.windowCreated, function()
-        -- Spotlight opened - enable vim mode temporarily
-        if vim.enabled == false then
-          vim.vimWasDisabledForApp = true
-          vim:enable()
-        end
-      end)
-
-      vim.spotlightWatcher:subscribe(hs.window.filter.windowDestroyed, function()
-        -- Spotlight closed - restore previous vim state
-        if vim.vimWasDisabledForApp then
-          vim.vimWasDisabledForApp = false
-          vim:disable()
-        end
-      end)
-
-      -- Emoji Picker support for vim mode
-      -- Detect emoji picker by monitoring all visible windows
-      vim.emojiEnabled = false
-      vim.emojiWasDisabled = false
-
-      vim.emojiChecker = hs.timer.doEvery(0.2, function()
-        local isEmojiVisible = false
-        local ax = require("hs.axuielement")
-
-        -- Check if any window looks like emoji picker
-        for _, win in ipairs(hs.window.allWindows()) do
-          local app = win:application()
-          local appName = app and app:name() or ""
-          local title = win:title() or ""
-          local role = win:role() or ""
-          local subrole = win:subrole() or ""
-
-          -- Print debug info for floating/panel windows
-          if subrole:lower():match("panel") or subrole:lower():match("floating") or subrole:lower():match("system") then
-            print("WINDOW CHECK - App: '" .. appName .. "', Title: '" .. title .. "', Subrole: '" .. subrole .. "'")
-          end
-
-          -- Detect emoji picker: owned by "Emoji & Symbols" or "Dock" with system dialog characteristics
-          if (appName == "Emoji & Symbols") or
-             (appName == "Dock" and (subrole:lower():match("floating") or subrole:lower():match("panel"))) or
-             (subrole:lower():match("systemdialog")) then
-            isEmojiVisible = true
-            print("EMOJI WINDOW FOUND - App: '" .. appName .. "', Title: '" .. title .. "', Subrole: '" .. subrole .. "'")
-            break
-          end
-
-          -- Alternative: Check focused element for emoji picker characteristics
-          local systemElement = ax.systemWideElement()
-          if systemElement then
-            local currentElement = systemElement:attributeValue("AXFocusedUIElement")
-            if currentElement then
-              local elSubrole = currentElement:attributeValue("AXSubrole") or ""
-              if elSubrole:lower():match("popover") then
-                isEmojiVisible = true
-                print("EMOJI POPOVER FOUND in focused element")
-                break
-              end
-            end
-          end
-        end
-
-        -- Handle state transitions
-        if isEmojiVisible and not vim.emojiEnabled then
-          if vim.enabled == false then
-            vim.emojiWasDisabled = true
-            vim:enable()
-            vim.emojiEnabled = true
-            print(">>> Vim mode ENABLED for emoji picker")
-          end
-        elseif not isEmojiVisible and vim.emojiEnabled then
-          if vim.emojiWasDisabled then
-            vim:disable()
-            vim.emojiWasDisabled = false
-            print(">>> Vim mode restored after emoji picker")
-          end
-          vim.emojiEnabled = false
-        end
-      end)
-
       -- Exit normal mode with 'q'
       vim.modal:bind({}, 'q', function()
         vim:exitAsync()
@@ -469,10 +143,8 @@
       end)
 
       -- Custom glass-style indicator for Normal/Visual mode
-      -- Hook into the first render call to apply custom styling
       local originalRender = nil
 
-      -- Function to get static position at bottom center of focused window
       local function getStaticPosition()
         local win = hs.window.focusedWindow()
         if win then
@@ -495,7 +167,6 @@
         return { x = 500, y = 800 }
       end
 
-      -- Function to get position near cursor if in text field
       local function getCursorPosition()
         local ax = require("hs.axuielement")
         local systemElement = ax.systemWideElement()
@@ -525,11 +196,9 @@
         }
       end
 
-      -- Custom render function
       local function customRender(self)
         local canvas = vim.stateIndicator.canvas
         if not canvas then
-          -- Canvas not ready yet, call original
           if originalRender then return originalRender(self) end
           return false
         end
@@ -545,15 +214,11 @@
           return false
         end
 
-        -- Choose position
         local pos = getCursorPosition() or getStaticPosition()
         canvas:topLeft(pos)
         canvas:level("overlay")
 
-        -- Glass styling — subtle tint per mode
-        local fillColor = {
-          red = 0.12, green = 0.12, blue = 0.12, alpha = 0.9
-        }
+        local fillColor = { red = 0.12, green = 0.12, blue = 0.12, alpha = 0.9 }
         local strokeColor = { white = 1.0, alpha = 0.4 }
         local textLabel = "N"
 
@@ -567,20 +232,16 @@
         canvas:elementAttribute(1, 'strokeColor', strokeColor)
         canvas:elementAttribute(1, 'strokeWidth', 1.0)
         canvas:elementAttribute(1, 'roundedRectRadii', { xRadius = 8, yRadius = 8 })
-
         canvas:size({ w = 40, h = 28 })
-
         canvas:elementAttribute(2, 'text', hs.styledtext.new(textLabel, {
           font = { size = 16 },
           color = { white = 1.0 },
           paragraphStyle = { alignment = 'center' }
         }))
-
         canvas:show()
         return true
       end
 
-      -- Override the canvas fill color immediately so blue never flashes
       local function applyDarkCanvas(canvas)
         if not canvas then return end
         local mode = vim.mode
@@ -596,11 +257,9 @@
         canvas:elementAttribute(1, 'roundedRectRadii', { xRadius = 8, yRadius = 8 })
       end
 
-      -- Hook both render AND update to ensure styling always wins
       local originalUpdate = nil
 
       local function customUpdate(self)
-        -- Call render first to set text/visibility
         local shouldShow = customRender(self)
         if shouldShow then
           if not self.showing then
@@ -618,38 +277,31 @@
         return self
       end
 
-      -- Watch for stateIndicator and hook both render and update
       local hookAttempts = 0
       hs.timer.doEvery(0.5, function()
         hookAttempts = hookAttempts + 1
 
-        -- Check if stateIndicator exists
         if not vim.stateIndicator then
           if hookAttempts > 20 then
             print("ERROR: vim.stateIndicator never created after 10 seconds")
             return false
           end
-          return -- continue polling
+          return
         end
 
-        -- Apply dark styling immediately on the canvas
         applyDarkCanvas(vim.stateIndicator.canvas)
 
-        -- Hook render
         if vim.stateIndicator.render ~= customRender then
           originalRender = vim.stateIndicator.render
           vim.stateIndicator.render = customRender
-          print("Custom UI render hooked (attempt " .. hookAttempts .. ")")
         end
 
-        -- Hook update to fully control show/hide + styling
         if vim.stateIndicator.update ~= customUpdate then
           originalUpdate = vim.stateIndicator.update
           vim.stateIndicator.update = customUpdate
-          print("Custom UI update hooked (attempt " .. hookAttempts .. ")")
         end
 
-        return false -- stop the timer
+        return false
       end)
     '';
 
