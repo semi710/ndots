@@ -85,7 +85,7 @@
 
     # personal flakes
     nvix.url = "github:semi710/nvix";
-    utils.url = "github:niksingh710/utils";
+    utils.url = "github:semi710/utils";
     naste.url = "github:semi710/naste";
     dragterm.url = "github:semi710/dragterm";
   };

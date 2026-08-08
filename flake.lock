@@ -2243,13 +2243,13 @@
       "locked": {
         "lastModified": 1786191359,
         "narHash": "sha256-izDJYS7SFpVMzy3lomMxYQP5McIf6nw2dXMa5KkbbSU=",
-        "owner": "niksingh710",
+        "owner": "semi710",
         "repo": "utils",
         "rev": "d72950cdf2675465bb621b7bfc854d82289e0bb6",
         "type": "github"
       },
       "original": {
-        "owner": "niksingh710",
+        "owner": "semi710",
         "repo": "utils",
         "type": "github"
       }
