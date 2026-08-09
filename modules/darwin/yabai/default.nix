@@ -12,8 +12,40 @@ let
     "9" = "9";
   };
 
+  # Single source of truth: space label -> list of app names (prefix-matched)
+  appSpaces = {
+    "1" = [ "kitty" ];
+    "2" = [ "Zen" ];
+    "comms" = [
+      "Slack"
+      "Discord"
+      "Telegram"
+      "Signal"
+    ];
+  };
+
   relabelCmd = lib.concatStringsSep "\n" (
     lib.mapAttrsToList (idx: label: "yabai -m space ${idx} --label ${label}") spaceLabels
+  );
+
+  # Generate yabai rules from appSpaces
+  spaceRules = lib.concatStringsSep "\n" (
+    lib.flatten (
+      lib.mapAttrsToList (
+        space: apps: lib.map (app: "yabai -m rule --add app=\"^${app}.*$\" space=${space}") apps
+      ) appSpaces
+    )
+  );
+
+  # Generate bash case branches for space-reset sorting
+  sortCases = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (
+      space: apps:
+      let
+        patterns = lib.concatStringsSep "|" (map (app: "${app}*") apps);
+      in
+      "${patterns}) yabai -m window \"$wid\" --space ${space} ;;"
+    ) appSpaces
   );
 
   notManaged =
@@ -22,24 +54,12 @@ let
       lib.map (name: "yabai -m rule --add app=\"^${name}$\" manage=off") list
     );
 
-  comms =
-    list:
-    builtins.concatStringsSep "\n" (
-      lib.map (name: "yabai -m rule --add app=\"^.*${name}$\" space=comms") list
-    );
-
   floating =
     list:
     builtins.concatStringsSep "\n" (
       lib.map (name: "yabai -m rule --add app=\"^.*${name}$\" manage=off") list
     );
 
-  commsApps = [
-    "Slack"
-    "Discord"
-    "Telegram"
-    "Signal"
-  ];
   unmanagedApps = [
     "System Settings"
     "Wallnetic"
@@ -81,7 +101,7 @@ let
     yabai -m rule --apply
   '';
 
-  # Reset spaces: display 1 gets 7, other displays get 8-9, then relabel
+  # Reset spaces: display 1 gets 7, other displays get 8-9, relabel, and sort windows
   space-reset = pkgs.writeShellScriptBin "space-reset" ''
     jq=${lib.getExe pkgs.jq}
 
@@ -102,7 +122,7 @@ let
       d1_count=$((d1_count + 1))
     done
 
-    # Create 2 spaces on display 2 (or last display if only 2 displays)
+    # Create 2 spaces on last display (8, 9)
     last_disp=$(yabai -m query --displays | $jq -r '.[-1].index')
     d2_count=$(yabai -m query --spaces --display "$last_disp" | $jq 'length')
     while [ "$d2_count" -lt 2 ]; do
@@ -112,6 +132,15 @@ let
 
     ${relabelCmd}
     yabai -m rule --apply
+
+    # Move windows to their assigned workspaces
+    yabai -m query --windows | $jq -c '.[] | {id, app}' | while read -r line; do
+      wid=$(echo "$line" | $jq -r '.id')
+      app=$(echo "$line" | $jq -r '.app')
+      case "$app" in
+        ${sortCases}
+      esac
+    done
   '';
 in
 {
@@ -153,7 +182,7 @@ in
         ${relabelCmd}
 
         ${notManaged unmanagedApps}
-        ${comms commsApps}
+        ${spaceRules}
         ${floating floatingApps}
         yabai -m rule --apply
       '';
