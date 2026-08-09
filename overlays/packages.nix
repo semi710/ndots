@@ -26,6 +26,7 @@ in
   sklauncher = selfPkgs.sklauncher;
   sklauncher-beta = selfPkgs.sklauncher-beta;
   bitbucket-mcp = selfPkgs.bitbucket-mcp;
+  kblight = selfPkgs.kblight;
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
