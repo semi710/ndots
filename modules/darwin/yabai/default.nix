@@ -70,11 +70,57 @@ let
   space-move-display = pkgs.writeShellScriptBin "space-move-display" ''
     ${lib.getExe pkgs.putils.yabai-space-move-display} "''${1:-next}"
     ${relabelCmd}
+    yabai -m rule --apply
+  '';
+
+  # Destroy the visible space under the cursor (works on empty spaces)
+  space-destroy = pkgs.writeShellScriptBin "space-destroy" ''
+    visible=$(yabai -m query --spaces --display mouse | ${lib.getExe pkgs.jq} -r '.[] | select(."is-visible") | .index')
+    [ -n "$visible" ] && yabai -m space "$visible" --destroy
+    ${relabelCmd}
+    yabai -m rule --apply
+  '';
+
+  # Reset spaces: display 1 gets 7, other displays get 8-9, then relabel
+  space-reset = pkgs.writeShellScriptBin "space-reset" ''
+    jq=${lib.getExe pkgs.jq}
+
+    # Destroy all spaces except one per display (can't destroy the last)
+    for disp in $(yabai -m query --displays | $jq -r '.[].index'); do
+      count=$(yabai -m query --spaces --display "$disp" | $jq 'length')
+      while [ "$count" -gt 1 ]; do
+        last=$(yabai -m query --spaces --display "$disp" | $jq -r '.[-1].index')
+        yabai -m space "$last" --destroy 2>/dev/null || break
+        count=$((count - 1))
+      done
+    done
+
+    # Create spaces on display 1 until it has 7
+    d1_count=$(yabai -m query --spaces --display 1 | $jq 'length')
+    while [ "$d1_count" -lt 7 ]; do
+      yabai -m space --create 1 2>/dev/null
+      d1_count=$((d1_count + 1))
+    done
+
+    # Create 2 spaces on display 2 (or last display if only 2 displays)
+    last_disp=$(yabai -m query --displays | $jq -r '.[-1].index')
+    d2_count=$(yabai -m query --spaces --display "$last_disp" | $jq 'length')
+    while [ "$d2_count" -lt 2 ]; do
+      yabai -m space --create "$last_disp" 2>/dev/null
+      d2_count=$((d2_count + 1))
+    done
+
+    ${relabelCmd}
+    yabai -m rule --apply
   '';
 in
 {
   imports = [ ./skhd.nix ]; # for keyamps
-  environment.systemPackages = [ space-move-display ];
+  environment.systemPackages = [
+    space-move-display
+    space-destroy
+    space-reset
+  ];
   services.yabai = {
     enable = true;
     enableScriptingAddition = true; # Requires SIP to be disabled Partially

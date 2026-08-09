@@ -72,11 +72,12 @@ in
       ${mod} + shift - f : yabai -m window --toggle float --grid 8:8:1:1:6:6
 
       special < r ; default : yabai -m space --rotate 90
+      special < shift - r ; default : yabai -m space --rotate 270
+      special < ${mod} - r ; default : space-reset
+      special < shift - h ; default : open -g hammerspoon://hs-reload
       special < x ; default : yabai -m window --toggle split
       special < b ; default : yabai -m space --balance
       special < shift - space : space-move-display next
-
-      special < shift - r ; default : open -g hammerspoon://hs-reload
 
       ${mod} - m : \
         case "$(yabai -m query --spaces --space | ${lib.getExe pkgs.jq} -r '.type')" in \
@@ -140,7 +141,7 @@ in
       special < 8 ; default : yabai -m space --move 8
       special < 9 ; default : yabai -m space --move 9
 
-      special < w ; default : yabai -m space --destroy
+      special < w ; default : space-destroy
     '';
   };
 }
