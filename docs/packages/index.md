@@ -16,6 +16,7 @@ Custom packages live in `packages/` and are auto-discovered by nix-wire, exposed
 | [road-rage](#road-rage) | all | Punky display font (used in hyprlock) |
 | [drag](#drag) | darwin | Drag-and-drop from the command line |
 | [bitbucket-server-mcp](#bitbucket-server-mcp) | unix | MCP server for Bitbucket Server PR management |
+| [kblight](#kblight) | darwin (aarch64) | MacBook keyboard backlight control via CoreBrightness |
 | [sklauncher-beta](#sklauncher-beta) | linux + darwin | SKLauncher 4.0 beta (native Electron, bundled JRE) |
 
 ## Using Packages
@@ -205,6 +206,23 @@ Built with `buildNpmPackage` from source. The binary is `bitbucket-server-mcp`.
 ```bash
 nix run github:semi710/ndots#bitbucket-mcp
 ```
+
+---
+
+## kblight
+
+`packages/kblight.nix`
+
+[kblight](https://github.com/Maxnflaxl/kblight) - a tiny CLI that sets the keyboard backlight on Apple Silicon Macs. Single Swift file, no dependencies, no sudo, no entitlements. Talks to the private `CoreBrightness.framework` via `KeyboardBrightnessClient` - the same path `corebrightnessd` uses, so writes propagate to the LED immediately.
+
+```bash
+kblight 0.5      # 50% brightness
+kblight 0.0      # off
+kblight 1.0      # full
+kblight get      # current value
+```
+
+Wired into skhd special mode: `,` decreases, `.` increases (10% steps via `kblight-step` wrapper).
 
 ---
 

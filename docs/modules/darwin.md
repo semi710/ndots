@@ -64,7 +64,7 @@ macOS system defaults via `system.defaults`:
 | **Fonts** | nerd-fonts.jetbrains-mono, monaspace |
 | **Shell** | zsh enabled |
 | **PAM** | sudo_local: Touch ID auth + reattach |
-| **Keyboard** | KeyMapping enabled, caps lock → escape |
+| **Keyboard** | KeyMapping enabled, caps lock → escape, globe key disabled |
 | **Trackpad** | Clicking enabled |
 | **Finder** | Show extensions, no desktop icons, path bar, quit menu |
 | **Dock** | Autohide (0.1 delay), static-only, no recents, magnification, scroll-to-open |
@@ -109,9 +109,14 @@ Auto-imported directory (`modules/darwin/yabai/`). Import via `darwinModules.yab
 - BSP layout, focus follows mouse (autofocus), mouse follows focus
 - Window opacity, 10px gaps, float shadow
 - Signals: reload SA on dock restart, opacity transitions on Mission Control
-- Unmanaged apps: System Settings, Calculator, Karabiner, Finder, etc.
-- Comms apps → comms space (Slack, Discord, Telegram, Signal)
-- Spaces labeled 1-9 + comms
+- **Space labels**: `spaceLabels` attrset (1-9, comms on 3) - single source of truth for relabeling
+- **App-to-space assignments**: `appSpaces` attrset generates both yabai rules and `space-reset` window sorting:
+    - `kitty` → space 1
+    - `Zen` → space 2
+    - `Slack`/`Discord`/`Telegram`/`Signal` → space 3 (comms)
+- **Unmanaged apps**: System Settings, Calculator, Karabiner, Finder, etc. (`manage=off`)
+- **Floating apps**: ChatGPT (`manage=off`)
+- **Helper scripts**: `space-move-display`, `space-destroy`, `space-reset`
 
 ### skhd.nix
 
@@ -119,13 +124,22 @@ Auto-imported directory (`modules/darwin/yabai/`). Import via `darwinModules.yab
 
 **Mod:** `cmd + alt + ctrl` (Hyper key)
 
-- Special mode (`0x29` / backtick): resize, rotate, balance, split, warp cursor - with Hammerspoon visual indicator
+- Special mode (`0x29` / backtick): resize, rotate, balance, split, warp cursor, kblight - with Hammerspoon visual indicator
 - App toggles: return → kitty, b → Zen, s → Slack
 - hjkl focus/move (via utils helpers), n/p workspace cycle
-- space → monitor cycle, shift+space → move to monitor
+- space → monitor cycle, shift+space → move space to monitor
 - 1-9 workspace focus, shift+1-9 move to workspace
+- 0 → focus last space (fullscreen)
 - m → toggle bsp/stack layout, shift+m → native fullscreen
 - shift+f → float toggle (8:8 grid), o → focus recent, c → comms space
+- **Special mode bindings:**
+    - `r` → rotate 90, `shift+r` → rotate 270, `mod+r` → reset spaces (7+2 layout + sort windows)
+    - `w` → destroy visible space (works on empty spaces via `--display mouse`)
+    - `shift+h` → reload Hammerspoon
+    - `,`/`.` → keyboard brightness down/up (via kblight)
+    - `<`/`>` → resize smaller/bigger
+    - `1-9` → move space to index
+    - `shift+space` → move space to next display + relabel
 
 **Usage:**
 
@@ -143,11 +157,11 @@ Homebrew management via nix-darwin.
 
 **Taps:**
 
-- `xykong/tap`, `thusvill/livewallpaper` (both `trusted = true`)
+- `xykong/tap` (`trusted = true`)
 
 **Casks (GUI apps):**
 
-betterdisplay, blip, cleanupbuddy, element, homerow, hiddenbar, hyperkey, pronotes, finetune, imageoptim, shottr, keycastr, localsend, flux-markdown, livewallpaper, fliqlo, maccy, numi, protonvpn, steam, utm, whatsapp, whisky, windows-app, zulip
+betterdisplay, blip, chatgpt, cleanupbuddy, element, homerow, hiddenbar, hyperkey, pronotes, finetune, imageoptim, shottr, keycastr, localsend, flux-markdown, fliqlo, maccy, numi, protonvpn, steam, utm, whatsapp, whisky, windows-app, zulip
 
 **Brews (CLI):**
 
