@@ -19,7 +19,7 @@ stdenvNoCC.mkDerivation {
     #!${runtimeShell}
     set -euo pipefail
     text=\$(cat)
-    encoded=\$(printf '%s' "\$text" | ${coreutils}/bin/base64 | tr -d '\n')
+    encoded=\$(printf '%s' "\$text" | ${lib.getExe' coreutils "base64"} | tr -d '\n')
     if [ -n "\''${TMUX:-}" ]; then
       printf '\ePtmux;\e\033]52;c;%s\a\e\\' "\$encoded"
     else

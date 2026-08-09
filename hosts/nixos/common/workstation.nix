@@ -77,13 +77,13 @@ in
       export BITBUCKET_URL="$(cat ${config.hm.sops.secrets."bitbucket/url".path})/rest"
       export BITBUCKET_ACCESS_TOKEN="$(cat ${config.hm.sops.secrets."bitbucket/token".path})"
       export BITBUCKET_USERNAME="$(cat ${config.hm.sops.secrets."bitbucket/username".path})"
-      exec ${pkgs.bitbucket-cli}/bin/bitbucket-cli "$@"
+      exec ${lib.getExe pkgs.bitbucket-cli} "$@"
     '')
     (pkgs.writeShellScriptBin "bitbucket-mcp" ''
       export BITBUCKET_URL="$(cat ${config.hm.sops.secrets."bitbucket/url".path})"
       export BITBUCKET_TOKEN="$(cat ${config.hm.sops.secrets."bitbucket/token".path})"
       export BITBUCKET_USERNAME="$(cat ${config.hm.sops.secrets."bitbucket/username".path})"
-      exec ${pkgs.nodejs}/bin/node ${pkgs.bitbucket-mcp}/lib/bitbucket-server-mcp/build/index.js "$@"
+      exec ${lib.getExe pkgs.nodejs} ${pkgs.bitbucket-mcp}/lib/bitbucket-server-mcp/build/index.js "$@"
     '')
   ];
   hm.programs.mcp.servers.bitbucket.command = "${config.hm.home.profileDirectory}/bin/bitbucket-mcp";

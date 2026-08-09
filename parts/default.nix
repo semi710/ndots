@@ -46,7 +46,7 @@
         in
         {
           type = "app";
-          program = "${env}/bin/mkdocs";
+          program = lib.getExe env;
         };
 
       pre-commit.settings = {

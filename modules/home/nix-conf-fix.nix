@@ -22,10 +22,10 @@
         while IFS= read -r line || [[ -n "$line" ]]; do
           if [[ "$line" =~ ^[[:space:]]*substituters[[:space:]]*= ]] && \
              ! [[ "$line" =~ ^[[:space:]]*extra-substituters[[:space:]]*= ]]; then
-            $DRY_RUN_CMD echo "$line" | ${pkgs.gnused}/bin/sed 's/^[[:space:]]*substituters/extra-substituters/' >> "$tmpFile"
+            $DRY_RUN_CMD echo "$line" | ${lib.getExe pkgs.gnused} 's/^[[:space:]]*substituters/extra-substituters/' >> "$tmpFile"
           elif [[ "$line" =~ ^[[:space:]]*trusted-public-keys[[:space:]]*= ]] && \
                ! [[ "$line" =~ ^[[:space:]]*extra-trusted-public-keys[[:space:]]*= ]]; then
-            $DRY_RUN_CMD echo "$line" | ${pkgs.gnused}/bin/sed 's/^[[:space:]]*trusted-public-keys/extra-trusted-public-keys/' >> "$tmpFile"
+            $DRY_RUN_CMD echo "$line" | ${lib.getExe pkgs.gnused} 's/^[[:space:]]*trusted-public-keys/extra-trusted-public-keys/' >> "$tmpFile"
           else
             $DRY_RUN_CMD echo "$line" >> "$tmpFile"
           fi

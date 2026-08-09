@@ -22,14 +22,14 @@
         {
           docs = {
             type = "app";
-            program = "${
+            program = pkgs.lib.getExe (
               pkgs.python3.withPackages (
                 ps: with ps; [
                   mkdocs
                   mkdocs-material
                 ]
               )
-            }/bin/mkdocs";
+            );
           };
         }
       );
