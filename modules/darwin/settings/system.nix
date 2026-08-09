@@ -15,6 +15,7 @@
       enableKeyMapping = true;
       remapCapsLockToEscape = true;
     };
+    defaults.CustomUserPreferences."com.apple.HIToolbox".AppleFnUsageType = 0;
     defaults = {
       # aerospace https://nikitabobko.github.io/AeroSpace/guide#a-note-on-displays-have-separate-spaces
       # for aerospace turn this true and for yabai turn this false

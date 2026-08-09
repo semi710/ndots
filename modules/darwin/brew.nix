@@ -23,6 +23,7 @@ in
       "sozercan/repo/kaset"
       "betterdisplay"
       "blip"
+      "chatgpt"
       "cleanupbuddy"
       "element"
       "homerow"
