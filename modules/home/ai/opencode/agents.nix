@@ -4,9 +4,6 @@
 { ... }:
 {
   programs.opencode.settings = {
-    # OmO plugin registers all agents (sisyphus, hephaestus, etc.).
-    # Keep skills installed, but do not preload them into the primary agent
-    # prompt. The plugin prepends agent.skills bodies to every new session.
     default_agent = "sisyphus";
     agent = {
       sisyphus = {
