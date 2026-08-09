@@ -53,6 +53,7 @@ in
     config = {
       useQuickCss = true;
       frameless = true;
+      transparent = true;
       plugins = {
         messageLogger = {
           enable = true;
@@ -62,5 +63,20 @@ in
         fakeNitro.enable = true;
       };
     };
+    quickCss = ''
+      :root {
+        --background-primary: rgba(0, 0, 0, 0.6) !important;
+        --background-secondary: rgba(0, 0, 0, 0.45) !important;
+        --background-secondary-alt: rgba(0, 0, 0, 0.5) !important;
+        --background-tertiary: rgba(0, 0, 0, 0.35) !important;
+        --channeltextarea-background: rgba(255, 255, 255, 0.05) !important;
+      }
+      [class*="sidebar_"] {
+        background: rgba(0, 0, 0, 0.4) !important;
+      }
+      [class*="container_"] {
+        background: transparent !important;
+      }
+    '';
   };
 }
