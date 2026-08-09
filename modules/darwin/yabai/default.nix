@@ -1,5 +1,21 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
+  spaceLabels = {
+    "1" = "1";
+    "2" = "2";
+    "3" = "comms";
+    "4" = "4";
+    "5" = "5";
+    "6" = "6";
+    "7" = "7";
+    "8" = "8";
+    "9" = "9";
+  };
+
+  relabelCmd = lib.concatStringsSep "\n" (
+    lib.mapAttrsToList (idx: label: "yabai -m space ${idx} --label ${label}") spaceLabels
+  );
+
   notManaged =
     list:
     builtins.concatStringsSep "\n" (
@@ -10,6 +26,12 @@ let
     list:
     builtins.concatStringsSep "\n" (
       lib.map (name: "yabai -m rule --add app=\"^.*${name}$\" space=comms") list
+    );
+
+  floating =
+    list:
+    builtins.concatStringsSep "\n" (
+      lib.map (name: "yabai -m rule --add app=\"^.*${name}$\" manage=off") list
     );
 
   commsApps = [
@@ -41,9 +63,18 @@ let
     "Tailscale"
     "hiddenbar"
   ];
+  floatingApps = [
+    "ChatGPT"
+  ];
+
+  space-move-display = pkgs.writeShellScriptBin "space-move-display" ''
+    ${lib.getExe pkgs.putils.yabai-space-move-display} "''${1:-next}"
+    ${relabelCmd}
+  '';
 in
 {
   imports = [ ./skhd.nix ]; # for keyamps
+  environment.systemPackages = [ space-move-display ];
   services.yabai = {
     enable = true;
     enableScriptingAddition = true; # Requires SIP to be disabled Partially
@@ -73,19 +104,12 @@ in
         yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
         yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
 
+        ${relabelCmd}
+
         ${notManaged unmanagedApps}
         ${comms commsApps}
+        ${floating floatingApps}
         yabai -m rule --apply
-
-        yabai -m space 1 --label 1
-        yabai -m space 2 --label 2
-        yabai -m space 3 --label comms
-        yabai -m space 4 --label 4
-        yabai -m space 5 --label 5
-        yabai -m space 6 --label 6
-        yabai -m space 7 --label 7
-        yabai -m space 8 --label 8
-        yabai -m space 9 --label 9
       '';
   };
 }

@@ -74,6 +74,7 @@ in
       special < r ; default : yabai -m space --rotate 90
       special < x ; default : yabai -m window --toggle split
       special < b ; default : yabai -m space --balance
+      special < shift - space : space-move-display next
 
       special < shift - r ; default : open -g hammerspoon://hs-reload
 
@@ -103,7 +104,7 @@ in
       special < 0x2B : ${lib.getExe kblight-step} down
       special < 0x2F : ${lib.getExe kblight-step} up
 
-      special < c ; default : [ "$(yabai -m query --windows --window | jq '.["is-floating"]')" = "true" ] && yabai -m window --grid 8:8:1:1:6:6
+      special < c ; default : [ "$(yabai -m query --windows --window | ${lib.getExe pkgs.jq} '.["is-floating"]')" = "true" ] && yabai -m window --grid 8:8:1:1:6:6
 
       special < shift - c ; default : ${lib.getExe pkgs.putils.yabai-warp-cursor}
 
@@ -138,6 +139,8 @@ in
       special < 7 ; default : yabai -m space --move 7
       special < 8 ; default : yabai -m space --move 8
       special < 9 ; default : yabai -m space --move 9
+
+      special < w ; default : yabai -m space --destroy
     '';
   };
 }
