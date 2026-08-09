@@ -2241,11 +2241,11 @@
         "nixpkgs": "nixpkgs_20"
       },
       "locked": {
-        "lastModified": 1786191359,
-        "narHash": "sha256-izDJYS7SFpVMzy3lomMxYQP5McIf6nw2dXMa5KkbbSU=",
+        "lastModified": 1786267064,
+        "narHash": "sha256-MgW3WNei2+G6FSXIeY/DJJi6IJdCy5NO5I3C6iQGp90=",
         "owner": "semi710",
         "repo": "utils",
-        "rev": "d72950cdf2675465bb621b7bfc854d82289e0bb6",
+        "rev": "0aaee67b8c227a80d8b1f8eceb6c0c113d0d54f1",
         "type": "github"
       },
       "original": {
