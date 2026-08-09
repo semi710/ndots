@@ -126,6 +126,18 @@ in
       ${mod} + shift - 7 : yabai -m window --space 7 --focus
       ${mod} + shift - 8 : yabai -m window --space 8 --focus
       ${mod} + shift - 9 : yabai -m window --space 9 --focus
+
+      ${mod} - 0 : yabai -m space --focus last
+
+      special < 1 ; default : yabai -m space --move 1
+      special < 2 ; default : yabai -m space --move 2
+      special < 3 ; default : yabai -m space --move 3
+      special < 4 ; default : yabai -m space --move 4
+      special < 5 ; default : yabai -m space --move 5
+      special < 6 ; default : yabai -m space --move 6
+      special < 7 ; default : yabai -m space --move 7
+      special < 8 ; default : yabai -m space --move 8
+      special < 9 ; default : yabai -m space --move 9
     '';
   };
 }
