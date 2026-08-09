@@ -66,6 +66,8 @@
         "browser.aboutConfig.showWarning" = false;
         "browser.newtabpage.enabled" = false;
         "browser.download.deletePrivate" = true;
+        "security.insecure_connection_text.enabled" = false;
+        "security.insecure_connection_text.pbmode.enabled" = false;
       };
     };
 

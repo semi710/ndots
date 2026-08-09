@@ -58,24 +58,24 @@
     }
     {
       id = "zen-split-view-vertical";
-      key = "«";
+      key = "v";
       modifiers = {
         control = false;
         alt = true;
         shift = false;
-        meta = true;
-        accel = false;
+        meta = false;
+        accel = true;
       };
     }
     {
       id = "zen-split-view-horizontal";
-      key = "–";
+      key = "h";
       modifiers = {
         control = false;
         alt = true;
         shift = false;
-        meta = true;
-        accel = false;
+        meta = false;
+        accel = true;
       };
     }
     {
@@ -113,7 +113,7 @@
     }
     {
       id = "zen-close-all-unpinned-tabs";
-      key = "k";
+      key = "x";
       modifiers = {
         control = false;
         alt = false;
