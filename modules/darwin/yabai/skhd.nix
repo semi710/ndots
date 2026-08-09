@@ -4,11 +4,24 @@ let
   yabai-restart = pkgs.writeShellScriptBin "yabai-restart" ''
     kill -9 $(pgrep -x yabai); kill -9 $(pgrep -x skhd); sudo yabai --load-sa
   '';
+  kblight = lib.getExe pkgs.kblight;
+  kblight-step = pkgs.writeShellScriptBin "kblight-step" ''
+    step=0.1
+    cur=$(${kblight} get)
+    case "$1" in
+      up)   val=$(echo "$cur $step" | awk '{print $1 + $2}') ;;
+      down) val=$(echo "$cur $step" | awk '{print $1 - $2}') ;;
+      *)    exit 1 ;;
+    esac
+    ${kblight} "$val"
+  '';
 in
 {
   environment.systemPackages = [
     pkgs.skhd-zig
+    pkgs.kblight
     yabai-restart
+    kblight-step
   ];
   services.skhd = {
     enable = true;
@@ -86,6 +99,9 @@ in
 
       special < shift - 0x2B : ${lib.getExe pkgs.putils.yabai-resize} smaller
       special < shift - 0x2F : ${lib.getExe pkgs.putils.yabai-resize} bigger
+
+      special < 0x2B : ${lib.getExe kblight-step} down
+      special < 0x2F : ${lib.getExe kblight-step} up
 
       special < c ; default : [ "$(yabai -m query --windows --window | jq '.["is-floating"]')" = "true" ] && yabai -m window --grid 8:8:1:1:6:6
 
