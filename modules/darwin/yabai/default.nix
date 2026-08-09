@@ -9,7 +9,7 @@ let
   comms =
     list:
     builtins.concatStringsSep "\n" (
-      lib.map (name: "yabai -m rule --add app=\"^*${name}$\" space=comms") list
+      lib.map (name: "yabai -m rule --add app=\"^.*${name}$\" space=comms") list
     );
 
   commsApps = [
