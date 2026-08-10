@@ -28,6 +28,22 @@ in
   bitbucket-mcp = selfPkgs.bitbucket-mcp;
   kblight = selfPkgs.kblight;
 
+  # FIXME: remove pin when https://github.com/sst/opencode/issues/34782 is fixed
+  # 3.7 breaks opentui rendering on macOS only (bold/inline code stripped in TUI)
+  tmux =
+    if prev.stdenv.hostPlatform.isDarwin then
+      prev.tmux.overrideAttrs {
+        version = "3.6b";
+        src = prev.fetchFromGitHub {
+          owner = "tmux";
+          repo = "tmux";
+          rev = "3.6b";
+          hash = "sha256-iW4K/OxSVpxVkyI5Dy6lzwVf/8nXyjcHtL76Ezmxavc=";
+        };
+      }
+    else
+      prev.tmux;
+
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
