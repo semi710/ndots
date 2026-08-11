@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 # For a new System Copy the generated cert and key and set it in that host's user.
 let
   home = config.home.homeDirectory;
@@ -57,9 +57,14 @@ in
     };
   };
 
-  # Exclude .obsidian/ from sync - device-specific config that iCloud locks on macOS.
-  home.file.".stignore-notes" = {
-    target = ".notes/.stignore";
-    text = "/.obsidian\n";
-  };
+  # Syncthing 2.1.x opens .stignore with O_NOFOLLOW, rejecting symlinks.
+  # home.file creates nix-store symlinks, so we write a regular file via activation.
+  # Runs after icloudNotesLink (MBP only) so ~/.notes symlinks resolve first.
+  home.activation.stignoreNotes = lib.hm.dag.entryAfter [ "writeBoundary" "icloudNotesLink" ] ''
+    if [ -L "$HOME/.notes/.stignore" ]; then
+      run rm -f "$HOME/.notes/.stignore"
+    fi
+    run sh -c 'mkdir -p "$HOME/.notes" && printf "/.obsidian\n" > "$HOME/.notes/.stignore"'
+    run chmod 644 "$HOME/.notes/.stignore"
+  '';
 }
