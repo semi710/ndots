@@ -94,6 +94,9 @@
     inputs:
     inputs.nix-wire.mkFlake {
       inherit inputs;
-      imports = [ ./parts ];
+      imports = [
+        ./parts
+        ./repl.nix
+      ];
     };
 }
