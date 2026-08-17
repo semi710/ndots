@@ -130,15 +130,17 @@ in
 
   systemd.services.beszel-hub = {
     serviceConfig.SupplementaryGroups = [ "beszel-hub-key" ];
-    # FIXME: remove when nixpkgs PR #539583 lands (issue #512567)
+    # FIXME: remove ExecStartPre override when nixpkgs PR #539583 lands (issue #512567).
+    # mkForce replaces the entire ExecStartPre list (including preStart), so the
+    # key copy must live here too.
     serviceConfig.ExecStartPre = lib.mkForce [
+      (pkgs.writeShellScript "beszel-hub-prestart" ''
+        cp "${config.sops.secrets."beszel/ssh_key".path}" /var/lib/beszel-hub/beszel_data/id_ed25519
+        chmod 0600 /var/lib/beszel-hub/beszel_data/id_ed25519
+      '')
       "${config.services.beszel.hub.package}/bin/beszel-hub migrate up"
       "${config.services.beszel.hub.package}/bin/beszel-hub migrate history-sync"
     ];
-    preStart = lib.mkBefore ''
-      cp "${config.sops.secrets."beszel/ssh_key".path}" /var/lib/beszel-hub/beszel_data/id_ed25519
-      chmod 0600 /var/lib/beszel-hub/beszel_data/id_ed25519
-    '';
   };
 
   services.caddy = {
