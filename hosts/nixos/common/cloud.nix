@@ -130,6 +130,11 @@ in
 
   systemd.services.beszel-hub = {
     serviceConfig.SupplementaryGroups = [ "beszel-hub-key" ];
+    # FIXME: remove when nixpkgs PR #539583 lands (issue #512567)
+    serviceConfig.ExecStartPre = lib.mkForce [
+      "${config.services.beszel.hub.package}/bin/beszel-hub migrate up"
+      "${config.services.beszel.hub.package}/bin/beszel-hub migrate history-sync"
+    ];
     preStart = lib.mkBefore ''
       cp "${config.sops.secrets."beszel/ssh_key".path}" /var/lib/beszel-hub/beszel_data/id_ed25519
       chmod 0600 /var/lib/beszel-hub/beszel_data/id_ed25519
