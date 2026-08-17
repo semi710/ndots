@@ -2,13 +2,30 @@
 # For a new System Copy the generated cert and key and set it in that host's user.
 let
   home = config.home.homeDirectory;
-  allDevices = [
-    "semi"
-    "mach"
-    "jp-mbp"
-    "dsd"
-    "obox"
-  ];
+
+  deviceIds = {
+    mach = "73YKZUL-LARTNVW-EOQVSVF-XVVT5XP-ODAH7TC-OCF6D6M-PC4BGPU-AMYP4AS";
+    semi = "VIRL66U-KLPB2V5-7NHB7FU-5HYPREY-LZDGXGU-4F5VCXT-JYO3JHH-F2J2NQJ";
+    jp-mbp = "3AAAQDF-H57Z4S4-4CKGZJX-BLSVSXF-SP7V2LZ-R2YQIFK-KFPG7MJ-I6RPQAQ";
+    dsd = "DNPFMLD-3SFDPIJ-PVVA7VV-HWBOEOI-ABEM47N-7RU4HHQ-TOF7EHC-SXX7DQZ";
+    obox = "ZYLR3CR-WE4CRVU-3V7PFAA-RI5C6CR-3DWPXVD-E6OJ4ZJ-UTRWVJ6-X4BWCQL";
+  };
+
+  mkDevice = name: id: {
+    inherit name id;
+    autoAcceptFolders = true;
+  };
+
+  allDevices = builtins.attrNames deviceIds;
+
+  mkFolder = id: extra: {
+    "${home}/.${id}" = rec {
+      inherit id;
+      name = id;
+      devices = allDevices;
+    }
+    // extra;
+  };
 in
 {
   services.syncthing = {
@@ -17,49 +34,12 @@ in
     overrideDevices = false;
     overrideFolders = false;
     settings = {
-      devices = {
-        mach = {
-          name = "mach";
-          id = "73YKZUL-LARTNVW-EOQVSVF-XVVT5XP-ODAH7TC-OCF6D6M-PC4BGPU-AMYP4AS";
-          autoAcceptFolders = true;
-        };
-        semi = {
-          name = "semi";
-          id = "VIRL66U-KLPB2V5-7NHB7FU-5HYPREY-LZDGXGU-4F5VCXT-JYO3JHH-F2J2NQJ";
-          autoAcceptFolders = true;
-        };
-        jp-mbp = {
-          name = "jp-mbp";
-          id = "3AAAQDF-H57Z4S4-4CKGZJX-BLSVSXF-SP7V2LZ-R2YQIFK-KFPG7MJ-I6RPQAQ";
-          autoAcceptFolders = true;
-        };
-        dsd = {
-          name = "dsd";
-          id = "DNPFMLD-3SFDPIJ-PVVA7VV-HWBOEOI-ABEM47N-7RU4HHQ-TOF7EHC-SXX7DQZ";
-          autoAcceptFolders = true;
-        };
-        obox = {
-          name = "obox";
-          id = "ZYLR3CR-WE4CRVU-3V7PFAA-RI5C6CR-3DWPXVD-E6OJ4ZJ-UTRWVJ6-X4BWCQL";
-          autoAcceptFolders = true;
-        };
-      };
+      devices = lib.mapAttrs mkDevice deviceIds;
 
-      folders = {
-        "${home}/.notes" = rec {
-          id = "notes";
-          name = id;
-          devices = allDevices;
-          # .obsidian/ is device-specific (workspace layout, app settings) and
-          # iCloud locks those files on macOS ("resource deadlock avoided").
-          ignorePerms = true;
-        };
-        "${home}/.dump" = rec {
-          id = "dump";
-          name = id;
-          devices = allDevices;
-        };
-      };
+      folders = lib.mergeAttrsList [
+        (mkFolder "notes" { ignorePerms = true; })
+        (mkFolder "dump" { })
+      ];
     };
   };
 

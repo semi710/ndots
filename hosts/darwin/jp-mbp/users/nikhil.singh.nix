@@ -11,7 +11,7 @@
 }:
 let
   jp = (import (flake + "/config.nix")).users.jp;
-  me = (import (flake + "/config.nix")).users.me;
+  host = (import (flake + "/config.nix")).users.me;
 in
 {
   # users specific home modules
@@ -106,8 +106,8 @@ in
   programs.git = {
     settings = {
       user = {
-        name = me.fullname;
-        email = me.email;
+        name = host.fullname;
+        email = host.email;
       };
       core.sshCommand = "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes";
     };

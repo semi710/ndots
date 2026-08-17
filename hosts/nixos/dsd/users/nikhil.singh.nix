@@ -10,7 +10,7 @@
 }:
 let
   jp = (import (flake + "/config.nix")).users.jp;
-  me = (import (flake + "/config.nix")).users.me;
+  host = (import (flake + "/config.nix")).users.me;
 in
 {
   # users specific home modules
@@ -40,7 +40,7 @@ in
   };
   # Public keys for SSH agent key selection via -i
   home.file = {
-    ".ssh/id_ed25519.pub".text = builtins.elemAt me.sshPublicKeys 0;
+    ".ssh/id_ed25519.pub".text = builtins.elemAt host.sshPublicKeys 0;
     ".ssh/id_ed25519_work.pub".text = builtins.elemAt jp.sshPublicKeys 0;
   };
   nvix.variant = "core";
@@ -53,8 +53,8 @@ in
   programs.git = {
     settings = {
       user = {
-        name = me.fullname;
-        email = me.email;
+        name = host.fullname;
+        email = host.email;
       };
       core.sshCommand = "ssh -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes";
     };

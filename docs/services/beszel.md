@@ -16,7 +16,7 @@ The hub connects to agents via SSH using a dedicated key. Agents report system s
 ## Hub (obox)
 
 - Runs as a systemd service
-- SSH key stored in sops, copied to PocketBase's data dir via `preStart`
+- SSH key stored in sops, copied to PocketBase's data dir via `ExecStartPre`
 - Admin credentials in sops (`secrets/server.yaml`)
 - Universal token for agent auto-enrollment (one-time setup)
 
@@ -52,20 +52,35 @@ Per-host config is limited to the user, secrets, and host-specific env vars:
 
 ## Adding a New Agent Host
 
-The SSH key is shared (hardcoded in the module), so onboarding is minimal:
+The SSH key is shared (hardcoded in the module), so onboarding is minimal.
 
-1. Ensure `beszel/token` exists in the host's sops file (`secrets/server.yaml` for obox/mach, `secrets/office.yaml` for semi/dsd)
-2. Import `nixosModules.beszel` in the host config (already done by `cloud.nix` and `workstation.nix`)
-3. Wire the token and user in the host config:
+### 1. Token
+
+Ensure `beszel/token` exists in the host's sops file (`secrets/server.yaml` for obox/mach, `secrets/office.yaml` for semi/dsd). The shared module reads it automatically.
+
+### 2. Module Import
+
+For NixOS hosts, `common/cloud.nix` or `common/workstation.nix` already imports `nixosModules.beszel`. The agent is enabled by default. Per-host config:
 
 ```nix
 services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
 services.beszel.agent.user = "<username>";  # for rootless docker, else omit
 ```
 
-4. For non-NixOS devices, use the Docker command from the module header comment
+### 3. Non-NixOS Devices
 
-See [Adding a New Host - Beszel](../guides/new-host.md#5-beszel-agent) for the full walkthrough.
+For non-NixOS devices (e.g., a remote server), run the Docker image:
+
+```bash
+docker run -d --network host --restart unless-stopped \
+  -v /var/run/docker.sock:/var/run/docker.sock:ro \
+  -e KEY='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYwmNqGPWjYdAoVH2IM3tp/liL8sHNF4/kladhQUzSQ beszel-hub@obox' \
+  -e HUB_URL='https://beszel.semi.sh' \
+  -e TOKEN='<from sops: secrets/server.yaml beszel.token>' \
+  henrygd/beszel-agent:latest
+```
+
+KEY is public (encrypts metrics), TOKEN is secret (from sops).
 
 ## Module
 

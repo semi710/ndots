@@ -9,7 +9,7 @@
 }:
 let
   jp = (import (flake + "/config.nix")).users.jp;
-  me = (import (flake + "/config.nix")).users.me;
+  host = (import (flake + "/config.nix")).users.me;
 in
 {
   # users specific home modules
@@ -56,7 +56,7 @@ in
 
   services.syncthing = {
     guiCredentials = {
-      username = me.username;
+      username = host.username;
       passwordFile = config.sops.secrets."syncthing/mach/password".path;
     };
     cert = config.sops.secrets."syncthing/mach/cert".path;
@@ -81,8 +81,8 @@ in
   programs.git = {
     settings = {
       user = {
-        name = me.fullname;
-        email = me.email;
+        name = host.fullname;
+        email = host.email;
       };
       core.sshCommand = "ssh -i ~/.ssh/id_ed25519.pub -o IdentitiesOnly=yes";
     };

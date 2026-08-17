@@ -1,6 +1,6 @@
 # Adding a New Host
 
-Checklist for onboarding a new machine into the ndots fleet. Each section is a prerequisite for the next.
+Checklist for onboarding a new machine into the ndots fleet. Service-specific setup (syncthing, beszel) is documented in each service's own page.
 
 ## 1. Age Key
 
@@ -67,131 +67,14 @@ SOPS_AGE_KEY_FILE=~/.config/sops/age/keys.txt \
 
 The shared module (`nixosModules.tailscale`) reads it automatically - no per-host config needed beyond what `cloud.nix` or `workstation.nix` already wires.
 
-## 4. Syncthing
+## 4. Services
 
-Syncthing syncs `~/.notes` and `~/.dump` across all devices. Each device needs:
+Each service has its own onboarding steps in its docs page:
 
-- A **device ID** (public identifier, derived from the TLS cert)
-- A **TLS cert + key** (stored in sops, enables consistent identity across rebuilds)
-- A **GUI password** (stored in sops)
+- [Syncthing - Adding a New Device](../services/syncthing.md#adding-a-new-device)
+- [Beszel - Adding a New Agent Host](../services/beszel.md#adding-a-new-agent-host)
 
-### 4.1 Generate Identity
-
-On the new host:
-
-```bash
-nix run nixpkgs#syncthing -- generate --home=/tmp/syncthing-gen
-```
-
-This prints the device ID and creates:
-
-| File | Sops key |
-|------|----------|
-| `/tmp/syncthing-gen/cert.pem` | `syncthing/<host>/cert` |
-| `/tmp/syncthing-gen/key.pem` | `syncthing/<host>/key` |
-
-### 4.2 Add to Sops
-
-Add the cert, key, and a GUI password to the appropriate sops file (`server.yaml` for obox/mach, `office.yaml` for semi/dsd, `keys.yaml` for personal-only):
-
-```yaml
-syncthing:
-  <host>:
-    password: <chosen-password>
-    cert: |
-      -----BEGIN CERTIFICATE-----
-      ...
-    key: |
-      -----BEGIN EC PRIVATE KEY-----
-      ...
-```
-
-Clean up: `rm -rf /tmp/syncthing-gen`
-
-### 4.3 Register in Shared Module
-
-Edit `modules/home/syncthing.nix`:
-
-1. Add hostname to `allDevices` list
-2. Add device entry with the device ID from step 4.1:
-
-```nix
-allDevices = [ "semi" "mach" "jp-mbp" "dsd" "<host>" ];
-
-settings.devices."<host>" = {
-  name = "<host>";
-  id = "<DEVICE-ID-FROM-STEP-4.1>";
-  autoAcceptFolders = true;
-};
-```
-
-### 4.4 Wire in User Config
-
-In `hosts/nixos/<host>/users/<user>.nix`:
-
-```nix
-imports = [
-  flake.homeModules.sops
-  flake.homeModules.syncthing
-];
-
-sops.secrets = {
-  "syncthing/<host>/password" = { };
-  "syncthing/<host>/cert" = { };
-  "syncthing/<host>/key" = { };
-};
-
-services.syncthing = {
-  guiCredentials = {
-    username = "<username>";
-    passwordFile = config.sops.secrets."syncthing/<host>/password".path;
-  };
-  cert = config.sops.secrets."syncthing/<host>/cert".path;
-  key = config.sops.secrets."syncthing/<host>/key".path;
-};
-```
-
-### 4.5 Verify
-
-After deploy, syncthing auto-creates the folders and `.stfolder` markers. Verify it's connected:
-
-```bash
-systemctl --user status syncthing
-```
-
-## 5. Beszel Agent
-
-Agents report system stats to the hub on obox. The SSH key is shared (hardcoded in the module), so setup is minimal.
-
-### 5.1 Token
-
-The beszel token is already in `secrets/server.yaml` as `beszel/token`. The shared module reads it automatically.
-
-### 5.2 Module Import
-
-For NixOS hosts, `common/cloud.nix` or `common/workstation.nix` already imports `nixosModules.beszel`. The agent is enabled by default.
-
-Per-host config in the user or host file:
-
-```nix
-services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
-services.beszel.agent.user = "<username>";  # for rootless docker, else omit
-```
-
-### 5.3 Non-NixOS Devices
-
-For non-NixOS devices (e.g., a remote server), run the Docker image:
-
-```bash
-docker run -d --network host --restart unless-stopped \
-  -v /var/run/docker.sock:/var/run/docker.sock:ro \
-  -e KEY='ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKYwmNqGPWjYdAoVH2IM3tp/liL8sHNF4/kladhQUzSQ beszel-hub@obox' \
-  -e HUB_URL='https://beszel.semi.sh' \
-  -e TOKEN='<from sops: secrets/server.yaml beszel.token>' \
-  henrygd/beszel-agent:latest
-```
-
-## 6. Deploy
+## 5. Deploy
 
 ```bash
 just deploy <hostname>
