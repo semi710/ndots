@@ -7,6 +7,7 @@ let
     "mach"
     "jp-mbp"
     "dsd"
+    "obox"
   ];
 in
 {
@@ -35,6 +36,11 @@ in
         dsd = {
           name = "dsd";
           id = "DNPFMLD-3SFDPIJ-PVVA7VV-HWBOEOI-ABEM47N-7RU4HHQ-TOF7EHC-SXX7DQZ";
+          autoAcceptFolders = true;
+        };
+        obox = {
+          name = "obox";
+          id = "ZYLR3CR-WE4CRVU-3V7PFAA-RI5C6CR-3DWPXVD-E6OJ4ZJ-UTRWVJ6-X4BWCQL";
           autoAcceptFolders = true;
         };
       };

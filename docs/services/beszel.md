@@ -50,7 +50,24 @@ Per-host config is limited to the user, secrets, and host-specific env vars:
 | semi, dsd | `nikhil.singh` | — | — |
 | mach | `niksingh710` | `SKIP_GPU=true` | AMD GPU sysfs panic workaround ([#1799](https://github.com/henrygd/beszel/issues/1799)) |
 
+## Adding a New Agent Host
+
+The SSH key is shared (hardcoded in the module), so onboarding is minimal:
+
+1. Ensure `beszel/token` exists in the host's sops file (`secrets/server.yaml` for obox/mach, `secrets/office.yaml` for semi/dsd)
+2. Import `nixosModules.beszel` in the host config (already done by `cloud.nix` and `workstation.nix`)
+3. Wire the token and user in the host config:
+
+```nix
+services.beszel.agent.environment.TOKEN_FILE = config.sops.secrets."beszel/token".path;
+services.beszel.agent.user = "<username>";  # for rootless docker, else omit
+```
+
+4. For non-NixOS devices, use the Docker command from the module header comment
+
+See [Adding a New Host - Beszel](../guides/new-host.md#5-beszel-agent) for the full walkthrough.
+
 ## Module
 
 - `modules/nixos/beszel.nix` - agent module with `user` option (drives socket, run-as, linger) plus HUB_URL, KEY, LISTEN, DOCKER_HOST defaults
-- Hub config is in `hosts/nixos/obox/services/beszel.nix`
+- Hub config is in `hosts/nixos/common/cloud.nix` (shared by obox and bbox)

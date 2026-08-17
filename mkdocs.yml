@@ -61,6 +61,7 @@ nav:
   - Guides:
       - Installation: guides/installation.md
       - Deployment: guides/deployment.md
+      - Adding a New Host: guides/new-host.md
       - Secrets Management: guides/secrets.md
       - Building an ISO: guides/iso.md
       - Users: guides/users.md

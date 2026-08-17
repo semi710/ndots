@@ -19,6 +19,7 @@ This is the **hub host** - runs central services for the network.
 - **[FileBrowser Quantum](../services/filebrowser.md)** - serves `/` + user home
 - **[Caddy](../services/caddy.md)** - reverse proxy (imperative config, no rebuild needed)
 - **[Tailscale](../services/tailscale.md)** - mesh VPN
+- **[Syncthing](../services/syncthing.md)** - file sync (`~/.notes`, `~/.dump`)
 - **naste** - self-hosted paste service
 - **Docker** - system only (for OCI containers)
 
@@ -88,6 +89,7 @@ Uses `secrets/server.yaml` (office age key):
 
 - `tailscale_auth_key`
 - `beszel/token` (agent), `beszel/ssh_key`, `beszel/username`, `beszel/password` (hub)
+- `syncthing/obox/password`, `syncthing/obox/cert`, `syncthing/obox/key`
 - `naste/user`, `naste/pass`
 - `filebrowser/obox`
 
