@@ -88,6 +88,8 @@
     utils.url = "github:semi710/utils";
     naste.url = "github:semi710/naste";
     dragterm.url = "github:semi710/dragterm";
+
+    workmux.url = "github:raine/workmux";
   };
 
   outputs =

@@ -1,0 +1,66 @@
+# workmux config — copy to project root, customize as needed
+# Docs: https://workmux.raine.dev/guide/configuration
+
+# Session mode: each worktree gets its own tmux session
+mode: session
+
+# Worktrees as siblings of main repo (../<branch>/)
+# Alternative: "worktrees" for nested layout (./worktrees/<branch>/)
+worktree_dir: ..
+
+# Default agent — opencode is auto-detected, no registration needed
+agent: opencode
+
+# Single window with two panes (use this OR `windows:` below, not both)
+panes:
+  - focus: true
+  - command: opencode
+  - split: horizontal
+
+# Clean open
+# panes:
+#   - focus: true
+
+# post_create:
+#   - ln -sfn "$WM_PROJECT_ROOT/.env" .env
+#   - ln -sfn "$WM_PROJECT_ROOT/tmp" tmp
+
+
+# Multiple windows per session (uncomment to replace `panes:`)
+# Only valid when mode: session
+# windows:
+#   - name: editor
+#     panes:
+#       - command: opencode
+#         focus: true
+#       - split: horizontal
+#   - name: tests
+#     panes:
+#       - command: just test --watch
+#   - panes:
+#       - command: tail -f app.log
+
+# Symlink shared files into new worktrees (glob-supported)
+# files:
+#   symlink:
+#     - .env
+#     - node_modules
+#     - .pnpm-store
+#   copy:
+#     - .env.local
+
+# Run after worktree creation, before tmux window opens
+# post_create:
+#   - ln -sfn ../hub/env .env
+#   - mkdir -p tmp
+#   - ln -sfn ../../hub/docs tmp/docs
+
+# Run before merge — aborts on non-zero exit
+# Receives: WM_BRANCH_NAME, WM_TARGET_BRANCH
+# pre_merge:
+#   - just check
+#   - just test
+
+# Run before worktree removal — aborts on non-zero exit
+# pre_remove:
+#   - just clean

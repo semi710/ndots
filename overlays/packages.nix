@@ -47,5 +47,6 @@ in
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
-  opencode-vim = inputs.opencode-vim.packages.${final.stdenv.hostPlatform.system}.default;
+  opencode-vim = inputs.opencode-vim.packages.${prev.stdenv.hostPlatform.system}.default;
+  workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default;
 }
