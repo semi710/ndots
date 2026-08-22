@@ -75,6 +75,7 @@
       vim:shouldDimScreenInNormalMode(false)
       vim:disableForApp('zoom.us')
       vim:disableForApp('kitty')
+      vim:disableForApp('.zathura-wrapped')
       vim:enterWithSequence('jk', 300)
       vim:shouldShowAlertInNormalMode(true)
 
