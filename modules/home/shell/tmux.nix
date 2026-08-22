@@ -14,15 +14,23 @@ let
     pkgs.writeShellScript "workmux-sidebar" # sh
       ''
         set +e
-        before=$(tmux list-panes -F '#{pane_id} #{pane_current_command}' 2>/dev/null | grep ' workmux$' | awk '{print $1}' | head -1)
-        workmux sidebar --session 2>/dev/null
-        if [ -z "$before" ]; then
+        sidebar=$(tmux list-panes -F '#{pane_id} #{pane_current_command}' 2>/dev/null | grep ' workmux$' | awk '{print $1}' | head -1)
+        active=$(tmux display -p '#{pane_id}' 2>/dev/null)
+        if [ -z "$sidebar" ]; then
+          # Not open → open and focus
+          workmux sidebar --session 2>/dev/null
           for i in 1 2 3 4 5 6 7 8 9 10; do
             sidebar=$(tmux list-panes -F '#{pane_id} #{pane_current_command}' 2>/dev/null | grep ' workmux$' | awk '{print $1}' | head -1)
             [ -n "$sidebar" ] && break
             sleep 0.1
           done
           [ -n "$sidebar" ] && tmux select-pane -t "$sidebar" 2>/dev/null
+        elif [ "$sidebar" = "$active" ]; then
+          # Focused → close
+          tmux kill-pane -t "$sidebar" 2>/dev/null
+        else
+          # Open but not focused → focus
+          tmux select-pane -t "$sidebar" 2>/dev/null
         fi
         exit 0
       '';
