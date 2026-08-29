@@ -43,6 +43,7 @@
       ignores = [
         "*~"
         "*.swp"
+        ".workmux.yaml"
       ];
       lfs.enable = true;
       iniContent = {
