@@ -68,8 +68,11 @@
           "networkmanager"
         ];
         openssh.authorizedKeys.keys = keys;
-        # Set password explicitly, suppress conflicting defaults
+        # null out installation-cd-base's initialHashedPassword = "" so only the
+        # password below is set (password "nixos" is needed for SSH; sshd refuses
+        # the empty-password default)
         password = lib.mkOverride 10 "nixos";
+        initialHashedPassword = lib.mkOverride 10 null;
       };
     };
 
