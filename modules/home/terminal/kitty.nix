@@ -93,8 +93,9 @@ in
         cursor_beam_thickness = 1.5;
         cursor_blink_interval = 0.5;
         cursor_stop_blinking_after = 15.0;
-        cursor_trail_decay = "0.05 0.15";
-        cursor_trail_start_threshold = 2;
+        # cursor_trail_decay = "0.05 0.15";
+        # cursor_trail_start_threshold = 2;
+        # cursor_trail = 3;
 
         wheel_scroll_multiplier = 5.0;
         touch_scroll_multiplier = 1.0;
@@ -118,7 +119,6 @@ in
         inactive_tab_font_style = "normal";
         tab_bar_min_tabs = 2;
         tab_activity_symbol = "none";
-        cursor_trail = 3;
 
         bold_font = "auto";
         italic_font = "auto";
