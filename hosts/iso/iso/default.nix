@@ -21,7 +21,7 @@
   hardware.enableRedistributableFirmware = lib.mkDefault false;
 
   # We don't need sound on an install ISO
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # Strip documentation to save space
   documentation.enable = false;
