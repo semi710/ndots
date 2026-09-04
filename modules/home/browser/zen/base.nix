@@ -127,7 +127,7 @@
       defaultApplications = associations;
     };
 
-  home.file.".config/mimeapps.list".text = lib.optionalString pkgs.stdenv.isLinux ''
+  home.file.".config/mimeapps.list".text = lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
     [Default Applications]
     x-scheme-handler/slack=zen-beta.desktop
     x-scheme-handler/discord=zen-beta.desktop

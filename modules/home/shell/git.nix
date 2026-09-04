@@ -56,7 +56,7 @@
         core.editor = "nvim";
         core.sharedRepository = "group";
         credential.helper =
-          if pkgs.stdenv.isDarwin then "osxkeychain" else "store --file ~/.git-credentials";
+          if pkgs.stdenv.hostPlatform.isDarwin then "osxkeychain" else "store --file ~/.git-credentials";
         pull.rebase = "true";
         diff.wsErrorHighlight = "none";
         apply.whitespace = "nowarn";

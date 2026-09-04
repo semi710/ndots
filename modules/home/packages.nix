@@ -11,7 +11,7 @@
   ...
 }:
 let
-  inherit (pkgs.stdenv) isDarwin isLinux;
+  inherit (pkgs.stdenv.hostPlatform) isDarwin isLinux;
 
   both = with pkgs; [
     google-chrome
