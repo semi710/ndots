@@ -1,0 +1,58 @@
+diff --git a/src/sandbox/network_proxy.rs b/src/sandbox/network_proxy.rs
+index 5236ba4d..7683b668 100644
+--- a/src/sandbox/network_proxy.rs
++++ b/src/sandbox/network_proxy.rs
+@@ -332,15 +332,9 @@ fn write_request_read_error(writer: &mut impl Write, error: io::Error) -> Result
+     }
+ }
+ 
+-fn reject_over_capacity(mut stream: TcpStream) {
+-    let _ = stream.set_write_timeout(Some(REJECT_LINGER_TIMEOUT));
+-    let _ = write_error(
+-        &mut stream,
+-        503,
+-        "workmux network proxy connection limit reached",
+-    );
+-    let _ = stream.shutdown(Shutdown::Write);
+-
++// Close with unread kernel data sends an RST that can destroy the error
++// response before the client reads it (and EINVAL's set_read_timeout on macOS).
++fn drain_inbound(mut stream: &TcpStream) {
+     let _ = stream.set_read_timeout(Some(REJECT_LINGER_TIMEOUT));
+     let mut drained = 0usize;
+     let mut buffer = [0u8; 1024];
+@@ -354,6 +348,18 @@ fn reject_over_capacity(mut stream: TcpStream) {
+     }
+ }
+ 
++fn reject_over_capacity(mut stream: TcpStream) {
++    let _ = stream.set_write_timeout(Some(REJECT_LINGER_TIMEOUT));
++    let _ = write_error(
++        &mut stream,
++        503,
++        "workmux network proxy connection limit reached",
++    );
++    let _ = stream.shutdown(Shutdown::Write);
++
++    drain_inbound(&stream);
++}
++
+ /// Parse and handle a single proxy connection.
+ fn handle_proxy_connection(stream: TcpStream, ctx: &ProxyContext) -> Result<()> {
+     let peer = stream.peer_addr().ok();
+@@ -376,6 +382,7 @@ fn handle_proxy_connection(stream: TcpStream, ctx: &ProxyContext) -> Result<()>
+         Ok(n) => n,
+         Err(error) => {
+             write_request_read_error(&mut writer, error)?;
++            drain_inbound(&stream);
+             return Ok(());
+         }
+     };
+@@ -392,6 +399,7 @@ fn handle_proxy_connection(stream: TcpStream, ctx: &ProxyContext) -> Result<()>
+             read_bounded_request_line(&mut reader, &mut header_line, &mut total_read, deadline)
+         {
+             write_request_read_error(&mut writer, error)?;
++            drain_inbound(&stream);
+             return Ok(());
+         }
+ 

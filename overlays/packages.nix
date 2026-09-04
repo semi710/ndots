@@ -48,5 +48,9 @@ in
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
   opencode-vim = inputs.opencode-vim.packages.${prev.stdenv.hostPlatform.system}.default;
-  workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default;
+  # FIXME: remove when raine/workmux releases the drain-before-close fix
+  # (test oversized_unterminated_request_line_is_rejected fails on macOS without it)
+  workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+    patches = (old.patches or [ ]) ++ [ ./patches/workmux-drain-inbound.patch ];
+  });
 }
