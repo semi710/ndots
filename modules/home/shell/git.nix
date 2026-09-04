@@ -43,6 +43,7 @@
       ignores = [
         "*~"
         "*.swp"
+        ".omo"
         ".workmux.yaml"
       ];
       lfs.enable = true;
