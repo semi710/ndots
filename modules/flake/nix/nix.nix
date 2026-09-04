@@ -24,6 +24,12 @@
     };
 
     settings = {
+      # list-typed option; nix-wire's mkDefault "nix-command flakes" string
+      # fails eval on nixpkgs that type-checks it
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       warn-dirty = false;
       extra-platforms = lib.mkIf pkgs.stdenv.hostPlatform.isDarwin "aarch64-darwin x86_64-darwin";
       # Nullify the registry for purity.

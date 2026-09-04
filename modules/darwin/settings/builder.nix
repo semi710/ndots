@@ -12,7 +12,10 @@
       { lib, ... }:
       {
         boot.binfmt.emulatedSystems = [ "x86_64-linux" ];
-        nix.settings.experimental-features = "nix-command flakes";
+        nix.settings.experimental-features = [
+          "nix-command"
+          "flakes"
+        ];
         users.users."builder".extraGroups = [ "wheel" ];
         security.sudo.wheelNeedsPassword = false;
         virtualisation = {
