@@ -1096,11 +1096,11 @@
         "treefmt-nix": "treefmt-nix_3"
       },
       "locked": {
-        "lastModified": 1787310464,
-        "narHash": "sha256-wnn6NrSQ0NcHuqWtOyKU4RPkq4MjXqhqjtgWuJz4XTY=",
+        "lastModified": 1788548282,
+        "narHash": "sha256-+MAAn5/c3yeHvNLJHJv97NeVgVM+q5q3SyU/ZHbtJ1I=",
         "owner": "semi710",
         "repo": "naste",
-        "rev": "d015ef50a46e44ea54208e30e6413fb5cab8a89b",
+        "rev": "7b4e0952269273b98fd0af04a56e1ecb323dabf7",
         "type": "github"
       },
       "original": {
