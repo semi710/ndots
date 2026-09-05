@@ -17,6 +17,12 @@ in
   ];
 
   sops.secrets = {
+    "naste/user" = {
+      sopsFile = "${flake}/secrets/server.yaml";
+    };
+    "naste/pass" = {
+      sopsFile = "${flake}/secrets/server.yaml";
+    };
     "syncthing/obox/password" = {
       sopsFile = "${flake}/secrets/server.yaml";
     };
@@ -26,6 +32,11 @@ in
     "syncthing/obox/key" = {
       sopsFile = "${flake}/secrets/server.yaml";
     };
+  };
+
+  programs.naste-client.private = {
+    userFile = config.sops.secrets."naste/user".path;
+    passFile = config.sops.secrets."naste/pass".path;
   };
 
   services.syncthing = {
