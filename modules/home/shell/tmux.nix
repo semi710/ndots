@@ -49,6 +49,18 @@ let
           tmux display-popup -h "$h" -w "$w" -E "workmux dashboard"
         fi
       '';
+
+  equalize-layout =
+    pkgs.writeShellScript "equalize-layout" # sh
+      ''
+        # select-layout is all-or-nothing per window, so leave windows
+        # containing a workmux pane (sidebar) alone
+        if tmux list-panes -F '#{pane_current_command}' | grep -qx workmux; then
+          tmux display-message "equalize skipped: workmux pane present"
+          exit 0
+        fi
+        tmux select-layout "$1"
+      '';
 in
 {
   programs = {
@@ -166,6 +178,10 @@ in
           bind -r l resize-pane -R
           bind -r h resize-pane -L
           bind -r m resize-pane -Z
+
+          # equalize splits; skips windows where workmux owns a pane
+          bind e run-shell "${equalize-layout} even-vertical"
+          bind E run-shell "${equalize-layout} even-horizontal"
 
           bind x kill-pane
           bind q kill-window
