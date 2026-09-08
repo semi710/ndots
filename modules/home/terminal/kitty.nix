@@ -91,7 +91,9 @@ in
 
         cursor_shape = "beam";
         cursor_beam_thickness = 1.5;
-        cursor_blink_interval = 0.5;
+        # steady cursor - tmux status churn (background window activity)
+        # resets the blink phase on every repaint and the beam flickers
+        cursor_blink_interval = 0;
         cursor_stop_blinking_after = 15.0;
         # cursor_trail_decay = "0.05 0.15";
         # cursor_trail_start_threshold = 2;
