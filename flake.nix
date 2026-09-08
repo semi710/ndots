@@ -58,6 +58,12 @@
     claude-code.url = "github:anthropics/claude-code";
     claude-code.flake = false;
 
+    # vim motions for pi's input box, from our fork.
+    # Flip to plain main after the bar-cursor PR merges.
+    # Bump with: `nix flake update vim-motions-pi`.
+    vim-motions-pi.url = "github:semi710/vim-motions-pi/feat/insert-mode-bar-cursor";
+    vim-motions-pi.flake = false;
+
     ponytail.url = "github:DietrichGebert/ponytail";
     ponytail.flake = false;
 

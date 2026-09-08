@@ -9,7 +9,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [base](#basenix-defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
 | [shell](#shell) | `homeModules.shell` | zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android |
 | [editor](#editor) | `homeModules.editor` | Helix, nvix (Neovim) |
-| [ai](#ai) | `homeModules.ai` | opencode, claude, mcp, pi, providers (anthropic, office, zen, openrouter) |
+| [ai](#ai) | `homeModules.ai` | opencode, mcp, pi, providers (anthropic, office, zen, openrouter) |
 | [browser](#browser) | `homeModules.browser` | Zen browser (base, extensions, keymaps, search) |
 | [terminal](#terminal) | `homeModules.terminal` | kitty terminal |
 | [hyprland](#hyprland) | `homeModules.hyprland` | Hyprland home config, rofi, hypridle, hyprlock, keymaps |
@@ -283,14 +283,6 @@ Agent config for the oh-my-openagent plugin.
 - `default_agent = "sisyphus"` (oh-my-openagent provides the agent system + subagents: explore, librarian, oracle, metis, momus, etc.)
 - Commit hygiene prompt: never set `--author` or add `Co-authored-by` trailers for the AI agent
 
-### claude.nix
-
-[Claude Code](https://claude.ai/code).
-
-- `programs.claude-code.enable` + MCP integration
-- Vim mode, model `claude-opus-4-6`, `ENABLE_TOOL_SEARCH = true`
-- `~/.claude/CLAUDE.md` set to the combined system prompt
-
 ### mcp.nix
 
 MCP (Model Context Protocol) servers. Opencode spawns every configured server as a child process on startup, so only universally-needed servers are included globally. Work-specific servers are gated behind an option.
@@ -299,43 +291,50 @@ MCP (Model Context Protocol) servers. Opencode spawns every configured server as
 |---|---|---|
 | `git` | Always | Git MCP server |
 | `fetch` | Always | Fetch MCP server |
+| `sequential-thinking` | Always | Sequential thinking MCP server |
+| `everything` | Always | Filesystem MCP server |
+| `playwright` | Always | Browser automation |
+| `deepwiki` | Always (remote) | GitHub repo docs |
+| `nixos` | Always | nixpkgs/options lookup |
 | `github` | Work hosts only | GitHub API (needs `GITHUB_TOKEN`) |
 | `gitnexus` | Work hosts only | Code knowledge graph |
 | `newton-hs-prod` | Work hosts only | Juspay internal code search |
 | `bitbucket` | Workstation hosts (via `workstation.nix`) | Bitbucket Server API |
 
-**Removed from global config** (were spawning node processes on every launch): `playwright`, `sequential-thinking`, `everything` (filesystem - opencode has its own file tools), `deepwiki`, `nixos`. Add these per-project if needed.
-
 **Option:** `ndots.ai.mcp.workServers` - when `true`, work-tier servers (github, gitnexus, newton-hs-prod) are included. Enabled on work hosts (dsd, semi, jp-mbp, mach).
+
+Pi consumes the same set: `~/.pi/agent/mcp.json` is rendered from the merged `programs.mcp.servers` (so host-level additions like bitbucket land in pi too). This replaces pi's onboarding-written file, which rots after GC.
 
 ### pi.nix
 
-[Pi coding agent](https://github.com/anthropics/pi) (via `llm-agents`).
+[Pi coding agent](https://github.com/badlogic/pi-mono) (via `llm-agents`). Kept at parity with opencode:
 
-- Default provider: anthropic, thinking level: medium
+- Same default model: juspay provider, `glm-latest` (opencode's `litellm/glm-latest` on the same grid)
+- Same system rules: combined system prompt written to `~/.pi/agent/AGENTS.md` (pi's global instructions file) via the pi-coding-agent `context` option
+- Same skills: local, workmux, and claude-code (frontend-design) sources symlinked into `~/.pi/agent/skills/`; ponytail skills arrive via the pi package instead
+- Same MCP servers: `mcp.json` rendered from `programs.mcp.servers` (see mcp.nix)
 - `vim-motions-pi` package with `jk` escape + OSC52 clipboard
 - Packages: nodejs, bun, copy
-- System prompt: combined system prompt
 
 ### providers/
 
 Auto-imported directory of opencode provider definitions. One file per provider, drop a new `.nix` to add a provider.
 
 - `anthropic.nix` - built-in Anthropic (env `ANTHROPIC_API_KEY`), models: claude-opus-4-7 ("gawwd"), claude-sonnet-4-6 ("worker"), claude-haiku-4-5 ("haiya")
-- `office.nix` - shared Juspay LLM provider (litellm, `@ai-sdk/openai-compatible`), used by both opencode and pi. Default model `litellm/open-large`, explore agent uses `open-fast`. 13 models: open-large/fast/vision, claude-opus/sonnet, glm, gemini, minimax, kimi
+- `office.nix` - shared Juspay LLM provider (litellm, `@ai-sdk/openai-compatible`), used by both opencode and pi. Default model `litellm/glm-latest` for both. 13 models: open-large/fast/vision, claude-opus/sonnet, glm, gemini, minimax, kimi
 - `zen.nix` - opencode Zen gateway (`provider.opencode`, built-in, env `OPENCODE_API_KEY`). Free models work without a key; with a key all 71 models load
 - `openrouter.nix` - OpenRouter (`provider.openrouter`, built-in, env `OPENROUTER_API_KEY`)
 
 ### combined-system-prompt.nix
 
-A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git, 02-before-you-code, 03-code-comments, 04-docs) into a single prompt string. Written to `~/.config/opencode/AGENTS.md` by `opencode/default.nix` so it applies to every agent globally. Also used by claude.nix and pi.nix. Ponytail lives as a toggleable plugin, not a static prompt.
+A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git, 02-before-you-code, 03-code-comments, 04-docs, 05-nix) into a single prompt string. Written to `~/.config/opencode/AGENTS.md` by `opencode/default.nix` and `~/.pi/agent/AGENTS.md` by pi.nix (pi-coding-agent `context` option), so the same rules apply to every agent. Ponytail lives as a toggleable plugin, not a static prompt.
 
 **Usage:**
 
 ```nix
 { flake, ... }: {
   imports = [ flake.homeModules.ai ];
-  # opencode + claude + mcp + pi + providers
+  # opencode + mcp + pi + providers
 }
 ```
 

@@ -63,7 +63,8 @@ in
   programs.pi-coding-agent.models.providers.juspay = {
     baseUrl = juspay.baseUrl;
     api = "openai-completions";
-    apiKey = juspay.apiKeyEnv;
+    # pi treats plain strings as literal keys; "$" prefix makes it read the env var
+    apiKey = "$" + juspay.apiKeyEnv;
     models = piJuspayModels;
   };
 }

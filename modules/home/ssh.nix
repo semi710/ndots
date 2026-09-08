@@ -9,14 +9,13 @@
         forwardAgent = true;
         addKeysToAgent = "yes";
         # For home-manager setups we need to modify /etc/ssh/ssh_config
-        # AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* CLAUDE_*
+        # AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* OPENROUTER_* OPENCODE_*
         sendEnv = [
           "JUSPAY_*"
           "GITHUB_*"
           "ANTHROPIC_*"
           "OPENROUTER_*"
           "OPENCODE_*"
-          "CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS"
         ];
       }
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin { useKeychain = true; })

@@ -33,6 +33,28 @@ let
 
   ponytailSkillNames = lib.filter isPonytailSkillDir (lib.attrNames ponytailSkillsEntries);
   workmuxSkillNames = lib.filter isWorkmuxSkillDir (lib.attrNames workmuxSkillsEntries);
+  # File mappings for a target skills directory prefix
+  mkSkillFiles =
+    prefix:
+    let
+      local = lib.mapAttrs' (name: _: {
+        name = "${prefix}/${name}/SKILL.md";
+        value.source = "${skillsDir}/${name}/SKILL.md";
+      }) (lib.filterAttrs (_: type: type == "directory") skillsEntries);
+
+      workmux = lib.listToAttrs (
+        map (name: {
+          name = "${prefix}/${name}/SKILL.md";
+          value.source = "${workmuxSkillsDir}/${name}/SKILL.md";
+        }) workmuxSkillNames
+      );
+
+      external = {
+        "${prefix}/frontend-design/SKILL.md".source =
+          "${claude-code}/plugins/frontend-design/skills/frontend-design/SKILL.md";
+      };
+    in
+    local // workmux // external;
 in
 {
   # Skill name list for the agent config
@@ -40,30 +62,15 @@ in
 
   # File mappings for ~/.config/opencode/skills/
   files =
-    let
-      local = lib.mapAttrs' (name: _: {
+    mkSkillFiles ".config/opencode/skills"
+    // lib.listToAttrs (
+      map (name: {
         name = ".config/opencode/skills/${name}/SKILL.md";
-        value.source = "${skillsDir}/${name}/SKILL.md";
-      }) (lib.filterAttrs (_: type: type == "directory") skillsEntries);
+        value.source = "${ponytail}/skills/${name}/SKILL.md";
+      }) ponytailSkillNames
+    );
 
-      pony = lib.listToAttrs (
-        map (name: {
-          name = ".config/opencode/skills/${name}/SKILL.md";
-          value.source = "${ponytail}/skills/${name}/SKILL.md";
-        }) ponytailSkillNames
-      );
-
-      workmux = lib.listToAttrs (
-        map (name: {
-          name = ".config/opencode/skills/${name}/SKILL.md";
-          value.source = "${workmuxSkillsDir}/${name}/SKILL.md";
-        }) workmuxSkillNames
-      );
-
-      external = {
-        ".config/opencode/skills/frontend-design/SKILL.md".source =
-          "${claude-code}/plugins/frontend-design/skills/frontend-design/SKILL.md";
-      };
-    in
-    local // pony // workmux // external;
+  # File mappings for ~/.pi/agent/skills/ - ponytail skills arrive via the
+  # pi package (settings.packages), so they are not symlinked here
+  piFiles = mkSkillFiles ".pi/agent/skills";
 }

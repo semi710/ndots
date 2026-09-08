@@ -31,6 +31,24 @@ let
         "--"
       ];
     };
+    # parity with the servers OMA injects into opencode, so pi gets them too
+    context7 = {
+      type = "remote";
+      url = "https://mcp.context7.com/mcp";
+    };
+    grep_app = {
+      type = "remote";
+      url = "https://mcp.grep.app";
+    };
+    codegraph = {
+      command = getExe pkgs.codegraph;
+      # bare `codegraph` opens the interactive setup wizard and never answers
+      # initialize, hanging pi's whole MCP startup for the 60s SDK timeout
+      args = [
+        "serve"
+        "--mcp"
+      ];
+    };
   };
 
   # Work-specific - only included when workServers is enabled
@@ -64,6 +82,29 @@ in
     programs.mcp = {
       enable = true;
       inherit servers;
+    };
+
+    # render pi's mcp.json ourselves - its onboarding-written file rots after GC.
+    # read from config.programs.mcp.servers so host-level additions (e.g.
+    # bitbucket in workstation.nix) land in pi too, same as opencode.
+    # nulls are the mcp module's option defaults for unset fields - strip them,
+    # pi's own config format omits them.
+    home.file.".pi/agent/mcp.json" = lib.mkIf config.programs.pi-coding-agent.enable {
+      text = builtins.toJSON {
+        # 111 direct tools is deliberate; silence the adapter's token-cost advisory
+        # that re-prints on every keep-alive catalog refresh
+        settings.warnOnLargeDirectTools = false;
+        mcpServers = lib.mapAttrs (
+          _: server:
+          lib.filterAttrs (_: v: v != null) (
+            server
+            // {
+              lifecycle = "keep-alive";
+              directTools = true;
+            }
+          )
+        ) config.programs.mcp.servers;
+      };
     };
   };
 }

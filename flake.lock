@@ -1892,6 +1892,7 @@
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix_6",
         "utils": "utils",
+        "vim-motions-pi": "vim-motions-pi",
         "workmux": "workmux",
         "zen-browser": "zen-browser"
       }
@@ -2270,6 +2271,23 @@
       "original": {
         "owner": "semi710",
         "repo": "utils",
+        "type": "github"
+      }
+    },
+    "vim-motions-pi": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1788776636,
+        "narHash": "sha256-NhUj5o9qZC6gyoDO7A87fCgpb1KOTDxhX5w8bwXW/iU=",
+        "owner": "semi710",
+        "repo": "vim-motions-pi",
+        "rev": "a97d4104c3c1a04e8bc0218cbf4ae76c7ab125dd",
+        "type": "github"
+      },
+      "original": {
+        "owner": "semi710",
+        "ref": "feat/insert-mode-bar-cursor",
+        "repo": "vim-motions-pi",
         "type": "github"
       }
     },
