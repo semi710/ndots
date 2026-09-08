@@ -53,13 +53,37 @@ let
   equalize-layout =
     pkgs.writeShellScript "equalize-layout" # sh
       ''
-        # select-layout is all-or-nothing per window, so leave windows
-        # containing a workmux pane (sidebar) alone
-        if tmux list-panes -F '#{pane_current_command}' | grep -qx workmux; then
-          tmux display-message "equalize skipped: workmux pane present"
+        # select-layout is window-wide, so size panes directly instead: the
+        # workmux sidebar keeps its size and hosts without workmux still work
+        panes=$(tmux list-panes -F '#{pane_id} #{pane_left} #{pane_top} #{pane_width} #{pane_height} #{pane_current_command}')
+        main=$(printf '%s\n' "$panes" | awk '$6 != "workmux"')
+        n=$(printf '%s\n' "$main" | grep -c .)
+        [ "$n" -lt 2 ] && exit 0
+
+        # same left edge means stacked, same top edge means side by side
+        if [ "$(printf '%s\n' "$main" | awk '{print $2}' | sort -u | wc -l)" -eq 1 ]; then
+          axis=y
+          size_field=5
+          pos_field=3
+        elif [ "$(printf '%s\n' "$main" | awk '{print $3}' | sort -u | wc -l)" -eq 1 ]; then
+          axis=x
+          size_field=4
+          pos_field=2
+        else
+          tmux display-message "equalize skipped: mixed layout"
           exit 0
         fi
-        tmux select-layout "$1"
+
+        total=$(printf '%s\n' "$main" | awk -v f="$size_field" '{s += $f} END {print s}')
+        share=$((total / n))
+
+        # the geometrically last pane is left alone and absorbs the remainder
+        printf '%s\n' "$main" | sort -k"$pos_field,$pos_field"n | head -n -1 |
+          while read -r id _; do
+            tmux resize-pane -t "$id" "-$axis" "$share"
+          done
+
+        tmux display-message "equalized $n panes"
       '';
 in
 {
@@ -179,9 +203,8 @@ in
           bind -r h resize-pane -L
           bind -r m resize-pane -Z
 
-          # equalize splits; skips windows where workmux owns a pane
-          bind e run-shell "${equalize-layout} even-vertical"
-          bind E run-shell "${equalize-layout} even-horizontal"
+          # equalize splits; the workmux sidebar (if any) keeps its size
+          bind e run-shell "${equalize-layout}"
 
           bind x kill-pane
           bind q kill-window
