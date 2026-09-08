@@ -58,10 +58,6 @@ let
       args = [ "stdio" ];
       env.GITHUB_PERSONAL_ACCESS_TOKEN = "{env:GITHUB_TOKEN}";
     };
-    gitnexus = {
-      command = getExe pkgs.llm-agents.gitnexus;
-      args = [ "mcp" ];
-    };
     newton-hs-prod = {
       autoApprove = [
         "search_functions_by_keyword"
@@ -76,7 +72,7 @@ let
 in
 {
   options.ndots.ai.mcp.workServers =
-    lib.mkEnableOption "work-specific MCP servers (github, gitnexus, newton-hs-prod)";
+    lib.mkEnableOption "work-specific MCP servers (github, newton-hs-prod)";
 
   config = {
     programs.mcp = {
