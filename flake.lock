@@ -2277,11 +2277,11 @@
     "vim-motions-pi": {
       "flake": false,
       "locked": {
-        "lastModified": 1788776636,
-        "narHash": "sha256-NhUj5o9qZC6gyoDO7A87fCgpb1KOTDxhX5w8bwXW/iU=",
+        "lastModified": 1788865932,
+        "narHash": "sha256-tdI1EBQS5Si7wir4iBav+oeoHZxXdfVpsdC8XpnKVgk=",
         "owner": "semi710",
         "repo": "vim-motions-pi",
-        "rev": "a97d4104c3c1a04e8bc0218cbf4ae76c7ab125dd",
+        "rev": "e338e61e6accff83d8f5c78566bdc7d8037b0e4c",
         "type": "github"
       },
       "original": {
