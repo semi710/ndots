@@ -26,8 +26,9 @@ let
           done
           [ -n "$sidebar" ] && tmux select-pane -t "$sidebar" 2>/dev/null
         elif [ "$sidebar" = "$active" ]; then
-          # Focused → close
-          tmux kill-pane -t "$sidebar" 2>/dev/null
+          # Focused → close; kill-pane dumps the freed columns into one
+          # pane, workmux's off reflows the rest back proportionally
+          workmux sidebar --session off 2>/dev/null
         else
           # Open but not focused → focus
           tmux select-pane -t "$sidebar" 2>/dev/null
@@ -204,7 +205,7 @@ in
           bind -r m resize-pane -Z
 
           # equalize splits; the workmux sidebar (if any) keeps its size
-          bind e run-shell "${equalize-layout}"
+          bind = run-shell "${equalize-layout}"
 
           bind x kill-pane
           bind q kill-window
