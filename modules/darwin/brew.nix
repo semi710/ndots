@@ -27,7 +27,6 @@ in
       "google-gemini"
       "element"
       "homerow"
-      "hiddenbar"
       "hyperkey"
       "pronotes"
       "finetune"
