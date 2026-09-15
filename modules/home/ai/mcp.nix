@@ -65,6 +65,9 @@ let
       ];
       type = "http";
       url = "https://juspay-brain.internal.svc.k8s.office.mum.juspay.net/newton-hs/";
+      # gateway intermittently 403s; keep-alive's 30s health-check retry loop
+      # spams errors for the whole outage - connect on tool use instead
+      lifecycle = "lazy";
     };
   };
 
@@ -93,11 +96,11 @@ in
         mcpServers = lib.mapAttrs (
           _: server:
           lib.filterAttrs (_: v: v != null) (
-            server
-            // {
+            {
               lifecycle = "keep-alive";
               directTools = true;
             }
+            // server
           )
         ) config.programs.mcp.servers;
       };
