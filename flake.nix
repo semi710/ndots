@@ -58,6 +58,14 @@
     claude-code.url = "github:anthropics/claude-code";
     claude-code.flake = false;
 
+    # yabai with macOS 27 space-switching support: agg23's macos-27 branch adds
+    # augmented synthetic dock-swipe events (SIP-friendly, from InstantSpaceSwitcher)
+    # since the SA mach-injection is dead on macOS 27 final (26A428).
+    # Switch back to upstream when it lands there (koekeishiya/yabai#2802).
+    # Bump with: `nix flake update yabai`.
+    yabai.url = "github:agg23/yabai/macos-27";
+    yabai.flake = false;
+
     # vim motions for pi's input box, from our fork.
     # Flip to plain main after the bar-cursor PR merges.
     # Bump with: `nix flake update vim-motions-pi`.

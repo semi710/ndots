@@ -1894,6 +1894,7 @@
         "utils": "utils",
         "vim-motions-pi": "vim-motions-pi",
         "workmux": "workmux",
+        "yabai": "yabai",
         "zen-browser": "zen-browser"
       }
     },
@@ -2347,6 +2348,23 @@
       "original": {
         "owner": "hyprwm",
         "repo": "xdg-desktop-portal-hyprland",
+        "type": "github"
+      }
+    },
+    "yabai": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1783090113,
+        "narHash": "sha256-6tNi20q8K4LeNETjFA5nEDqcSVSBYvRFbzcJbDx7ntA=",
+        "owner": "agg23",
+        "repo": "yabai",
+        "rev": "d0d387d1445048415fd1f3566393a191fe3c5097",
+        "type": "github"
+      },
+      "original": {
+        "owner": "agg23",
+        "ref": "macos-27",
+        "repo": "yabai",
         "type": "github"
       }
     },

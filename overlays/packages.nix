@@ -28,6 +28,17 @@ in
   bitbucket-mcp = selfPkgs.bitbucket-mcp;
   kblight = selfPkgs.kblight;
 
+  # FIXME: remove when nixpkgs yabai ships macOS 27 scripting-addition support
+  # (issue-2802 fork; upstream master lacks it, flip input back to asmvik/yabai)
+  yabai = prev.yabai.overrideAttrs (old: {
+    version = "unstable-${inputs.yabai.shortRev}";
+    src = inputs.yabai;
+    doInstallCheck = false; # fork still reports the last tagged version
+    # macOS 27 dyld rejects dlopen of images without LC_UUID; nixpkgs' -no_uuid
+    # kills the scripting-addition payload inside Dock (UUID becomes random, fine here)
+    postPatch = builtins.replaceStrings [ "-Wl,-no_uuid" ] [ "" ] old.postPatch;
+  });
+
   # FIXME: remove pin when https://github.com/sst/opencode/issues/34782 is fixed
   # 3.7 breaks opentui rendering on macOS only (bold/inline code stripped in TUI)
   tmux =
