@@ -1,4 +1,4 @@
-# Beszel agent — lightweight monitoring agent for the Beszel hub.
+# Beszel agent - lightweight monitoring agent for the Beszel hub.
 # Import this module to enable the agent. The host must supply TOKEN_FILE
 # from sops (see hosts/nixos/<host>/). Set services.beszel.agent.user to
 # the docker-group username to target the rootless socket; the module

@@ -50,7 +50,7 @@
 
     opencode-vim.url = "github:leohenon/opencode-vim/ocv";
 
-    # AI tooling sources — vendored at the module level (not full flakes).
+    # AI tooling sources - vendored at the module level (not full flakes).
     # `flake = false` makes flake.lock track the rev+narHash, so we don't
     # have to hand-manage `sha256` in modules/home/ai/opencode.nix.
     # Bump with: `nix flake update claude-code`.

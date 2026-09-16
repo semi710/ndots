@@ -1,4 +1,4 @@
-# Skills wiring — maps skill sources to ~/.config/opencode/skills/.
+# Skills wiring - maps skill sources to ~/.config/opencode/skills/.
 # Sources: local (./skills/), ponytail (vendored), workmux (flake), external (claude-code).
 {
   inputs,

@@ -1,6 +1,6 @@
 { lib, ... }:
 let
-  # Shared Juspay provider data — consumed by both opencode and pi.
+  # Shared Juspay provider data - consumed by both opencode and pi.
   juspay = {
     baseUrl = "https://grid.ai.juspay.net";
     apiKeyEnv = "JUSPAY_API_KEY";

@@ -29,7 +29,7 @@ in
     };
   };
 
-  # Extensions not in rycee — installed via AMO policies
+  # Extensions not in rycee - installed via AMO policies
   programs.zen-browser.policies.ExtensionSettings = {
     # iCloud Passwords
     "password-manager-firefox-extension@apple.com" = {
@@ -51,7 +51,7 @@ in
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/nixpkgs-pr-tracker/latest.xpi";
       installation_mode = "normal_installed";
     };
-    # LanguageTool (unfree license — not in rycee)
+    # LanguageTool (unfree license - not in rycee)
     "languagetool-webextension@languagetool.org" = {
       install_url = "https://addons.mozilla.org/firefox/downloads/latest/languagetool-grammar-checker/latest.xpi";
       installation_mode = "normal_installed";

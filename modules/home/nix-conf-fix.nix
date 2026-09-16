@@ -7,7 +7,7 @@
 {
   # attic-client's `attic use` writes `substituters` and `trusted-public-keys`
   # (without the `extra-` prefix) to ~/.config/nix/nix.conf.  On multi-user
-  # Nix (daemon), bare `substituters` in user config is silently ignored —
+  # Nix (daemon), bare `substituters` in user config is silently ignored;
   # only `extra-substituters` appends to the system list.  This activation
   # hook converts the bare keys to their `extra-` equivalents after every
   # home-manager switch so the user-level cache config actually works.

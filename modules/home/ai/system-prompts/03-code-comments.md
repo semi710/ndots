@@ -10,4 +10,4 @@ When making a change that is a temporary workaround, version pin, or will need r
 No divider lines, no ASCII art headers, no section-label comments that repeat the code below, no commented-out code.
 
 ### Em-dashes
-NEVER use em-dashes (—). Use a hyphen with spaces (" - ") or a comma. Em-dashes are an AI writing tell that add nothing.
+NEVER use em-dashes. Use a hyphen with spaces (" - ") or a comma. Em-dashes are an AI writing tell that add nothing.

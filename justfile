@@ -1,6 +1,6 @@
 set positional-arguments
 
-# Deploy — current host (no arg) or remote host over SSH
+# Deploy - current host (no arg) or remote host over SSH
 deploy host="":
     @if [ -z "{{host}}" ]; then \
         if [ "$(uname -s)" = "Darwin" ]; then \
@@ -52,6 +52,6 @@ update:
 check:
     nix flake check
 
-# Garbage collect — all profiles (needs sudo)
+# Garbage collect - all profiles (needs sudo)
 gc:
     sudo nh clean all

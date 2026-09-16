@@ -61,7 +61,7 @@
         "dsd"
         "dsd.persian-vega.ts.net"
       ];
-      # SSH host key — used by nix-daemon (root) for knownHosts verification
+      # SSH host key - used by nix-daemon (root) for knownHosts verification
       # Update with: ssh-keyscan dsd 2>/dev/null | grep ed25519
       hostPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH9PMm+g87zvYb85/LhAiguCWbSXlDeR56m+OV86lYbK";
     };
@@ -71,7 +71,7 @@
         "semi"
         "semi.persian-vega.ts.net"
       ];
-      # SSH host key — used by nix-daemon (root) for knownHosts verification
+      # SSH host key - used by nix-daemon (root) for knownHosts verification
       # Update with: ssh-keyscan semi 2>/dev/null | grep ed25519
       hostPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII9zAGumywN507wgOwNoGKjJkr5dn/TFejM7FAiKdHvg";
     };

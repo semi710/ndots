@@ -1,4 +1,4 @@
-# FileBrowser Quantum — systemd service wrapping the nixpkgs binary.
+# FileBrowser Quantum - systemd service wrapping the nixpkgs binary.
 # Admin user auto-derived from hostname. Password comes from sops via passwordFile.
 # Runs as root for full filesystem access (Tailscale-only, not exposed publicly).
 {

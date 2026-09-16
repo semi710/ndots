@@ -46,8 +46,8 @@ Per-host config is limited to the user, secrets, and host-specific env vars:
 
 | Host | `agent.user` | Extra env | Notes |
 |------|-------------|-----------|-------|
-| obox | `nikhil` | — | Also runs the hub |
-| semi, dsd | `nikhil.singh` | — | — |
+| obox | `nikhil` | - | Also runs the hub |
+| semi, dsd | `nikhil.singh` | - | - |
 | mach | `niksingh710` | `SKIP_GPU=true` | AMD GPU sysfs panic workaround ([#1799](https://github.com/henrygd/beszel/issues/1799)) |
 
 ## Adding a New Agent Host

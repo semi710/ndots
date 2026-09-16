@@ -41,7 +41,7 @@
       sha256 = "0s4d73gbi2mbp72520qr2nq1gqsjh8l0xz8gnzw55qnpv01xlsv7";
     };
 
-    # Death chest (DeathChest 1.5.7 — replaces GraveSafe 1.0.0 which duped
+    # Death chest (DeathChest 1.5.7 - replaces GraveSafe 1.0.0 which duped
     # armor: it collected getContents() [all 41 slots incl armor+offhand] then
     # re-collected getArmorContents() + getItemInOffHand(), adding them twice)
     "plugins/DeathChest.jar" = pkgs.fetchurl {
