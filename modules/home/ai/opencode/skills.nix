@@ -55,22 +55,25 @@ let
       };
     in
     local // workmux // external;
+  # File mappings for a target skills directory prefix, ponytail included
+  # (pi loaded it from its package system; omp has none, so symlink it)
+  withPonytail =
+    prefix:
+    mkSkillFiles prefix
+    // lib.listToAttrs (
+      map (name: {
+        name = "${prefix}/${name}/SKILL.md";
+        value.source = "${ponytail}/skills/${name}/SKILL.md";
+      }) ponytailSkillNames
+    );
 in
 {
   # Skill name list for the agent config
   skills = localSkillNames ++ ponytailSkillNames ++ workmuxSkillNames;
 
   # File mappings for ~/.config/opencode/skills/
-  files =
-    mkSkillFiles ".config/opencode/skills"
-    // lib.listToAttrs (
-      map (name: {
-        name = ".config/opencode/skills/${name}/SKILL.md";
-        value.source = "${ponytail}/skills/${name}/SKILL.md";
-      }) ponytailSkillNames
-    );
+  files = withPonytail ".config/opencode/skills";
 
-  # File mappings for ~/.pi/agent/skills/ - ponytail skills arrive via the
-  # pi package (settings.packages), so they are not symlinked here
-  piFiles = mkSkillFiles ".pi/agent/skills";
+  # File mappings for ~/.omp/agent/skills/
+  ompFiles = withPonytail ".omp/agent/skills";
 }

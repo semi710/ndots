@@ -40,8 +40,8 @@ let
     ) modelNames
   );
 
-  # Pi format: flat list of { id }.
-  piJuspayModels = map (name: { id = name; }) modelNames;
+  # omp format: flat list of { id }.
+  ompJuspayModels = map (name: { id = name; }) modelNames;
   defaultModel = "litellm/glm-latest";
 in
 {
@@ -60,11 +60,14 @@ in
     };
   };
 
-  programs.pi-coding-agent.models.providers.juspay = {
-    baseUrl = juspay.baseUrl;
-    api = "openai-completions";
-    # pi treats plain strings as literal keys; "$" prefix makes it read the env var
-    apiKey = "$" + juspay.apiKeyEnv;
-    models = piJuspayModels;
+  # omp reads this read-only, a store symlink is fine (unlike config.yml)
+  home.file.".omp/agent/models.yml".text = lib.generators.toYAML { } {
+    providers.juspay = {
+      baseUrl = juspay.baseUrl;
+      api = "openai-completions";
+      # omp: plain string is an env-var name (pi needed a "$" prefix)
+      apiKey = juspay.apiKeyEnv;
+      models = ompJuspayModels;
+    };
   };
 }

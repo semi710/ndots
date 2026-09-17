@@ -48,6 +48,9 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
+    # oh-my-pi - pi-mono fork with native vim mode, MCP, and LSP-edits
+    omp.url = "github:can1357/oh-my-pi";
+
     opencode-vim.url = "github:leohenon/opencode-vim/ocv";
 
     # AI tooling sources - vendored at the module level (not full flakes).
@@ -68,10 +71,6 @@
 
     # vim motions for pi's input box, from our fork.
     # Flip to plain main after the bar-cursor PR merges.
-    # Bump with: `nix flake update vim-motions-pi`.
-    vim-motions-pi.url = "github:semi710/vim-motions-pi/feat/insert-mode-bar-cursor";
-    vim-motions-pi.flake = false;
-
     ponytail.url = "github:DietrichGebert/ponytail";
     ponytail.flake = false;
 
