@@ -9,7 +9,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [base](#basenix-defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
 | [shell](#shell) | `homeModules.shell` | zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android |
 | [editor](#editor) | `homeModules.editor` | Helix, nvix (Neovim) |
-| [ai](#ai) | `homeModules.ai` | opencode, mcp, pi, providers (anthropic, office, zen, openrouter) |
+| [ai](#ai) | `homeModules.ai` | opencode, mcp, omp, providers (anthropic, office, zen, openrouter) |
 | [browser](#browser) | `homeModules.browser` | Zen browser (base, extensions, keymaps, search) |
 | [terminal](#terminal) | `homeModules.terminal` | kitty terminal |
 | [hyprland](#hyprland) | `homeModules.hyprland` | Hyprland home config, rofi, hypridle, hyprlock, keymaps |
@@ -47,7 +47,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 A few deliberate choices repeat across these modules. They explain the per-module details below:
 
 - **vi-mode / hjkl everywhere** - zsh, tmux, kitty, hyprland, mpv, zathura, rofi, aerospace, and skhd share the same motion keys. One muscle memory set works across shell, terminal, window manager, and media apps.
-- **`jk` escape** - the same escape chord in zsh, opencode, pi, and Hammerspoon's system-wide vim mode. Leaving insert mode is identical everywhere.
+- **`jk` escape** - the same escape chord in zsh, opencode, and Hammerspoon's system-wide vim mode. Leaving insert mode is identical everywhere (omp uses plain Escape; its keybindings only remap single chords).
 - **OSC52 clipboard** - visual yank reaches the local clipboard over SSH and inside tmux, with no xclip forwarding or extra config.
 - **Shared stylix theme** - kanagawa-dragon colors and Monaspace fonts flow from NixOS to Darwin to home-manager, so every app reads the same theme - no per-app configuration.
 - **nix-wire auto-import** - drop a `.nix` into a module directory and it's wired automatically. That's why `shell/`, `editor/`, `ai/`, etc. are directories with a `default.nix` that imports its siblings - no import list to maintain.
@@ -315,6 +315,9 @@ OMP consumes the same set: `~/.omp/agent/mcp.json` is rendered from the merged `
 - Same MCP servers: `mcp.json` rendered from `programs.mcp.servers` (see mcp.nix)
 - Same provider: `models.yml` rendered in `providers/office.nix`
 - Native vim mode (`tui.vimMode`) - full motions/operators/text objects, bar cursor in insert. No `jk` escape (omp's keybindings only remap single chords); plain Escape only
+- Memory: `memory.backend = "mnemopi"` (local SQLite, per-project recall/retain) + `autolearn.enabled` (post-stop lesson capture)
+- Advisor (second-opinion review on stop) and prewalk (repo-map pre-arm) enabled; `modelRoles.advisor`/`modelRoles.smol` point at juspay models because the builtin fallback chains have none
+- Themes: `ndots-dark`/`ndots-light` derived at eval time from omp's upstream titanium/light JSONs (via `lib.recursiveUpdate`) with `symbols.overrides."icon.context"` set to the unicode box `◫` instead of the nerd preset's Windows-logo glyph; written to `~/.omp/agent/themes/`
 
 ### providers/
 
