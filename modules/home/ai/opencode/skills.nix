@@ -37,10 +37,16 @@ let
   mkSkillFiles =
     prefix:
     let
-      local = lib.mapAttrs' (name: _: {
-        name = "${prefix}/${name}/SKILL.md";
-        value.source = "${skillsDir}/${name}/SKILL.md";
-      }) (lib.filterAttrs (_: type: type == "directory") skillsEntries);
+      # ship every file in a skill dir (SKILL.md plus references like checklists/templates)
+      local = lib.listToAttrs (
+        lib.concatMap (
+          name:
+          map (f: {
+            name = "${prefix}/${name}/${f}";
+            value.source = "${skillsDir}/${name}/${f}";
+          }) (builtins.attrNames (builtins.readDir "${skillsDir}/${name}"))
+        ) (lib.filter (name: skillsEntries.${name} == "directory") (lib.attrNames skillsEntries))
+      );
 
       workmux = lib.listToAttrs (
         map (name: {
