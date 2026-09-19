@@ -109,6 +109,7 @@ Tmux as the session/pane layer, kept consistent with the shell and editor. Vi mo
 - `Ctrl+e` edits pane output in `$EDITOR`
 - Undercurl support, true color, extended keys
 - Splits: `|` horizontal, `-` vertical, `v`/`s` (open in cwd)
+- `alt+h`/`alt+l` translate to Left/Right at the tmux root table, so omp selectors (ask dialogs, settings, model sidebar) accept them as tab switches; copy-mode-vi keeps native motion
 
 ### fzf.nix
 

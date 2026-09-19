@@ -210,6 +210,12 @@ in
           # equalize splits; the workmux sidebar (if any) keeps its size
           bind = run-shell "${equalize-layout}"
 
+          # alt+h/l -> Left/Right for TUI selectors; copy-mode keeps its own motion
+          bind -n M-h send-keys Left
+          bind -n M-l send-keys Right
+          bind -T copy-mode-vi M-h send -X cursor-left
+          bind -T copy-mode-vi M-l send -X cursor-right
+
           bind x kill-pane
           bind q kill-window
           bind Q kill-session
