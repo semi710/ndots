@@ -73,7 +73,8 @@ in
         autolearn.enabled = true;
         # second-opinion reviewer on stop; needs an explicit model (see modelRoles)
         advisor.enabled = true;
-        # pre-arm the session with a repo map before the first prompt
+        # strong model plans: deep-plan nudge, then switch to the smol role at
+        # the first edit/write (one-way; implementation runs on the cheap model)
         prewalk.enabled = true;
 
         # dark is derived from the base16 palette; light stays upstream
