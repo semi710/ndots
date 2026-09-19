@@ -91,6 +91,10 @@ in
   # comes from homeModules.editor
   nvix.variant = "full";
   ndots.ai.mcp.workServers = true;
+  # omp dark theme follows the stylix palette (fallback is kanagawa-dragon)
+  ndots.ai.omp.base16Colors = lib.filterAttrs (
+    n: _: builtins.match "base[0-9A-F]{2}" n != null
+  ) config.lib.stylix.colors;
 
   # Color override for tmux plugin
   programs.tmux.plugins = [
