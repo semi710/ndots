@@ -89,6 +89,13 @@ in
       # derived themes land where omp discovers custom themes by name
       ".omp/agent/themes/ndots-dark.json".text = builtins.toJSON themes.dark;
       ".omp/agent/themes/ndots-light.json".text = builtins.toJSON themes.light;
+
+      # vim-style select navigation; alt-chords dodge type-to-search which eats plain j/k
+      # (user bindings replace defaults, so the arrows must stay listed)
+      ".omp/agent/keybindings.yml".text = ''
+        tui.select.up: ["up", "alt+k"]
+        tui.select.down: ["down", "alt+j"]
+      '';
     };
   };
 }
