@@ -91,10 +91,13 @@ in
       ".omp/agent/themes/ndots-light.json".text = builtins.toJSON themes.light;
 
       # vim-style select navigation; alt-chords dodge type-to-search which eats plain j/k
-      # (user bindings replace defaults, so the arrows must stay listed)
+      # (user bindings replace defaults, so the arrows must stay listed).
+      # app.display.reset drops its default alt+l so tmux's alt+h/l -> Left/Right
+      # translation stays consistent outside tmux too (display reset is unused).
       ".omp/agent/keybindings.yml".text = ''
         tui.select.up: ["up", "alt+k"]
         tui.select.down: ["down", "alt+j"]
+        app.display.reset: []
       '';
     };
   };
