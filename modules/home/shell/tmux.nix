@@ -130,7 +130,11 @@ in
       extraConfig = # tmux
         ''
           set -g allow-passthrough all
-          set -g extended-keys on
+          # omp never requests extended keys over SSH+tmux (its modifyOtherKeys
+          # fallback is gated off for base/trueColor terminal ids), so "on" left
+          # panes in VT10x mode where Shift+Enter collapses to \r; "always" forces
+          # mode 1 so modified keys reach apps as CSI-u (\x1b[13;2u = shift+enter)
+          set -g extended-keys always
           set -g extended-keys-format csi-u
           set -g default-command "''${SHELL}"
 
