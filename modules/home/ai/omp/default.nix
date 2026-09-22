@@ -14,6 +14,7 @@ let
     omp = inputs.omp;
     palette = config.ndots.ai.omp.base16Colors;
   };
+  cfg = config.ndots.ai.omp;
 in
 {
   options.ndots.ai.omp.base16Colors = lib.mkOption {
@@ -37,6 +38,26 @@ in
       base0F = "b98d7b";
     };
     description = "Base16 palette (hex, no #) driving the ndots-dark omp theme; stylix hosts override with config.lib.stylix.colors";
+  };
+
+  options.ndots.ai.omp.keybindings = lib.mkOption {
+    type = lib.types.attrsOf (lib.types.either lib.types.str (lib.types.listOf lib.types.str));
+    default = {
+      # vim-style select navigation; alt-chords dodge type-to-search which eats
+      # plain j/k (user bindings replace defaults, so the arrows must stay listed).
+      # app.display.reset drops its default alt+l so tmux's alt+h/l -> Left/Right
+      # translation stays consistent outside tmux too (display reset is unused).
+      "tui.select.up" = [
+        "up"
+        "alt+k"
+      ];
+      "tui.select.down" = [
+        "down"
+        "alt+j"
+      ];
+      "app.display.reset" = [ ];
+    };
+    description = "Action-id to chord(s) mapping written to ~/.omp/agent/keybindings.yml; upstream reads no keybindings object from config.yml, so this file is the only remap channel";
   };
 
   imports = [ inputs.omp.homeManagerModules.default ];
@@ -91,15 +112,9 @@ in
       ".omp/agent/themes/ndots-dark.json".text = builtins.toJSON themes.dark;
       ".omp/agent/themes/ndots-light.json".text = builtins.toJSON themes.light;
 
-      # vim-style select navigation; alt-chords dodge type-to-search which eats plain j/k
-      # (user bindings replace defaults, so the arrows must stay listed).
-      # app.display.reset drops its default alt+l so tmux's alt+h/l -> Left/Right
-      # translation stays consistent outside tmux too (display reset is unused).
-      ".omp/agent/keybindings.yml".text = ''
-        tui.select.up: ["up", "alt+k"]
-        tui.select.down: ["down", "alt+j"]
-        app.display.reset: []
-      '';
+      # declarative remaps (see ndots.ai.omp.keybindings); upstream reads this
+      # file, never a keybindings object in config.yml
+      ".omp/agent/keybindings.yml".text = lib.generators.toYAML { } cfg.keybindings;
     };
   };
 }
