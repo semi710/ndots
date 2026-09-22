@@ -13,13 +13,14 @@ in
   imports = [
     flake.homeModules.default
     flake.homeModules.ai
-    flake.homeModules.stylix # for consistent theming across devices
+    flake.homeModules.stylix
   ];
   stylix.cliOnly = true;
-  # omp dark theme follows the stylix palette (fallback is kanagawa-dragon)
+  # omp gets its own module settings
   ndots.ai.omp.base16Colors = lib.filterAttrs (
     n: _: builtins.match "base[0-9A-F]{2}" n != null
   ) config.lib.stylix.colors;
+
   home.username = me.username;
   programs.zsh.initContent = ''
     export TERM="xterm-256color"

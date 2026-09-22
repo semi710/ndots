@@ -82,4 +82,8 @@ in
 
   # File mappings for ~/.omp/agent/skills/
   ompFiles = withPonytail ".omp/agent/skills";
+
+  # File mappings for ~/.pi/agent/skills/ - ponytail skills arrive via the
+  # pi package (settings.packages), so they are not symlinked here
+  piFiles = mkSkillFiles ".pi/agent/skills";
 }

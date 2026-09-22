@@ -42,6 +42,9 @@ let
 
   # omp format: flat list of { id }.
   ompJuspayModels = map (name: { id = name; }) modelNames;
+
+  # pi format: flat list of { id } - same shape as omp's.
+  piJuspayModels = map (name: { id = name; }) modelNames;
   defaultModel = "litellm/glm-latest";
 in
 {
@@ -69,5 +72,14 @@ in
       apiKey = juspay.apiKeyEnv;
       models = ompJuspayModels;
     };
+  };
+
+  # pi writes models.json from this; the "$" prefix makes pi read the env var
+  # (pi treats plain strings as literal keys)
+  programs.pi-coding-agent.models.providers.juspay = {
+    baseUrl = juspay.baseUrl;
+    api = "openai-completions";
+    apiKey = "$" + juspay.apiKeyEnv;
+    models = piJuspayModels;
   };
 }

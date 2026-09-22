@@ -115,5 +115,26 @@ in
         mcpServers = lib.mapAttrs (_: ompServer) config.programs.mcp.servers;
       };
     };
+
+    # render pi's mcp.json ourselves - its onboarding-written file rots after GC.
+    # reads the same merged programs.mcp.servers as opencode/omp, so host-level
+    # additions (e.g. bitbucket in workstation.nix) land in pi too.
+    home.file.".pi/agent/mcp.json" = lib.mkIf config.ndots.ai.pi.enable {
+      text = builtins.toJSON {
+        # 111 direct tools is deliberate; silence the adapter's token-cost advisory
+        # that re-prints on every keep-alive catalog refresh
+        settings.warnOnLargeDirectTools = false;
+        mcpServers = lib.mapAttrs (
+          _: server:
+          lib.filterAttrs (_: v: v != null) (
+            {
+              lifecycle = "keep-alive";
+              directTools = true;
+            }
+            // server
+          )
+        ) config.programs.mcp.servers;
+      };
+    };
   };
 }

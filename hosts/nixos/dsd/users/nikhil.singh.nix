@@ -1,7 +1,3 @@
-# Contains override for packages/moduels
-# Most of my modules are meant to be used by multiple users
-# and multiple people online.
-# here in this config file i override them according to my needs
 {
   flake,
   config,
@@ -13,7 +9,6 @@ let
   host = (import (flake + "/config.nix")).users.me;
 in
 {
-  # users specific home modules
   imports = [
     flake.homeModules.sops
     flake.homeModules.ai
@@ -38,18 +33,18 @@ in
     cert = config.sops.secrets."syncthing/dsd/cert".path;
     key = config.sops.secrets."syncthing/dsd/key".path;
   };
-  # Public keys for SSH agent key selection via -i
+
   home.file = {
     ".ssh/id_ed25519.pub".text = builtins.elemAt host.sshPublicKeys 0;
     ".ssh/id_ed25519_work.pub".text = builtins.elemAt jp.sshPublicKeys 0;
   };
+
   nvix.variant = "core";
   programs.opencode.web = {
     enable = true;
     environmentFile = "${config.home.homeDirectory}/.opencode.env";
   };
   ndots.ai.mcp.workServers = true;
-  # omp dark theme follows the stylix palette (fallback is kanagawa-dragon)
   ndots.ai.omp.base16Colors = lib.filterAttrs (
     n: _: builtins.match "base[0-9A-F]{2}" n != null
   ) config.lib.stylix.colors;
@@ -74,10 +69,6 @@ in
     ];
   };
 
-  # Allow nix flake fetcher to find the work SSH key regardless of directory.
-  # Nix's internal git fetcher doesn't use git's core.sshCommand (which is
-  # gated behind gitdir:~/work/bitbucket/), so without this Host block it
-  # has no key to offer and gets Permission denied.
   programs.ssh.settings = {
     "ssh.bitbucket.juspay.net" = {
       identityFile = "~/.ssh/id_ed25519_work";

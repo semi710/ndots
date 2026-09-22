@@ -9,7 +9,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [base](#basenix-defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
 | [shell](#shell) | `homeModules.shell` | zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android |
 | [editor](#editor) | `homeModules.editor` | Helix, nvix (Neovim) |
-| [ai](#ai) | `homeModules.ai` | opencode, mcp, omp, providers (anthropic, office, zen, openrouter) |
+| [ai](#ai) | `homeModules.ai` | opencode, mcp, omp, pi, providers (anthropic, office, zen, openrouter) |
 | [browser](#browser) | `homeModules.browser` | Zen browser (base, extensions, keymaps, search) |
 | [terminal](#terminal) | `homeModules.terminal` | kitty terminal |
 | [hyprland](#hyprland) | `homeModules.hyprland` | Hyprland home config, rofi, hypridle, hyprlock, keymaps |
@@ -107,7 +107,7 @@ Tmux as the session/pane layer, kept consistent with the shell and editor. Vi mo
 - OSC52 copy via the `copy` tool in fzf-url
 - `ta <session>` command (attach/create session)
 - `Ctrl+e` edits pane output in `$EDITOR`
-- Undercurl support, true color, extended keys
+- Extended keys forced (`extended-keys always`, CSI-u format) so modified keys survive the SSH+tmux hop: Shift+Enter reaches omp as `\x1b[13;2u` (newline) instead of collapsing to `\r` (submit). Apps that never request extended keys still get CSI-u for keys without a legacy sequence; Enter and Ctrl+J keep their standard bytes. In omp: Shift+Enter and Ctrl+J insert a newline, Enter submits.
 - Splits: `|` horizontal, `-` vertical, `v`/`s` (open in cwd)
 - `alt+h`/`alt+l` translate to Left/Right at the tmux root table, so omp selectors (ask dialogs, settings, model sidebar) accept them as tab switches; copy-mode-vi keeps native motion
 
@@ -306,9 +306,11 @@ MCP (Model Context Protocol) servers. Opencode spawns every configured server as
 
 OMP consumes the same set: `~/.omp/agent/mcp.json` is rendered from the merged `programs.mcp.servers` (so host-level additions like bitbucket land in omp too). omp's schema is strict - pi-only keys (lifecycle, directTools, autoApprove) are stripped and `{env:VAR}` values become plain env-var names.
 
+When `ndots.ai.pi.enable` is `true`, pi gets the same set: `~/.pi/agent/mcp.json` is rendered with pi's own keys (`lifecycle = "keep-alive"`, `directTools = true`) re-added.
+
 ### omp/
 
-[oh-my-pi](https://github.com/can1357/oh-my-pi) - a pi-mono fork with native vim mode, a native MCP client, and LSP-aware edits. Replaced pi. `default.nix` holds the module config, `theme.nix` derives the themes from the palette. Kept at parity with opencode:
+[oh-my-pi](https://github.com/can1357/oh-my-pi) - a pi-mono fork with native vim mode, a native MCP client, and LSP-aware edits. `default.nix` holds the module config, `theme.nix` derives the themes from the palette. Kept at parity with opencode:
 
 - Same default model: juspay provider, `glm-latest` (opencode's `litellm/glm-latest` on the same grid), via `modelRoles.default` in `~/.omp/agent/config.yml`
 - Same system rules: combined system prompt written to `~/.omp/agent/AGENTS.md` (omp's user-level context file)
@@ -316,18 +318,29 @@ OMP consumes the same set: `~/.omp/agent/mcp.json` is rendered from the merged `
 - Same MCP servers: `mcp.json` rendered from `programs.mcp.servers` (see mcp.nix)
 - Same provider: `models.yml` rendered in `providers/office.nix`
 - Native vim mode (`tui.vimMode`) - full motions/operators/text objects, bar cursor in insert. No `jk` escape (omp's keybindings only remap single chords); plain Escape only
-- Select navigation: `~/.omp/agent/keybindings.yml` adds `alt+j`/`alt+k` to `tui.select.down/up` (arrows kept). Plain `j`/`k` are unusable - type-to-search eats printable keys in the settings menu and long lists; alt-chords are exempt. Horizontal movement (`alt+h`/`alt+l` → Left/Right for tabs/sidebar) is translated at the tmux root table, not remapped in omp - omp hardcodes left/right matching with no action IDs. Applies to every selector: settings menu, model browser, ask dialogs, approval prompts
-- `app.display.reset` is unbound (empty key list) - its default `alt+l` would collide with the tmux-level `alt+h`/`alt+l` → Left/Right translation outside tmux; display reset is recoverable via terminal restart if ever needed
+- Select navigation: `~/.omp/agent/keybindings.yml` is rendered from the `ndots.ai.omp.keybindings` option (default: `alt+j`/`alt+k` added to `tui.select.down/up`, arrows kept). Plain `j`/`k` are unusable - type-to-search eats printable keys in the settings menu and long lists; alt-chords are exempt. Horizontal movement (`alt+h`/`alt+l` → Left/Right for tabs/sidebar) is translated at the tmux root table, not remapped in omp - omp hardcodes left/right matching with no action IDs. Applies to every selector: settings menu, model browser, ask dialogs, approval prompts. omp reads no `keybindings` object from `config.yml`, so the file is the only remap channel
+- `app.display.reset` is unbound via the same option (empty key list) - its default `alt+l` would collide with the tmux-level `alt+h`/`alt+l` → Left/Right translation outside tmux; display reset is recoverable via terminal restart if ever needed
 - Memory: `memory.backend = "mnemopi"` (local SQLite, per-project recall/retain) + `autolearn.enabled` (post-stop lesson capture)
 - Advisor (second-opinion review on stop) and prewalk enabled; prewalk makes the strong model plan first, then hands off to the `smol` role at the first edit/write (one-way switch; implementation runs on the cheap model). `modelRoles.advisor`/`modelRoles.smol` point at juspay models because the builtin fallback chains have none
 - Themes: `ndots-dark` is generated from a base16 palette (`ndots.ai.omp.base16Colors`, kanagawa-dragon by default) - every one of omp's 66 color slots maps onto the 16 palette colors. Hosts with stylix override the option with `config.lib.stylix.colors` so omp follows the system scheme. `ndots-light` stays upstream-derived (light.json) - stylix polarity is dark, so it never renders. Both override `symbols.overrides."icon.context"` with the unicode box `◫` instead of the nerd preset's Windows-logo glyph; written to `~/.omp/agent/themes/`
+
+
+### pi.nix
+
+The original pi coding agent (`programs.pi-coding-agent`, upstream home-manager module), restored to run in parallel with omp. On by default; disable per user with `ndots.ai.pi.enable = false`. Writes `~/.pi/agent/` only - no overlap with omp's `~/.omp/agent/`.
+
+- Package: `pkgs.llm-agents.pi` (wrapped with nodejs, bun, and `copy` for OSC 52 clipboard)
+- Same default model: juspay provider, `glm-latest` (via `models.json` from `providers/office.nix`)
+- Same system rules: combined system prompt written to `~/.pi/agent/AGENTS.md`
+- Same skills as opencode minus ponytail (pi loads it from its package system: `git:github.com/DietrichGebert/ponytail`)
+- Same MCP servers: `~/.pi/agent/mcp.json` rendered from `programs.mcp.servers` (see mcp.nix)
+- vim-motions-pi plugin (from the `vim-motions-pi` flake input, our fork): `jk` escape, yank syncs to system clipboard via OSC 52
 
 ### providers/
 
 Auto-imported directory of opencode provider definitions. One file per provider, drop a new `.nix` to add a provider.
 
-- `anthropic.nix` - built-in Anthropic (env `ANTHROPIC_API_KEY`), models: claude-opus-4-7 ("gawwd"), claude-sonnet-4-6 ("worker"), claude-haiku-4-5 ("haiya")
-- `office.nix` - shared Juspay LLM provider (litellm, `@ai-sdk/openai-compatible`), used by both opencode and omp. Default model `litellm/glm-latest` for both. 13 models: open-large/fast/vision, claude-opus/sonnet, glm, gemini, minimax, kimi
+- `office.nix` - shared Juspay LLM provider (litellm, `@ai-sdk/openai-compatible`), used by opencode, omp, and pi. Default model `litellm/glm-latest` for all three. 13 models: open-large/fast/vision, claude-opus/sonnet, glm, gemini, minimax, kimi
 - `zen.nix` - opencode Zen gateway (`provider.opencode`, built-in, env `OPENCODE_API_KEY`). Free models work without a key; with a key all 71 models load
 - `openrouter.nix` - OpenRouter (`provider.openrouter`, built-in, env `OPENROUTER_API_KEY`)
 
