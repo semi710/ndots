@@ -93,6 +93,17 @@
       }
       precmd_functions+=(_zle_accept_suggestion)
 
+      # Forwarded agent sockets die on disconnect; tmux refreshes its global
+      # env on reattach, so adopt that socket when ours is gone
+      _fix_ssh_auth_sock() {
+        [[ -n "$TMUX" && ! -S "$SSH_AUTH_SOCK" ]] || return
+        local sock
+        sock=$(tmux show-environment -g SSH_AUTH_SOCK 2>/dev/null)
+        sock=''${sock#SSH_AUTH_SOCK=}
+        [[ -S "$sock" ]] && export SSH_AUTH_SOCK="$sock"
+      }
+      precmd_functions+=(_fix_ssh_auth_sock)
+
       [ -f "$HOME/.temp.zsh" ] && source "$HOME/.temp.zsh"
     '';
   };

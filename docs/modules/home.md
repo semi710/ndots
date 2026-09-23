@@ -95,6 +95,7 @@ Zsh as the primary shell, configured so editor muscle memory carries over and th
 - `zsh-fzf-tab` plugin (`Alt+j`/`Alt+k` complete)
 - Autosuggestions + syntax highlighting
 - OSC52 copy integration (visual yank → clipboard, works over SSH/tmux)
+- Re-adopts the forwarded agent socket from tmux's environment when the current one is dead, so git push keeps working in old panes after disconnect/reconnect
 - `runbg` function (resume a Ctrl+Z'd job in background)
 - Sources `~/.temp.zsh` if it exists
 
