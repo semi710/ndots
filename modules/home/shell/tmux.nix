@@ -160,6 +160,9 @@ in
           set-option -ga update-environment "SSH_AUTH_SOCK"
 
           set -g set-clipboard on
+          set -g buffer-limit 10
+          # wheel-click while scrolling fires paste-buffer; only explicit prefix+] should paste
+          unbind -n MouseDown2Pane
           set-option -g automatic-rename on
           set-option -g status-style bg=default
           set -g prefix C-a
