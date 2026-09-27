@@ -176,6 +176,11 @@ in
         yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
         sudo yabai --load-sa
 
+        # FIXME: borders drawn at unscaled positions in Mission Control on macOS 27
+        # (upstream FelixKratz/JankyBorders#209) - not workaroundable here because
+        # the mission_control_enter/exit signals never fire on macOS 27 (Dock emits
+        # no AXExpose notifications and WindowServer retired SLS notification 1204);
+        # resolves when upstream fixes either side
         yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
         yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
 
