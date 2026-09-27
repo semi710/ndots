@@ -106,6 +106,8 @@
     utils.url = "github:semi710/utils";
     naste.url = "github:semi710/naste";
     dragterm.url = "github:semi710/dragterm";
+    mltb.url = "github:semi710/mirror-leech-telegram-bot";
+    mltb.inputs.nixpkgs.follows = "nixpkgs";
 
     workmux.url = "github:raine/workmux";
   };

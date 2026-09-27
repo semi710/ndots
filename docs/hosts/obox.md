@@ -15,6 +15,8 @@
 This is the **hub host** - runs central services for the network.
 
 - **[Beszel hub](../services/beszel.md)** - monitoring dashboard, agents from all hosts connect here
+- **[MLTB](../services/mltb.md)** - mirror-leech-telegram-bot, uploads to gdrive via rclone
+- **[Jellyfin](../services/jellyfin.md)** - media server over the gdrive mount
 - **[Stirling PDF](../services/stirling-pdf.md)** - self-hosted PDF tools, branded "semi.sh PDF"
 - **[FileBrowser Quantum](../services/filebrowser.md)** - serves `/` + user home
 - **[Caddy](../services/caddy.md)** - reverse proxy (imperative config, no rebuild needed)

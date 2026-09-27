@@ -51,6 +51,8 @@ nav:
   - Services:
       - Overview: services/index.md
       - Beszel: services/beszel.md
+      - MLTB: services/mltb.md
+      - Jellyfin: services/jellyfin.md
       - Stirling PDF: services/stirling-pdf.md
       - FileBrowser Quantum: services/filebrowser.md
       - Caddy: services/caddy.md
