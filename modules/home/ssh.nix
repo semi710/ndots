@@ -8,6 +8,9 @@
       {
         forwardAgent = true;
         addKeysToAgent = "yes";
+        # etm first for modern sshd (OpenSSH 10 defaults dropped non-etm MACs),
+        # plain hmac-sha2 kept for legacy servers
+        macs = "hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com,hmac-sha2-512,hmac-sha2-256";
         # For home-manager setups we need to modify /etc/ssh/ssh_config
         # AcceptEnv LANG LC_* JUSPAY_API_KEY ANTHROPIC_* GITHUB_* OPENROUTER_* OPENCODE_*
         sendEnv = [
