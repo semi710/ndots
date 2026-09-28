@@ -62,7 +62,7 @@ let
     in
     local // workmux // external;
   # File mappings for a target skills directory prefix, ponytail included
-  # (pi loaded it from its package system; omp has none, so symlink it)
+  # (pi loads it from its package system instead)
   withPonytail =
     prefix:
     mkSkillFiles prefix
@@ -79,9 +79,6 @@ in
 
   # File mappings for ~/.config/opencode/skills/
   files = withPonytail ".config/opencode/skills";
-
-  # File mappings for ~/.omp/agent/skills/
-  ompFiles = withPonytail ".omp/agent/skills";
 
   # File mappings for ~/.pi/agent/skills/ - ponytail skills arrive via the
   # pi package (settings.packages), so they are not symlinked here

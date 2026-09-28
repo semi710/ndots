@@ -40,10 +40,7 @@ let
     ) modelNames
   );
 
-  # omp format: flat list of { id }.
-  ompJuspayModels = map (name: { id = name; }) modelNames;
-
-  # pi format: flat list of { id } - same shape as omp's.
+  # pi format: flat list of { id }.
   piJuspayModels = map (name: { id = name; }) modelNames;
   defaultModel = "litellm/glm-latest";
 in
@@ -60,17 +57,6 @@ in
         timeout = juspay.timeout;
       };
       models = opencodeJuspayModels;
-    };
-  };
-
-  # omp reads this read-only, a store symlink is fine (unlike config.yml)
-  home.file.".omp/agent/models.yml".text = lib.generators.toYAML { } {
-    providers.juspay = {
-      baseUrl = juspay.baseUrl;
-      api = "openai-completions";
-      # omp: plain string is an env-var name (pi needed a "$" prefix)
-      apiKey = juspay.apiKeyEnv;
-      models = ompJuspayModels;
     };
   };
 

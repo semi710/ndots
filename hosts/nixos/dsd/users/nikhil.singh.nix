@@ -45,9 +45,6 @@ in
     environmentFile = "${config.home.homeDirectory}/.opencode.env";
   };
   ndots.ai.mcp.workServers = true;
-  ndots.ai.omp.base16Colors = lib.filterAttrs (
-    n: _: builtins.match "base[0-9A-F]{2}" n != null
-  ) config.lib.stylix.colors;
 
   programs.git = {
     settings = {

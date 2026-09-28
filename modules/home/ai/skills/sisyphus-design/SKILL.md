@@ -2,7 +2,7 @@
 name: sisyphus-design
 description: Produce high-quality design documents through research, divergent thinking, and iterative refinement
 disable-model-invocation: true
-source: "https://github.com/arkbriar/sisyphus-design (ported to omp: ask/task tools)"
+source: "https://github.com/arkbriar/sisyphus-design (ported to ask/task tools)"
 ---
 
 # Design Skill

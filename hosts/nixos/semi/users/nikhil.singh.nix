@@ -44,11 +44,7 @@ in
     enable = true;
     environmentFile = "${config.home.homeDirectory}/.opencode.env";
   };
-  # omp gets its own module settings
   ndots.ai.mcp.workServers = true;
-  ndots.ai.omp.base16Colors = lib.filterAttrs (
-    n: _: builtins.match "base[0-9A-F]{2}" n != null
-  ) config.lib.stylix.colors;
 
   programs.git = {
     settings = {

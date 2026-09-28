@@ -48,9 +48,6 @@
 
     llm-agents.url = "github:numtide/llm-agents.nix";
 
-    # oh-my-pi - pi-mono fork with native vim mode, MCP, and LSP-edits
-    omp.url = "github:can1357/oh-my-pi";
-
     opencode-vim.url = "github:leohenon/opencode-vim/ocv";
 
     # AI tooling sources - vendored at the module level (not full flakes).

@@ -16,10 +16,6 @@ in
     flake.homeModules.stylix
   ];
   stylix.cliOnly = true;
-  # omp gets its own module settings
-  ndots.ai.omp.base16Colors = lib.filterAttrs (
-    n: _: builtins.match "base[0-9A-F]{2}" n != null
-  ) config.lib.stylix.colors;
 
   home.username = me.username;
   programs.zsh.initContent = ''

@@ -72,30 +72,6 @@ let
   };
 
   servers = universalServers // workServers;
-
-  # omp's mcp.json schema is strict (additionalProperties: false): stdio takes
-  # command/args/env, http takes type/url/headers. Strip the pi-only keys
-  # (lifecycle, directTools, autoApprove) and translate `{env:VAR}` values to
-  # omp's env-name form.
-  ompServer =
-    server:
-    let
-      env = lib.mapAttrs (_: v: lib.removeSuffix "}" (lib.removePrefix "{env:" v)) (
-        lib.filterAttrs (_: v: v != null) (server.env or { })
-      );
-    in
-    if (server.type or "stdio") == "stdio" then
-      {
-        inherit (server) command;
-      }
-      // lib.optionalAttrs (server.args or [ ] != [ ]) { inherit (server) args; }
-      // lib.optionalAttrs (env != { }) { inherit env; }
-    else
-      {
-        type = "http";
-        url = server.url;
-      }
-      // lib.optionalAttrs ((server.headers or { }) != { }) { inherit (server) headers; };
 in
 {
   options.ndots.ai.mcp.workServers =
@@ -107,17 +83,8 @@ in
       inherit servers;
     };
 
-    # render omp's mcp.json ourselves, from the same merged programs.mcp.servers
-    # set as opencode (host-level additions like bitbucket land in omp too).
-    # omp reads it read-only, a store symlink is fine.
-    home.file.".omp/agent/mcp.json" = lib.mkIf config.programs.omp.enable {
-      text = builtins.toJSON {
-        mcpServers = lib.mapAttrs (_: ompServer) config.programs.mcp.servers;
-      };
-    };
-
     # render pi's mcp.json ourselves - its onboarding-written file rots after GC.
-    # reads the same merged programs.mcp.servers as opencode/omp, so host-level
+    # reads the same merged programs.mcp.servers as opencode, so host-level
     # additions (e.g. bitbucket in workstation.nix) land in pi too.
     home.file.".pi/agent/mcp.json" = lib.mkIf config.ndots.ai.pi.enable {
       text = builtins.toJSON {

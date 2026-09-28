@@ -11,11 +11,11 @@ let
   cfg = config.ndots.ai.pi;
 in
 {
-  # parallel to omp; writes ~/.pi/agent (no overlap with omp's ~/.omp/agent)
+  # writes ~/.pi/agent
   options.ndots.ai.pi.enable = lib.mkOption {
     type = lib.types.bool;
     default = true;
-    description = "pi coding agent alongside omp";
+    description = "pi coding agent";
   };
   config = lib.mkIf cfg.enable {
     home.sessionVariables = {
