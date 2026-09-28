@@ -13,48 +13,56 @@ let
   skillsMod = import ./skills.nix { inherit inputs lib; };
   bashPermissions = builtins.fromJSON (builtins.readFile ./bash-permissions.json);
   defaultModel = "litellm/glm-latest";
+  # Unified OMO config (~/.omo/omo.jsonc). The _migrations marker matches
+  # OMO's 2026-07-opencode-config-unification so the legacy jsonc migration
+  # never runs (it cannot back up an hm store symlink and wedges its journal).
   omoConfig = builtins.toJSON {
-    default_run_agent = "sisyphus";
-    team_mode = {
-      enabled = true;
-      tmux_visualization = true;
+    "$schema" =
+      "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json";
+    "[opencode]" = {
+      default_run_agent = "sisyphus";
+      team_mode = {
+        enabled = true;
+        tmux_visualization = true;
+      };
+      agents = {
+        sisyphus = {
+          model = defaultModel;
+        };
+        metis = {
+          model = defaultModel;
+        };
+        prometheus = {
+          model = defaultModel;
+        };
+        atlas = {
+          model = defaultModel;
+        };
+        hephaestus = {
+          model = defaultModel;
+          allow_non_gpt_model = true;
+        };
+        oracle = {
+          model = defaultModel;
+        };
+        momus = {
+          model = defaultModel;
+        };
+        explore = {
+          model = defaultModel;
+        };
+        librarian = {
+          model = defaultModel;
+        };
+        multimodal-looker = {
+          model = defaultModel;
+        };
+        sisyphus-junior = {
+          model = defaultModel;
+        };
+      };
     };
-    agents = {
-      sisyphus = {
-        model = defaultModel;
-      };
-      metis = {
-        model = defaultModel;
-      };
-      prometheus = {
-        model = defaultModel;
-      };
-      atlas = {
-        model = defaultModel;
-      };
-      hephaestus = {
-        model = defaultModel;
-        allow_non_gpt_model = true;
-      };
-      oracle = {
-        model = defaultModel;
-      };
-      momus = {
-        model = defaultModel;
-      };
-      explore = {
-        model = defaultModel;
-      };
-      librarian = {
-        model = defaultModel;
-      };
-      multimodal-looker = {
-        model = defaultModel;
-      };
-      sisyphus-junior = {
-        model = defaultModel;
-      };
-    };
+    _migrations = [ "2026-07-opencode-config-unification" ];
   };
 in
 {
@@ -65,7 +73,7 @@ in
 
   home.file = skillsMod.files // {
     ".config/opencode/AGENTS.md".text = combinedSystemPrompt;
-    ".config/opencode/oh-my-openagent.jsonc".text = omoConfig;
+    ".omo/omo.jsonc".text = omoConfig;
     ".config/opencode/node_modules/oh-my-openagent".source = "${omoPkg}/lib/oh-my-opencode";
   };
 
