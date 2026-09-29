@@ -23,14 +23,9 @@ let
       url = "https://mcp.deepwiki.com/mcp";
       enabled = true;
     };
-    nixos = {
-      command = "nix";
-      args = [
-        "run"
-        "github:utensils/mcp-nixos"
-        "--"
-      ];
-    };
+    # direct binary - `nix run github:utensils/mcp-nixos` re-evaluated the
+    # flake on every opencode boot (1-15s cold)
+    nixos.command = getExe pkgs.mcp-nixos;
     # parity with the servers OMA injects into opencode, so pi gets them too
     context7 = {
       type = "remote";
