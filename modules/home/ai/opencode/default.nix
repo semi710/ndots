@@ -13,9 +13,11 @@ let
   skillsMod = import ./skills.nix { inherit inputs lib; };
   bashPermissions = builtins.fromJSON (builtins.readFile ./bash-permissions.json);
   defaultModel = "litellm/glm-latest";
-  # Unified OMO config (~/.omo/omo.jsonc). The _migrations marker matches
-  # OMO's 2026-07-opencode-config-unification so the legacy jsonc migration
-  # never runs (it cannot back up an hm store symlink and wedges its journal).
+  # Unified OMO config (~/.omo/omo.jsonc). The file is a read-only hm store
+  # symlink, so OMO's migrations cannot write it and wedge their journal on
+  # every boot - pre-mark each migration id in _migrations (new ids show up as
+  # "[config-migration] ... not applied" toasts; grep MIGRATION_ID in the
+  # oh-my-openagent dist).
   omoConfig = builtins.toJSON {
     "$schema" =
       "https://raw.githubusercontent.com/code-yeongyu/oh-my-openagent/dev/assets/omo.schema.json";
@@ -62,7 +64,10 @@ let
         };
       };
     };
-    _migrations = [ "2026-07-opencode-config-unification" ];
+    _migrations = [
+      "2026-07-opencode-config-unification"
+      "2026-08-reasoning-unification"
+    ];
   };
 in
 {
