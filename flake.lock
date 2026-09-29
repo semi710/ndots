@@ -1918,11 +1918,11 @@
         "treefmt-nix": "treefmt-nix_6"
       },
       "locked": {
-        "lastModified": 1790538534,
-        "narHash": "sha256-Q7Nxs5sb5q2j/r4vfe/0IgnkCHn1KZo9ZfEVLQKZWNw=",
+        "lastModified": 1790681068,
+        "narHash": "sha256-oD0IOcIde3Bax+1ZVS4n7qljQViLWrdCgA5qcZtSrtc=",
         "owner": "semi710",
         "repo": "nvix",
-        "rev": "32285097c800f116a699e20ae3021fe126f38aff",
+        "rev": "67a5daf33cb74df5b2e2d1372ef5974324eaa00a",
         "type": "github"
       },
       "original": {
