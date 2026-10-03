@@ -1,6 +1,9 @@
 { pkgs, lib, ... }:
 let
   mod = "cmd + alt + ctrl";
+  # nudge a floating window by this many px per keypress (special mode, alt+ctrl
+  # focus pattern: plain hjkl = move, mod hjkl = resize)
+  float-step = 40;
   yabai-restart = pkgs.writeShellScriptBin "yabai-restart" ''
     kill -9 $(pgrep -x yabai); kill -9 $(pgrep -x skhd); sudo yabai --load-sa
   '';
@@ -94,10 +97,15 @@ in
       ${mod} - c : yabai -m space --focus comms
       ${mod} + shift - c : yabai -m window --space comms --focus
 
-      special < h : ${lib.getExe pkgs.putils.yabai-resize-dir} h
-      special < j : ${lib.getExe pkgs.putils.yabai-resize-dir} j
-      special < k : ${lib.getExe pkgs.putils.yabai-resize-dir} k
-      special < l : ${lib.getExe pkgs.putils.yabai-resize-dir} l
+      special < h : yabai -m window --move rel:-${builtins.toString float-step}:0
+      special < l : yabai -m window --move rel:${builtins.toString float-step}:0
+      special < j : yabai -m window --move rel:0:${builtins.toString float-step}
+      special < k : yabai -m window --move rel:0:-${builtins.toString float-step}
+
+      special < ${mod} - h : ${lib.getExe pkgs.putils.yabai-resize-dir} h
+      special < ${mod} - j : ${lib.getExe pkgs.putils.yabai-resize-dir} j
+      special < ${mod} - k : ${lib.getExe pkgs.putils.yabai-resize-dir} k
+      special < ${mod} - l : ${lib.getExe pkgs.putils.yabai-resize-dir} l
 
       special < shift - 0x2B : ${lib.getExe pkgs.putils.yabai-resize} smaller
       special < shift - 0x2F : ${lib.getExe pkgs.putils.yabai-resize} bigger
