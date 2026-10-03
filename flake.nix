@@ -107,6 +107,9 @@
     mltb.inputs.nixpkgs.follows = "nixpkgs";
 
     workmux.url = "github:raine/workmux";
+
+    # zmk keyboard firmware - configs live in semi710/zmk-config
+    zmk-config.url = "github:semi710/zmk-config";
   };
 
   outputs =
@@ -114,6 +117,7 @@
     inputs.nix-wire.mkFlake {
       inherit inputs;
       imports = [
+        inputs.zmk-config.flakeModules.default
         ./parts
         ./repl.nix
       ];

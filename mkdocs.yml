@@ -66,6 +66,7 @@ nav:
       - Adding a New Host: guides/new-host.md
       - Secrets Management: guides/secrets.md
       - Building an ISO: guides/iso.md
+      - ZMK Firmware: guides/zmk.md
       - Users: guides/users.md
   - Memory:
       - Context: memory/context.md

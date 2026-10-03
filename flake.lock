@@ -1750,6 +1750,22 @@
         "type": "github"
       }
     },
+    "nixpkgs_26": {
+      "locked": {
+        "lastModified": 1767313136,
+        "narHash": "sha256-16KkgfdYqjaeRGBaYsNrhPRRENs0qzkQVUooNHtoy2w=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "ac62194c3917d5f474c1a844b6fd6da2db95077d",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-25.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "nixpkgs_3": {
       "locked": {
         "lastModified": 1787736819,
@@ -2089,7 +2105,8 @@
         "vim-motions-pi": "vim-motions-pi",
         "workmux": "workmux",
         "yabai": "yabai",
-        "zen-browser": "zen-browser"
+        "zen-browser": "zen-browser",
+        "zmk-config": "zmk-config"
       }
     },
     "sops-nix": {
@@ -2630,6 +2647,46 @@
       "original": {
         "owner": "0xc000022070",
         "repo": "zen-browser-flake",
+        "type": "github"
+      }
+    },
+    "zmk-config": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_26",
+        "zmk-nix": "zmk-nix"
+      },
+      "locked": {
+        "lastModified": 1791044726,
+        "narHash": "sha256-l1IWNJ73vgsFnV/PgQgqmx4Fom8s9cJMd8BKTHKj8aA=",
+        "owner": "semi710",
+        "repo": "zmk-config",
+        "rev": "c0da9b9c57f5eceb2e03de49fea899ed8feef946",
+        "type": "github"
+      },
+      "original": {
+        "owner": "semi710",
+        "repo": "zmk-config",
+        "type": "github"
+      }
+    },
+    "zmk-nix": {
+      "inputs": {
+        "nixpkgs": [
+          "zmk-config",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1790962468,
+        "narHash": "sha256-l087jtpsD98YN2QfBDI7zbaX+bAkt79n25oIe3apHUQ=",
+        "owner": "lilyinstarlight",
+        "repo": "zmk-nix",
+        "rev": "aa0fece5182ddfd5fa17020f058dacf79c94aaaf",
+        "type": "github"
+      },
+      "original": {
+        "owner": "lilyinstarlight",
+        "repo": "zmk-nix",
         "type": "github"
       }
     }

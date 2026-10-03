@@ -23,3 +23,6 @@
 # Decrypted secrets (never commit)
 *.decrypt.yaml
 /.omo/run-continuation
+
+# ZMK firmware downloads
+/zmk/out/

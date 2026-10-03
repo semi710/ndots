@@ -36,6 +36,16 @@ build host:
 iso:
     nix build .#iso
 
+# Fetch ZMK firmware from semi710/zmk-config CI (waits for in-progress run; downloads to zmk/out/)
+zmk:
+    rid=$(gh run list -R semi710/zmk-config -w "Build ZMK Firmware" -L1 --json databaseId -q '.[0].databaseId') && \
+    gh run watch "$rid" --exit-status -i 5 && \
+    gh run download "$rid" -R semi710/zmk-config -n firmware -D zmk/out
+
+# Build ZMK firmware locally via nix
+zmk-build:
+    nix build .#zmk
+
 # Serve docs locally (http://0.0.0.0:<random-port>)
 doc:
     PORT=$(shuf -i 8000-9000 -n 1) && echo "→ http://0.0.0.0:$PORT" && nix run .#docs -- serve -a 0.0.0.0:$PORT --quiet 2>&1 | grep -v "│"
