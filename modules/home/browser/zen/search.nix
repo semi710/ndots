@@ -2,11 +2,10 @@
 {
   programs.zen-browser.profiles.default.search = {
     force = true;
-    default = "ddg";
-    privateDefault = "ddg";
+    default = "google";
+    privateDefault = "google";
     engines = {
       "bing".metaData.hidden = true;
-      "google".metaData.hidden = true;
       "amazondotcom-us".metaData.hidden = true;
       "ebay".metaData.hidden = true;
       "nix-packages" = {
