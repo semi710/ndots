@@ -130,7 +130,10 @@ in
 
   systemd.services.beszel-hub = {
     serviceConfig.SupplementaryGroups = [ "beszel-hub-key" ];
-    # FIXME: remove ExecStartPre override when nixpkgs PR #539583 lands (issue #512567).
+    # FIXME: on nixpkgs past PR #539583 (merged 2026-08-20, issue #512567) the
+    # `migrate history-sync` line is upstream-native - drop it and keep only the
+    # key-copy preStart. Our pinned nixpkgs (89570f24, 2026-06-23) predates it,
+    # so the override is still required here.
     # mkForce replaces the entire ExecStartPre list (including preStart), so the
     # key copy must live here too.
     serviceConfig.ExecStartPre = lib.mkForce [

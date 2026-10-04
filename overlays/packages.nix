@@ -28,8 +28,11 @@ in
   bitbucket-mcp = selfPkgs.bitbucket-mcp;
   kblight = selfPkgs.kblight;
 
-  # FIXME: remove when nixpkgs yabai ships macOS 27 scripting-addition support
-  # (issue-2802 fork; upstream master lacks it, flip input back to asmvik/yabai)
+  # FIXME: agg23/macos-27 carries stale macOS 27 scripting-addition offsets
+  # (issue #2822): ours use 0x210000/0x170000 for fix_animation/add/remove/move
+  # space, but the confirmed-working set is 0x200000/0x150000 (see
+  # ImTheSquid/yabai "macOS 27 offsets"). Flip input to a fork with the correct
+  # offsets, then nixpkgs yabai once scripting-addition lands upstream.
   yabai = prev.yabai.overrideAttrs (old: {
     version = "unstable-${inputs.yabai.shortRev}";
     src = inputs.yabai;
