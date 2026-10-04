@@ -83,7 +83,7 @@ in
   services.beszel.agent.user = me.username;
   # beszel crashes reading AMD GPU sysfs (known bug). Disable GPU monitoring.
   # FIX: https://github.com/henrygd/beszel/issues/1799
-  services.beszel.agent.environment.SKIP_GPU = "true";
+  services.beszel.agent.environment.SKIP_GPU = true;
   services.openssh = {
     enable = true;
     settings = {
