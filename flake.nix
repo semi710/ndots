@@ -58,6 +58,13 @@
     claude-code.url = "github:anthropics/claude-code";
     claude-code.flake = false;
 
+    # Understand Anything - codebase-to-knowledge-graph skills (/understand*).
+    # Skills are markdown + scripts; the dashboard ships as a prebuilt npx
+    # tarball, so the read-only store checkout works as plugin root.
+    # Bump with: `nix flake update understand-anything`.
+    understand-anything.url = "github:Egonex-AI/Understand-Anything";
+    understand-anything.flake = false;
+
     # yabai with macOS 27 space-switching support: agg23's macos-27 branch adds
     # augmented synthetic dock-swipe events (SIP-friendly, from InstantSpaceSwitcher)
     # since the SA mach-injection is dead on macOS 27 final (26A428).

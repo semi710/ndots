@@ -45,6 +45,8 @@
         "*.swp"
         ".omo"
         ".workmux.yaml"
+        ".ua"
+        ".understand-anything"
       ];
       lfs.enable = true;
       iniContent = {

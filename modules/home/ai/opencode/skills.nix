@@ -1,5 +1,6 @@
 # Skills wiring - maps skill sources to ~/.config/opencode/skills/.
-# Sources: local (./skills/), workmux (flake), external (claude-code).
+# Sources: local (./skills/), workmux (flake), understand-anything (flake),
+# external (claude-code).
 # Ponytail skills are NOT symlinked here: the ponytail plugin registers its
 # own skills dir via config.skills.paths, so symlinking them too
 # double-registered every skill and warned on every boot.
@@ -12,6 +13,7 @@ let
   claude-code = inputs.claude-code;
   workmux = inputs.workmux;
   ponytail = inputs.ponytail;
+  understand-anything = inputs.understand-anything;
 
   skillsDir = ../skills;
   skillsEntries = builtins.readDir skillsDir;
@@ -19,6 +21,8 @@ let
   ponytailSkillsEntries = builtins.readDir ponytailSkillsDir;
   workmuxSkillsDir = workmux.outPath + "/skills";
   workmuxSkillsEntries = builtins.readDir workmuxSkillsDir;
+  uaSkillsDir = understand-anything + "/understand-anything-plugin/skills";
+  uaSkillsEntries = builtins.readDir uaSkillsDir;
 
   isPonytailSkillDir =
     name:
@@ -30,12 +34,17 @@ let
     workmuxSkillsEntries.${name} == "directory"
     && builtins.pathExists (workmuxSkillsDir + "/${name}/SKILL.md");
 
+  isUaSkillDir =
+    name:
+    uaSkillsEntries.${name} == "directory" && builtins.pathExists (uaSkillsDir + "/${name}/SKILL.md");
+
   localSkillNames = lib.filter (name: skillsEntries.${name} == "directory") (
     lib.attrNames skillsEntries
   );
 
   ponytailSkillNames = lib.filter isPonytailSkillDir (lib.attrNames ponytailSkillsEntries);
   workmuxSkillNames = lib.filter isWorkmuxSkillDir (lib.attrNames workmuxSkillsEntries);
+  uaSkillNames = lib.filter isUaSkillDir (lib.attrNames uaSkillsEntries);
 
   # File mappings for a target skills directory prefix
   mkSkillFiles =
@@ -63,8 +72,17 @@ let
         "${prefix}/frontend-design/SKILL.md".source =
           "${claude-code}/plugins/frontend-design/skills/frontend-design/SKILL.md";
       };
+
+      # UA skills carry their own scripts (mjs/py) - symlink whole dirs,
+      # same per-skill layout the upstream installer creates
+      ua = lib.listToAttrs (
+        map (name: {
+          name = "${prefix}/${name}";
+          value.source = "${uaSkillsDir}/${name}";
+        }) uaSkillNames
+      );
     in
-    local // workmux // external;
+    local // workmux // external // ua;
 
   # Eval-time skill hygiene, ported from agent-scripts' validate-skills:
   # authored skills must open with a front-matter fence on line 1, close it,
@@ -97,9 +115,10 @@ let
 
   badLocalSkills = lib.filter (name: localSkillError name != null) localSkillNames;
 
-  # local + workmux are symlinked by us, ponytail loads via its plugin - all
-  # three land in opencode's skill list, so their names must not collide
-  loadedSkillNames = localSkillNames ++ workmuxSkillNames ++ ponytailSkillNames;
+  # local + workmux are symlinked by us, ponytail loads via its plugin, ua
+  # arrives as whole-dir symlinks - all four land in opencode's skill list,
+  # so their names must not collide
+  loadedSkillNames = localSkillNames ++ workmuxSkillNames ++ ponytailSkillNames ++ uaSkillNames;
   duplicatedSkillName = lib.findFirst (
     n: lib.count (x: x == n) loadedSkillNames > 1
   ) null loadedSkillNames;
@@ -111,7 +130,12 @@ lib.throwIf (badLocalSkills != [ ])
       "duplicate skill name across sources: ${toString duplicatedSkillName}"
       {
         # File mappings for ~/.config/opencode/skills/
-        files = mkSkillFiles ".config/opencode/skills";
+        files = (mkSkillFiles ".config/opencode/skills") // {
+          # universal plugin root the understand-dashboard skill resolves
+          # (same symlink the upstream installer creates); read-only store
+          # path is fine, the dashboard runs from a prebuilt npx tarball
+          ".understand-anything-plugin".source = "${understand-anything}/understand-anything-plugin";
+        };
 
         # File mappings for ~/.pi/agent/skills/ - ponytail skills arrive via
         # the pi package (settings.packages), so they are not symlinked here

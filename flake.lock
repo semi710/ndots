@@ -2158,6 +2158,7 @@
         "sops-nix": "sops-nix",
         "stylix": "stylix",
         "treefmt-nix": "treefmt-nix_7",
+        "understand-anything": "understand-anything",
         "utils": "utils",
         "vim-motions-pi": "vim-motions-pi",
         "workmux": "workmux",
@@ -2550,6 +2551,22 @@
       "original": {
         "owner": "numtide",
         "repo": "treefmt-nix",
+        "type": "github"
+      }
+    },
+    "understand-anything": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1790912078,
+        "narHash": "sha256-Q4y7IfdLeYBx4DTflB3/T7XIigAMasaCcgw6dZZ/tTc=",
+        "owner": "Egonex-AI",
+        "repo": "Understand-Anything",
+        "rev": "1d7418b8abfa543744ae029e63a482aee03f9022",
+        "type": "github"
+      },
+      "original": {
+        "owner": "Egonex-AI",
+        "repo": "Understand-Anything",
         "type": "github"
       }
     },
