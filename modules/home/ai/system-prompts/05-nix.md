@@ -11,7 +11,7 @@ When modifying a flake input repo (e.g. `utils`, `nvix`), NEVER push to remote o
 4. Only after the user approves: push the input repo, then `nix flake lock --update-input <name>` to pin the remote commit.
 
 ### Missing package or tool
-If you need a CLI tool, library, or binary that is not installed, do not ask the user to install it manually. Use `nix run` to execute it ad-hoc, or `nix-shell -p` to get a shell with it:
+If a CLI tool, library, or binary is not installed, resolve it with nix - full stop. Never reach for another package manager (brew, pip, npm/go/cargo install), a `curl | bash` installer, or a hand-written workaround script while a nixpkgs package or flake can provide it. If an upstream instruction says to install a dependency, substitute the nix route instead. Do not ask the user to install it manually.
 
 ```bash
 # Run a package without installing
