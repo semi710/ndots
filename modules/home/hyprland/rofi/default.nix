@@ -6,8 +6,6 @@
 }:
 with lib;
 {
-  stylix.targets.rofi.enable = false;
-
   wayland.windowManager.hyprland.settings = {
     layerrule = [
       # "ignorezero, waybar"
