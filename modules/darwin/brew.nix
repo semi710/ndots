@@ -1,24 +1,9 @@
 {
   ...
 }:
-let
-  # sozercan/kaset doesn't follow homebrew-<name> convention, needs explicit clone_target
-  trustedTap =
-    t:
-    if builtins.isString t then
-      {
-        name = t;
-        trusted = true;
-      }
-    else
-      t // { trusted = true; };
-in
 {
   # packages for darwin those are installed via homebrew
   homebrew = {
-    taps = map trustedTap [
-      "xykong/tap"
-    ];
     casks = [
       "betterdisplay"
       "blip"
@@ -26,7 +11,6 @@ in
       "element"
       "finetune"
       "fliqlo"
-      "flux-markdown"
       "frankea/whisky/whisky"
       "google-gemini"
       "homerow"
