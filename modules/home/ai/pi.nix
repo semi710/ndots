@@ -47,7 +47,6 @@ in
         theme = "dark";
         packages = [
           "npm:@termdraw/pi"
-          "npm:pi-mcp-adapter"
           "${inputs.vim-motions-pi}"
           "git:github.com/DietrichGebert/ponytail"
         ];

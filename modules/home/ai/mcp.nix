@@ -67,6 +67,32 @@ let
   };
 
   servers = universalServers // workServers;
+
+  # programs.mcp.servers is multi-client/opencode flavored; pi's builtin mcp
+  # extension wants its own vocabulary, so translate per server here
+  toPiServer =
+    server:
+    let
+      dropAdapterFields = lib.filterAttrs (
+        k: v:
+        v != null
+        && !builtins.elem k [
+          "lifecycle"
+          "autoApprove"
+        ]
+      );
+      dropRemoteType = s: if s.type or null == "remote" then removeAttrs s [ "type" ] else s;
+      piEnv = lib.optionalAttrs (server ? env) {
+        env = lib.mapAttrs (
+          _: v:
+          if lib.hasPrefix "{env:" v && lib.hasSuffix "}" v then
+            "\${" + lib.removeSuffix "}" (lib.removePrefix "{env:" v) + "}"
+          else
+            v
+        ) server.env;
+      };
+    in
+    dropRemoteType (dropAdapterFields ({ exposure = "direct"; } // server // piEnv));
 in
 {
   options.ndots.ai.mcp.workServers =
@@ -83,19 +109,7 @@ in
     # additions (e.g. bitbucket in workstation.nix) land in pi too.
     home.file.".pi/agent/mcp.json" = lib.mkIf config.ndots.ai.pi.enable {
       text = builtins.toJSON {
-        # 111 direct tools is deliberate; silence the adapter's token-cost advisory
-        # that re-prints on every keep-alive catalog refresh
-        settings.warnOnLargeDirectTools = false;
-        mcpServers = lib.mapAttrs (
-          _: server:
-          lib.filterAttrs (_: v: v != null) (
-            {
-              lifecycle = "keep-alive";
-              directTools = true;
-            }
-            // server
-          )
-        ) config.programs.mcp.servers;
+        mcpServers = lib.mapAttrs (_: toPiServer) config.programs.mcp.servers;
       };
     };
   };
