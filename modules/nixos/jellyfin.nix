@@ -19,10 +19,14 @@ let
   # it from $configDir/plugins/<guid>/. We keep each plugin as a sourced zip
   # (fetchurl, so the hash covers the actual artifact) and unpack it into the
   # guid dir on every service start so it's hermetic and refreshable.
+  # The preStart runs as root, but jellyfin 12+ writes plugin status back into
+  # meta.json inside each plugin dir - chown to the service user or startup
+  # dies with UnauthorizedAccessException on SaveManifest.
   pluginZips = lib.concatMapStringsSep "\n" (p: ''
     mkdir -p /var/lib/jellyfin/plugins/${p.id}
     rm -rf /var/lib/jellyfin/plugins/${p.id}/*
     ${pkgs.unzip}/bin/unzip -o -q ${p.src} -d /var/lib/jellyfin/plugins/${p.id}
+    chown -R jellyfin:jellyfin /var/lib/jellyfin/plugins/${p.id}
   '') cfg.plugins;
 
   bootstrapScript = pkgs.writeShellScript "jellyfin-bootstrap" ''
@@ -41,9 +45,11 @@ let
     done
 
     auth() {
+      # jellyfin 12 dropped the legacy X-Emby-Authorization header (bare 400);
+      # the standard Authorization header with the MediaBrowser scheme is required
       curl -sf -X POST "$API/Users/AuthenticateByName" \
         -H 'Content-Type: application/json' \
-        -H 'X-Emby-Authorization: MediaBrowser Client="nixos-bootstrap", Device="nixos", DeviceId="nixos-bootstrap", Version="1.0.0"' \
+        -H 'Authorization: MediaBrowser Client="nixos-bootstrap", Device="nixos", DeviceId="nixos-bootstrap", Version="1.0.0"' \
         -d "$(jq -cn --arg u "$USER_NAME" --arg p "$1" '{Username: $u, Pw: $p}')"
     }
 
