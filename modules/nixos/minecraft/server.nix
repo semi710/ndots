@@ -8,7 +8,7 @@
     eula = true;
     openFirewall = true;
 
-    servers.dsd = {
+    servers.obox = {
       enable = true;
       package = pkgs.paperServers.paper-26_2;
 
@@ -17,7 +17,7 @@
         difficulty = "normal";
         gamemode = "survival";
         max-players = 20;
-        motd = "\\u00A7cDSD\\u00A7r - \\u00A7bSurvival Server\\u00A7r";
+        motd = "\\u00A7cOBOX\\u00A7r - \\u00A7bSurvival Server\\u00A7r";
         spawn-protection = 0;
         view-distance = 12;
         simulation-distance = 10;

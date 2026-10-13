@@ -9,7 +9,7 @@
     flake.inputs.minecraft.overlay
   ];
 
-  services.minecraft-servers.servers.dsd.symlinks = {
+  services.minecraft-servers.servers.obox.symlinks = {
     # Generated grass block icon
     "server-icon.png" =
       pkgs.runCommand "server-icon.png"
@@ -59,6 +59,19 @@
     "plugins/SimpleVoiceChat.jar" = pkgs.fetchurl {
       url = "https://cdn.modrinth.com/data/9eGKb6K1/versions/7ROzE7Qh/voicechat-bukkit-2.6.18.jar";
       sha256 = "05li5ic3rs1g1cq4arifwb05xh0kz6glyvfd8rnkxjrng2j0qmvb";
+    };
+
+    # Password auth for offline mode: players /register once, /login per
+    # session (frozen until authed); closes the offline name-spoofing hole
+    # behind the whitelist. PacketEvents is required by AuthMe for
+    # pre-auth inventory protection and the /premium Mojang bypass
+    "plugins/AuthMe.jar" = pkgs.fetchurl {
+      url = "https://github.com/AuthMe/AuthMeReloaded/releases/download/6.0.1/AuthMe-6.0.1-Paper.jar";
+      sha256 = "02j548kqs3xaymcklic2izvp8k3zi5vlyd16v7ck99kkkrg3613p";
+    };
+    "plugins/PacketEvents.jar" = pkgs.fetchurl {
+      url = "https://github.com/retrooper/packetevents/releases/download/v2.14.0/packetevents-spigot-2.14.0.jar";
+      sha256 = "1mqv143far7z850l34qnvanym8dyqdxg3c8fvpkyls62iv2qf006";
     };
   };
 }
