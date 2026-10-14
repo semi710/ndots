@@ -46,17 +46,12 @@
     # Discord flake
     nixcord.url = "github:kaylorben/nixcord";
 
-    llm-agents.url = "github:numtide/llm-agents.nix";
-
-    opencode-vim.url = "github:leohenon/opencode-vim/ocv";
-
-    # AI tooling sources - vendored at the module level (not full flakes).
-    # `flake = false` makes flake.lock track the rev+narHash, so we don't
-    # have to hand-manage `sha256` in modules/home/ai/opencode.nix.
-    # Bump with: `nix flake update claude-code`.
-
-    claude-code.url = "github:anthropics/claude-code";
-    claude-code.flake = false;
+    # AI agents (opencode, omp, pi) with shared skills/prompts/mcp/providers.
+    # TEMPORARY local checkout - absolute because path:../ relative refs
+    # resolve against the store copy of this flake, not the workdir. Flip to
+    # github:semi710/s-ai after pushing, then `nix flake lock --update-input
+    # s-ai`. Until then other hosts without ~/work/s-ai cannot eval.
+    s-ai.url = "path:/home/nikhil.singh/work/s-ai";
 
     # Understand Anything - codebase-to-knowledge-graph skills (/understand*).
     # Skills are markdown + scripts; the dashboard ships as a prebuilt npx
@@ -72,16 +67,6 @@
     # Bump with: `nix flake update yabai`.
     yabai.url = "github:agg23/yabai/macos-27";
     yabai.flake = false;
-
-    # vim motions for pi's input box, from our fork.
-    # Flip to plain main after the bar-cursor PR merges.
-    # Bump with: `nix flake update vim-motions-pi`.
-    vim-motions-pi.url = "github:semi710/vim-motions-pi/feat/insert-mode-bar-cursor";
-    vim-motions-pi.flake = false;
-
-    # opencode plugin + vendored skills source; pi loads it from its own package.
-    ponytail.url = "github:DietrichGebert/ponytail";
-    ponytail.flake = false;
 
     # nix-index; `,` command available
     nix-index-database.url = "github:nix-community/nix-index-database";

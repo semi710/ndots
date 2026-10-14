@@ -9,7 +9,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [base](#basenix-defaultnix) | `homeModules.default` | Base home: shell, editor, ssh, fonts, nix-index |
 | [shell](#shell) | `homeModules.shell` | zsh, tmux, fzf, starship, git, bat, btop, direnv, eza, zoxide, jq, sesh, aliases, android |
 | [editor](#editor) | `homeModules.editor` | Helix, nvix (Neovim) |
-| [ai](#ai) | `homeModules.ai` | opencode, mcp, pi, providers (anthropic, office, zen, openrouter) |
+| [ai](#ai) | `homeModules.ai` | s-ai agents (opencode, omp, pi) + juspay provider |
 | [browser](#browser) | `homeModules.browser` | Zen browser (base, extensions, keymaps, search) |
 | [terminal](#terminal) | `homeModules.terminal` | kitty terminal |
 | [hyprland](#hyprland) | `homeModules.hyprland` | Hyprland home config, rofi, hypridle, hyprlock, keymaps |
@@ -110,7 +110,7 @@ Tmux as the session/pane layer, kept consistent with the shell and editor. Vi mo
 - `Ctrl+e` edits pane output in `$EDITOR`
 - Extended keys forced (`extended-keys always`, CSI-u format) so modified keys survive the SSH+tmux hop: Shift+Enter reaches TUI apps as `\x1b[13;2u` (newline) instead of collapsing to `\r` (submit). Apps that never request extended keys still get CSI-u for keys without a legacy sequence; Enter and Ctrl+J keep their standard bytes. In opencode: Shift+Enter and Ctrl+J insert a newline, Enter submits.
 - Splits: `|` horizontal, `-` vertical, `v`/`s` (open in cwd)
-- `alt+h`/`alt+l` translate to Left/Right at the tmux root table, so opencode dialogs (ask prompts, settings, model sidebar) accept them as tab switches; copy-mode-vi keeps native motion
+- `alt+h`/`alt+l` translate to Left/Right at the tmux root table, so omp selectors and opencode dialogs accept them as tab switches; copy-mode-vi keeps native motion
 
 ### fzf.nix
 
@@ -262,82 +262,32 @@ A second editor alongside nvix. Relative line numbers so `5j`/`3k` motions stay 
 
 ## ai
 
-Auto-imported directory (`modules/home/ai/`), excluding `combined-system-prompt.nix` (a helper). Import via `homeModules.ai`.
+One file (`modules/home/ai/default.nix`): consumes the [s-ai](https://github.com/semi710/s-ai) flake module (local `~/work/s-ai` checkout while iterating, flip to the GitHub URL once pushed), which owns the agents - opencode, oh-my-pi (omp), pi - and the shared canonical layer: skills, prompts, MCP servers, provider renders, themes. Import via `homeModules.ai`.
 
-Sets `CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS = 1` globally.
+ndots supplies only what is host-specific:
 
-### opencode/
+- Provider: the juspay grid - baseUrl plus an env-var name; the key itself comes from sops-managed env, never the store
+- Theme: `s-ai.theme.palette` filtered from `config.lib.stylix.colors`, so the omp theme follows kanagawa-dragon
+- Skills: `s-ai.plugins.workmux.enable = true` (worktree/tmux workflow skills)
+- pi: `agents.pi.clipboardCommand` - OSC 52 yank via our `copy` tool
+- opencode-only providers: anthropic (the named models), Zen gateway (`OPENCODE_API_KEY`), OpenRouter (`OPENROUTER_API_KEY`)
+- Packages: `openspec`, `nil` (nix LSP; omp auto-detects it from flake.nix root markers and wires diagnostics/imports into edits)
 
-[Opencode](https://github.com/leohenon/opencode-vim) agent configuration.
+Everything else is s-ai defaults: all three agents enabled, core/ponytail/claude-code plugins on, omp memory/advisor/prewalk on, the universal MCP set, vim-mode TUIs, keybindings, themes derived from the palette. Toggle per host with the `s-ai.*` options; anything not exposed as an option is overridable through the per-agent `extraSettings` escape hatch (deep-merged last). See the s-ai README for the full option reference.
 
-- Package: `pkgs.opencode-vim` (patched node_modules hash + bun version check bypass)
-- Plugin: ponytail (lazy dev skill, toggleable via `/ponytail`)
-- TUI: vim system clipboard, `jk` escape, enter-to-submit, insert-after-submit
-- Agent: oh-my-openagent (Sisyphus) is the sole agent system; no external agent registry
-- System rules: written to `~/.config/opencode/AGENTS.md` from `system-prompts/` (applies to every agent globally)
-- Skills: wired from three sources - local (`skills/`), ponytail flake, claude-code flake (frontend-design)
-- Auto-imports siblings: drop a new `.nix` in `opencode/` to add config (agents.nix, providers/*)
+### MCP servers
 
-### agents.nix
-
-Agent config for the oh-my-openagent plugin.
-
-- `default_agent = "sisyphus"` (oh-my-openagent provides the agent system + subagents: explore, librarian, oracle, metis, momus, etc.)
-- Commit hygiene prompt: never set `--author` or add `Co-authored-by` trailers for the AI agent
-
-### mcp.nix
-
-MCP (Model Context Protocol) servers. Opencode spawns every configured server as a child process on startup, so only universally-needed servers are included globally. Work-specific servers are gated behind an option.
-
-| Server | When included | Purpose |
-|---|---|---|
-| `git` | Always | Git MCP server |
-| `fetch` | Always | Fetch MCP server |
-| `sequential-thinking` | Always | Sequential thinking MCP server |
-| `everything` | Always | Filesystem MCP server |
-| `playwright` | Always | Browser automation |
-| `deepwiki` | Always (remote) | GitHub repo docs |
-| `nixos` | Always | nixpkgs/options lookup |
-| `github` | Work hosts only | GitHub API (needs `GITHUB_TOKEN`) |
-| `gitnexus` | Work hosts only | Code knowledge graph |
-| `newton-hs-prod` | Work hosts only | Juspay internal code search |
-| `bitbucket` | Workstation hosts (via `workstation.nix`) | Bitbucket Server API |
-
-**Option:** `ndots.ai.mcp.workServers` - when `true`, work-tier servers (github, gitnexus, newton-hs-prod) are included. Enabled on work hosts (dsd, semi, jp-mbp, mach).
-
-When `ndots.ai.pi.enable` is `true`, pi gets the same set: `~/.pi/agent/mcp.json` is rendered with pi's own keys (`lifecycle = "keep-alive"`, `directTools = true`) re-added.
-
-### pi.nix
-
-The original pi coding agent (`programs.pi-coding-agent`, upstream home-manager module). On by default; disable per user with `ndots.ai.pi.enable = false`. Writes `~/.pi/agent/` only.
-
-- Package: `pkgs.llm-agents.pi` (wrapped with nodejs, bun, and `copy` for OSC 52 clipboard)
-- Same default model: juspay provider, `glm-latest` (via `models.json` from `providers/office.nix`)
-- Same system rules: combined system prompt written to `~/.pi/agent/AGENTS.md`
-- Same skills as opencode minus ponytail (pi loads it from its package system: `git:github.com/DietrichGebert/ponytail`)
-- Same MCP servers: `~/.pi/agent/mcp.json` rendered from `programs.mcp.servers` (see mcp.nix)
-- vim-motions-pi plugin (from the `vim-motions-pi` flake input, our fork): `jk` escape, yank syncs to system clipboard via OSC 52
-
-### providers/
-
-Auto-imported directory of opencode provider definitions. One file per provider, drop a new `.nix` to add a provider.
-
-- `office.nix` - shared Juspay LLM provider (litellm, `@ai-sdk/openai-compatible`), used by opencode, omp, and pi. Default model `litellm/glm-latest` for all three. 13 models: open-large/fast/vision, claude-opus/sonnet, glm, gemini, minimax, kimi
-- `zen.nix` - opencode Zen gateway (`provider.opencode`, built-in, env `OPENCODE_API_KEY`). Free models work without a key; with a key all 71 models load
-- `openrouter.nix` - OpenRouter (`provider.openrouter`, built-in, env `OPENROUTER_API_KEY`)
-
-### combined-system-prompt.nix
-
-A helper (not a module) - combines numbered markdown files in `system-prompts/` (01-git, 02-before-you-code, 03-code-comments, 04-docs, 05-nix) into a single prompt string. Written to `~/.config/opencode/AGENTS.md` by `opencode/default.nix` and `~/.omp/agent/AGENTS.md` by `omp/default.nix`, so the same rules apply to every agent. Ponytail lives as a toggleable plugin, not a static prompt.
+Rendered from s-ai's canonical set: git, fetch, sequential-thinking, everything (filesystem), playwright, deepwiki (remote), nixos, context7 (remote), grep_app (remote), codegraph. Work hosts set `s-ai.mcp.workServers = true`, which adds github and newton-hs-prod; the workstation module adds `bitbucket` at the `programs.mcp.servers` level. Every agent render (opencode MCP integration, pi's `mcp.json`, omp's `mcp.json`) reads the merged set, so host-level additions land in every agent.
 
 **Usage:**
 
 ```nix
 { flake, ... }: {
   imports = [ flake.homeModules.ai ];
-  # opencode + mcp + pi + providers
+  # all three agents + juspay provider + stylix theme
 }
 ```
+
 
 ---
 

@@ -61,21 +61,6 @@ in
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
-  # upstream build.ts ad-hoc re-signs darwin binaries (macOS 27+) but stdenvNoCC has no
-  # codesign on PATH; sigtool provides codesign, cctools provides its codesign_allocate helper
-  opencode-vim =
-    let
-      pkg = inputs.opencode-vim.packages.${prev.stdenv.hostPlatform.system}.default;
-    in
-    if prev.stdenv.hostPlatform.isDarwin then
-      pkg.overrideAttrs (old: {
-        nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [
-          prev.darwin.sigtool
-          prev.cctools
-        ];
-      })
-    else
-      pkg;
   # FIXME: remove when raine/workmux releases the drain-before-close fix
   # (test oversized_unterminated_request_line_is_rejected fails on macOS without it)
   workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
