@@ -47,11 +47,8 @@
     nixcord.url = "github:kaylorben/nixcord";
 
     # AI agents (opencode, omp, pi) with shared skills/prompts/mcp/providers.
-    # TEMPORARY local checkout - absolute because path:../ relative refs
-    # resolve against the store copy of this flake, not the workdir. Flip to
-    # github:semi710/s-ai after pushing, then `nix flake lock --update-input
-    # s-ai`. Until then other hosts without ~/work/s-ai cannot eval.
-    s-ai.url = "path:/home/nikhil.singh/work/s-ai";
+    # Bump with: `nix flake update s-ai`.
+    s-ai.url = "github:semi710/s-ai";
 
     # Understand Anything - codebase-to-knowledge-graph skills (/understand*).
     # Skills are markdown + scripts; the dashboard ships as a prebuilt npx

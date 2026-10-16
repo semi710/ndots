@@ -2463,14 +2463,17 @@
         "workmux": "workmux"
       },
       "locked": {
-        "lastModified": 1792046987,
-        "narHash": "sha256-Cr7nrdTVSlf/shoK953dLJZVNbFZyGEsR8JJ+8B6GpY=",
-        "path": "/home/nikhil.singh/work/s-ai",
-        "type": "path"
+        "lastModified": 1792046985,
+        "narHash": "sha256-B7zzxcFLzWKimps6+fzGdKAahU5GfLiUzAYu69Fvx+k=",
+        "owner": "semi710",
+        "repo": "s-ai",
+        "rev": "8d5b75e6abfc4198d38814056f883a88e9be225d",
+        "type": "github"
       },
       "original": {
-        "path": "/home/nikhil.singh/work/s-ai",
-        "type": "path"
+        "owner": "semi710",
+        "repo": "s-ai",
+        "type": "github"
       }
     },
     "sops-nix": {
