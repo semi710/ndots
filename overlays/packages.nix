@@ -42,21 +42,21 @@ in
     postPatch = builtins.replaceStrings [ "-Wl,-no_uuid" ] [ "" ] old.postPatch;
   });
 
-  # FIXME: remove pin when https://github.com/sst/opencode/issues/34782 is fixed
-  # 3.7 breaks opentui rendering on macOS only (bold/inline code stripped in TUI)
-  tmux =
-    if prev.stdenv.hostPlatform.isDarwin then
-      prev.tmux.overrideAttrs {
-        version = "3.6b";
-        src = prev.fetchFromGitHub {
-          owner = "tmux";
-          repo = "tmux";
-          rev = "3.6b";
-          hash = "sha256-iW4K/OxSVpxVkyI5Dy6lzwVf/8nXyjcHtL76Ezmxavc=";
-        };
-      }
-    else
-      prev.tmux;
+  # FIXME: remove pin when the flake's nixpkgs pin carries tmux >= 3.8.
+  # 3.7x breaks OSC 52 handling (CHANGES 3.7c->3.8: "parsing clipboard
+  # sequences", "clipboard or palette replies", "pass which clipboard is set
+  # through to the terminal") - dead/wrong clipboard via lazygit c-o, nvim
+  # osc52 yank+paste inside tmux. 3.8 also fixes opentui layout corruption
+  # on macOS (sst/opencode#34782).
+  tmux = prev.tmux.overrideAttrs (old: {
+    version = "3.8";
+    src = prev.fetchFromGitHub {
+      owner = "tmux";
+      repo = "tmux";
+      rev = "3.8";
+      hash = "sha256-pv2wlr3coo+E0pfpb58giJJQn9PGgMFqtVA6nk+9JdE=";
+    };
+  });
 
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
