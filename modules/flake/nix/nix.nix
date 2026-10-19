@@ -14,16 +14,16 @@
       options = "--delete-older-than 30d";
     };
 
-    nixPath = [
-      "nixpkgs=${flake.inputs.nixpkgs}"
-      "nixpkgs-stable=${flake.inputs.nixpkgs-stable}"
-    ]; # Enables use of `nix-shell -p ...` etc
     registry = {
       nixpkgs.flake = flake.inputs.nixpkgs; # Make `nix shell` etc use pinned nixpkgs
       nixpkgs-stable.flake = flake.inputs.nixpkgs-stable;
     };
 
     settings = {
+      nix-path = [
+        "nixpkgs=${flake.inputs.nixpkgs}"
+        "nixpkgs-stable=${flake.inputs.nixpkgs-stable}"
+      ];
       # list-typed option; nix-wire's mkDefault "nix-command flakes" string
       # fails eval on nixpkgs that type-checks it
       experimental-features = [
