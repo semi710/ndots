@@ -4,7 +4,7 @@ let
   fontFeatureString =
     name: # conf
     ''
-      clipboard_control write-primary write-clipboard no-append
+      clipboard_control read-primary read-clipboard write-primary write-clipboard no-append
       font_features Monaspace${name}Var-Bold +dlig +ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08
       font_features Monaspace${name}Var-BoldItalic +dlig +ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08
       font_features Monaspace${name}Var-ExtraBold +dlig +ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08

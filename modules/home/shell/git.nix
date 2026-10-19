@@ -1,4 +1,8 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  lib,
+  ...
+}:
 {
   home.shellAliases = {
     git-addnospace = "git diff -U0 -w --no-color --src-prefix=a/ --dst-prefix=b/ | git apply --cached --ignore-whitespace --unidiff-zero -";
@@ -81,16 +85,16 @@
       enable = true;
       settings = {
         promptToReturnFromSubprocess = false;
+        # OSC52 clipboard via the proven `copy` tool (works over SSH and in
+        # tmux - same path as zsh yanks). The inline printf variant used the
+        # DCS-passthrough leg which fails through ssh; copy keys off $TMUX
+        # and falls back to plain OSC52 which tmux's set-clipboard forwards.
+        os.copyToClipboardCmd = ''printf "%s" {{text}} | ${lib.getExe pkgs.copy}'';
         os.editPreset = "nvim-remote";
         gui = {
           nerdFontsVersion = "3";
           theme.lightTheme = false;
         };
-        # OSC52 clipboard integration - works over SSH and in tmux
-        # Supports both regular terminals and tmux sessions
-        os.copyToClipboardCmd = ''
-          if [[ "$TERM" =~ ^(screen|tmux) ]]; then printf "\033Ptmux;\033\033]52;c;$(printf "%s" {{text}} | base64 -w 0)\a\033\\" > /dev/tty; else printf "\033]52;c;$(printf "%s" {{text}} | base64 -w 0)\a" > /dev/tty; fi
-        '';
       };
     };
   };

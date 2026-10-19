@@ -158,6 +158,10 @@ in
           set-option -ga update-environment "UPTERM_ADMIN_SOCKET"
           set-option -ga update-environment "SSH_AUTH_SOCK"
 
+          # get-clipboard external: relay OSC52 reads to the real terminal (the
+          # host clipboard); default "on" answers from tmux's paste buffer,
+          # which is stale app-yank content, not the system clipboard
+          set -g get-clipboard external
           set -g set-clipboard on
           set -g buffer-limit 10
           # wheel-click while scrolling fires paste-buffer; only explicit prefix+] should paste
