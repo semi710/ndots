@@ -75,7 +75,13 @@ in
   });
   # FIXME: remove when raine/workmux releases the drain-before-close fix
   # (test oversized_unterminated_request_line_is_rejected fails on macOS without it)
+  # workmux-sidebar-focus: pane-focus-in dirty signal so the current-AI marker
+  # tracks focus moves (no pane-focus hook upstream; marker only refreshed on
+  # window/session events, which is why it lagged after sesh session switches)
   workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [ ./patches/workmux-drain-inbound.patch ];
+    patches = (old.patches or [ ]) ++ [
+      ./patches/workmux-drain-inbound.patch
+      ./patches/workmux-sidebar-focus.patch
+    ];
   });
 }

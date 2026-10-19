@@ -3038,11 +3038,11 @@
         "nixpkgs": "nixpkgs_27"
       },
       "locked": {
-        "lastModified": 1790968889,
-        "narHash": "sha256-FJwhdLZr8ny4/J7g5hA5IwoHivGbv+YhDZZSSE6VaEc=",
+        "lastModified": 1791995397,
+        "narHash": "sha256-9h8Pa8gw9lgt2AohnVNucQ8Dur0VKIeUWR3rKtcjGlQ=",
         "owner": "raine",
         "repo": "workmux",
-        "rev": "cf8516270afde59804e94fa90da931db9ee99a36",
+        "rev": "dba84b18ac98b9fb6717e94563bb218cf91cc4e6",
         "type": "github"
       },
       "original": {
