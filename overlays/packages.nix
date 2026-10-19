@@ -61,6 +61,18 @@ in
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
+  # FIXME: remove pin when the flake's nixpkgs pin carries sesh >= 2.33.0
+  # (worktree-aware session naming: git_namer_use_worktree_root/git_dir_length)
+  sesh = prev.sesh.overrideAttrs (old: {
+    version = "2.33.0";
+    src = prev.fetchFromGitHub {
+      owner = "joshmedeski";
+      repo = "sesh";
+      rev = "v2.33.0";
+      hash = "sha256-Q25fdn+1T4NOnFX5ZuIMhhRBFSj7dfjybgCj2bu3lK4=";
+    };
+    vendorHash = "sha256-8CMqOlq3rAXPpzABxd2pp2DhMOvKAN+jHVZ2bLZUN0w=";
+  });
   # FIXME: remove when raine/workmux releases the drain-before-close fix
   # (test oversized_unterminated_request_line_is_rejected fails on macOS without it)
   workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default.overrideAttrs (old: {

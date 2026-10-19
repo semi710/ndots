@@ -5,6 +5,10 @@
     enable = true;
     tmuxKey = "c-o";
     settings = {
+      # git-derived names: worktree sessions name from their own top-level,
+      # so sibling worktrees come out as "bernoulli/dev" (= 1: "dev")
+      git_namer_use_worktree_root = true;
+      git_dir_length = 2;
       blacklist = [
         "^scratch$"
         ".*/Library(/.*)?"
