@@ -5,8 +5,9 @@ let
   # there); while down every path lookup burns a 15s connect timeout.
   # cache.xinux.uz is the community mirror of those prebuilts
   # (github.com/xddxdd/nix-cachyos-kernel#89), verified reachable.
+  # cache.nixos.asia/juspay removed 2026-10-26: endpoint returning 502,
+  # killing builds; oss on the same host still works
   substituters = [
-    "https://cache.nixos.asia/juspay"
     "https://nix-community.cachix.org"
     "https://cache.nixos.org/"
     "https://cache.nixos.asia/oss"
@@ -17,7 +18,6 @@ let
     "https://cache.numtide.com"
   ];
   keys = [
-    "juspay:5aHaNForWL03wKOGhUn/al4BZd3HqZDWZ3hrVTcf6Fg="
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
     "oss:KO872wNJkCDgmGN3xy9dT89WAhvv13EiKncTtHDItVU="
