@@ -56,6 +56,7 @@
       ];
     };
     global.brewfile = true;
-    greedyCasks = true;
+    # no greedyCasks: auto-update casks (whatsapp etc.) upgrade in-app; brew
+    # chasing them on every activation just gambles the deploy on their CDN
   };
 }
