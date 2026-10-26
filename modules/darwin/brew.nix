@@ -21,7 +21,6 @@
       "localsend"
       "maccy"
       "numi"
-      "pronotes"
       "protonvpn"
       "shottr"
       "sozercan/repo/kaset"
@@ -32,7 +31,9 @@
       "zulip"
       # "lulu"
     ];
-    brews = [ ];
+    brews = [
+      "tailscale"
+    ];
     masApps = {
       # only mac apps supported not iOS one
       "handmirror" = 1502839586;
