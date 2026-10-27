@@ -39,7 +39,6 @@
       "handmirror" = 1502839586;
       "gifski" = 1351639930;
       "gladys" = 1382386877;
-      "tailscale" = 1475387142;
       "amphetamine" = 937984704;
     };
   };
