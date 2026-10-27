@@ -76,7 +76,13 @@ in
   hm.sops.secrets."tokens/nix-access" = { };
   nix.extraOptions = "!include ${config.hm.sops.secrets."tokens/nix-access".path}";
 
-  environment.etc."sudoers.d/10-nix-sudo".text = "${me.username} ALL=(ALL:ALL) NOPASSWD: ALL";
+  # sudo without password
+  # environment.etc."sudoers.d/10-nix-sudo".text = "${me.username} ALL=(ALL:ALL) NOPASSWD: ALL";
+
+  security.pam.services.sudo_local = {
+    touchIdAuth = true;
+    reattach = true;
+  };
   system.primaryUser = me.username;
   nix.settings.trusted-users = [ me.username ];
   nixpkgs.hostPlatform = "aarch64-darwin";
