@@ -103,7 +103,7 @@ in
           }
           {
             id = "glm-latest";
-            contextWindow = 400000;
+            contextWindow = 1000000;
             maxTokens = 32000;
           }
           {
