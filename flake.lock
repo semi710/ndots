@@ -2463,11 +2463,11 @@
         "workmux": "workmux"
       },
       "locked": {
-        "lastModified": 1792046985,
-        "narHash": "sha256-B7zzxcFLzWKimps6+fzGdKAahU5GfLiUzAYu69Fvx+k=",
+        "lastModified": 1792824962,
+        "narHash": "sha256-oOkhs4rHEPQZB7wn9Ujg8GI/QmkkrRuBEM2U1INufM0=",
         "owner": "semi710",
         "repo": "s-ai",
-        "rev": "8d5b75e6abfc4198d38814056f883a88e9be225d",
+        "rev": "aa75cf5957c0f35c64d20c92ecd35879e3714471",
         "type": "github"
       },
       "original": {
