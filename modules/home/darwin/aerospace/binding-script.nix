@@ -1,8 +1,11 @@
 { pkgs, lib, ... }:
 let
-  # I map holding of `capslock` key to `cmd+alt` in karabiner-elements
-  mod = "cmd-alt";
+  # mirrors skhd's hyper chord so gestures are identical in yabai mode
+  mod = "cmd-alt-ctrl";
   aerospaceBin = lib.getExe pkgs.aerospace;
+  kblight = lib.getExe pkgs.kblight;
+  # floating check - no %{is-window-floating}; window-layout reports "floating"
+  isFloating = ''[ "$(${aerospaceBin} list-windows --focused --format '%{window-layout}')" = "floating" ]'';
   displayInfo = # sh
     ''
       monitor_name=$(${aerospaceBin} list-monitors --focused --format '%{monitor-name}')
@@ -116,21 +119,77 @@ let
 
     centralize-focused-window
   '';
-  movefloatingCmd = lib.getExe movefloating;
-  centerfloatingCmd = lib.getExe centerfloating;
-  resizefloatingCmd = lib.getExe resizefloating;
+
+  # skhd special hjkl - nudge floating window 40px, no-op on tiled
+  float-move = pkgs.writeShellScriptBin "float-move" ''
+    if ${isFloating}; then
+      exec ${lib.getExe movefloating} "$1" "$2"
+    fi
+  '';
+  # skhd special mod+hjkl - resize; native for tiled, osascript for floating
+  aero-resize-dir = pkgs.writeShellScriptBin "aero-resize-dir" ''
+    dir="$1"
+    delta=50
+    if ${isFloating}; then
+      case "$dir" in
+        h) exec ${lib.getExe resizefloating} -$delta 0 ;;
+        l) exec ${lib.getExe resizefloating} $delta 0 ;;
+        k) exec ${lib.getExe resizefloating} 0 -$delta ;;
+        j) exec ${lib.getExe resizefloating} 0 $delta ;;
+      esac
+    fi
+    case "$dir" in
+      h) ${aerospaceBin} resize width -$delta ;;
+      l) ${aerospaceBin} resize width $delta ;;
+      k) ${aerospaceBin} resize height -$delta ;;
+      j) ${aerospaceBin} resize height $delta ;;
+    esac
+  '';
+  # skhd special c - re-grid floating window only
+  center-if-floating = pkgs.writeShellScriptBin "center-if-floating" ''
+    if ${isFloating}; then
+      exec ${lib.getExe centerfloating}
+    fi
+  '';
+  # skhd special minus/equal - keyboard backlight steps
+  kblight-step = pkgs.writeShellScriptBin "kblight-step" ''
+    step=0.1
+    cur=$(${kblight} get)
+    case "$1" in
+      up)   val=$(echo "$cur $step" | awk '{print $1 + $2}') ;;
+      down) val=$(echo "$cur $step" | awk '{print $1 - $2}') ;;
+      *)    exit 1 ;;
+    esac
+    ${kblight} "$val"
+  '';
 in
 {
-  programs.aerospace.userSettings.mode.main.binding = {
-    "${mod}-shift-left" = "exec-and-forget ${movefloatingCmd} -100 0"; # move left
-    "${mod}-shift-right" = "exec-and-forget ${movefloatingCmd} 100 0"; # move left
-    "${mod}-shift-up" = "exec-and-forget ${movefloatingCmd} 0 -100"; # move left
-    "${mod}-shift-down" = "exec-and-forget ${movefloatingCmd} 0 100"; # move left
-    "${mod}-ctrl-c" = "exec-and-forget ${centerfloatingCmd}"; # center floating window
+  programs.aerospace.settings.mode.main.binding = {
+    # floating move via arrows - aerospace extra, skhd doesn't use arrows
+    "${mod}-shift-left" = "exec-and-forget ${lib.getExe movefloating} -100 0";
+    "${mod}-shift-right" = "exec-and-forget ${lib.getExe movefloating} 100 0";
+    "${mod}-shift-up" = "exec-and-forget ${lib.getExe movefloating} 0 -100";
+    "${mod}-shift-down" = "exec-and-forget ${lib.getExe movefloating} 0 100";
+  };
+  programs.aerospace.settings.mode.service.binding = {
+    # skhd special hjkl - nudge floating window 40px
+    h = "exec-and-forget ${lib.getExe float-move} -40 0";
+    l = "exec-and-forget ${lib.getExe float-move} 40 0";
+    j = "exec-and-forget ${lib.getExe float-move} 0 40";
+    k = "exec-and-forget ${lib.getExe float-move} 0 -40";
 
-    "${mod}-ctrl-h" = "exec-and-forget ${resizefloatingCmd} -100 0"; # move left
-    "${mod}-ctrl-l" = "exec-and-forget ${resizefloatingCmd} 100 0"; # move left
-    "${mod}-ctrl-k" = "exec-and-forget ${resizefloatingCmd} 0 -100"; # move left
-    "${mod}-ctrl-j" = "exec-and-forget ${resizefloatingCmd} 0 100"; # move left
+    # skhd special mod+hjkl - resize (tiled native, floating osascript)
+    "${mod}-h" = "exec-and-forget ${lib.getExe aero-resize-dir} h";
+    "${mod}-l" = "exec-and-forget ${lib.getExe aero-resize-dir} l";
+    "${mod}-k" = "exec-and-forget ${lib.getExe aero-resize-dir} k";
+    "${mod}-j" = "exec-and-forget ${lib.getExe aero-resize-dir} j";
+
+    # skhd special minus/equal - keyboard backlight
+    minus = "exec-and-forget ${lib.getExe kblight-step} down";
+    equal = "exec-and-forget ${lib.getExe kblight-step} up";
+
+    # skhd special c - re-grid floating window; shift+c - warp cursor
+    c = "exec-and-forget ${lib.getExe center-if-floating}";
+    "shift-c" = "move-mouse window-force-center";
   };
 }

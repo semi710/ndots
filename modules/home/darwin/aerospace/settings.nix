@@ -74,7 +74,9 @@ in
 {
   programs.aerospace = {
     enable = true;
-    userSettings = {
+    # let home-manager own the launchd agent; aerospace self-managed startup conflicts
+    launchd.enable = true;
+    settings = {
       start-at-login = true;
       accordion-padding = 120;
       on-focused-monitor-changed = [ "move-mouse monitor-lazy-center" ];
