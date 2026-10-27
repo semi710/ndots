@@ -1,7 +1,7 @@
 {
   lib,
   stdenv,
-  fetchFromGitHub,
+  fetchzip,
   swift,
 }:
 
@@ -9,13 +9,10 @@ stdenv.mkDerivation (finalAttrs: {
   pname = "kblight";
   version = "0.1.0";
 
-  src = fetchFromGitHub {
-    owner = "Maxnflaxl";
-    repo = "kblight";
-    rev = "8ec63e452e1cf3ed0dd1c3f399aa9261019c2ff2";
+  src = fetchzip {
+    url = "https://git.maxnflaxl.dev/maxnflaxl/kblight/archive/8ec63e452e1cf3ed0dd1c3f399aa9261019c2ff2.tar.gz";
     hash = "sha256-C6sTae1OpNMrukc8ZoisUdF4/4O/w/oBpmvYqbcH05o=";
   };
-
   nativeBuildInputs = [ swift ];
 
   buildPhase = ''
