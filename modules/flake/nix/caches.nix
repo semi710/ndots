@@ -5,12 +5,14 @@ let
   # there); while down every path lookup burns a 15s connect timeout.
   # cache.xinux.uz is the community mirror of those prebuilts
   # (github.com/xddxdd/nix-cachyos-kernel#89), verified reachable.
-  # cache.nixos.asia/juspay removed 2026-10-26: endpoint returning 502,
-  # killing builds; oss on the same host still works
+  # cache.nixos.asia removed entirely 2026-10-31: whole host now times out
+  # at TCP connect (not just the 502 /juspay endpoint from 2026-10-26);
+  # every path lookup burned 5x15s timeouts. Re-add when the host responds.
+  # cache.xinux.uz is the community mirror of those prebuilts
+  # (github.com/xddxdd/nix-cachyos-kernel#89), verified reachable.
   substituters = [
     "https://nix-community.cachix.org"
     "https://cache.nixos.org/"
-    "https://cache.nixos.asia/oss"
     "https://nvix.cachix.org"
     "https://nija.cachix.org"
     "https://hyprland.cachix.org"
@@ -20,7 +22,6 @@ let
   keys = [
     "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     "hydra.nixos.org-1:CNHJZBh9K4tP3EKF6FkkgeVYsS3ohTl+oS0Qa8bezVs="
-    "oss:KO872wNJkCDgmGN3xy9dT89WAhvv13EiKncTtHDItVU="
     "nvix.cachix.org-1:qVYAfj2oiH0DF3pSs8OfPYI6B0mAZ+h5mMajN+EOL2E="
     "nija.cachix.org-1:wJRNRxBn1M1SAgzVv5ZAMe07ky6bkSSznMH0tEOFdcA="
     "hyprland.cachix.org-1:a7pgxzMz7+chwVL3/pzj6jIBMioiJM7ypFP8PwtkuGc="
