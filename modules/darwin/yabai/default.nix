@@ -101,6 +101,34 @@ let
     yabai -m rule --apply
   '';
 
+  # macOS appends new native-fullscreen spaces at the end of the display's
+  # space list; slide them in right after the space that held the window.
+  # Runs on every space_changed, so guards are cheap: only a focused,
+  # last-in-display, native-fullscreen space gets moved.
+  fs-space-order = pkgs.writeShellScriptBin "fs-space-order" ''
+    state="/tmp/yabai-fs-order"
+    yabaiBin="${lib.getExe pkgs.yabai}"
+    jqBin="${lib.getExe pkgs.jq}"
+    cur_json=$($yabaiBin -m query --spaces --space 2>/dev/null) || exit 0
+    cur_idx=$(printf '%s' "$cur_json" | $jqBin -r '.index')
+    cur_disp=$(printf '%s' "$cur_json" | $jqBin -r '.display')
+    prev_idx=""
+    prev_disp=""
+    [ -f "$state" ] && read -r prev_idx prev_disp < "$state"
+    printf '%s %s\n' "$cur_idx" "$cur_disp" > "$state"
+    [ -n "$prev_idx" ] && [ "$prev_disp" = "$cur_disp" ] || exit 0
+    [ "$(printf '%s' "$cur_json" | $jqBin '."is-native-fullscreen"')" = "true" ] || exit 0
+    last_idx=$($yabaiBin -m query --spaces --display "$cur_disp" | $jqBin '.[-1].index')
+    [ "$cur_idx" = "$last_idx" ] || exit 0
+    target=$((prev_idx + 1))
+    [ "$cur_idx" -eq "$target" ] && exit 0
+    # the fullscreen transition animates the display; retry until it settles
+    for _ in 1 2 3 4 5; do
+      $yabaiBin -m space "$cur_idx" --move "$target" 2>/dev/null && exit 0
+      sleep 0.3
+    done
+  '';
+
   # Reset spaces: display 1 gets 7, other displays get 8-9, relabel, and sort windows
   space-reset = pkgs.writeShellScriptBin "space-reset" ''
     jq=${lib.getExe pkgs.jq}
@@ -184,6 +212,7 @@ in
         # resolves when upstream fixes either side
         yabai -m signal --add event=mission_control_enter action="yabai -m config normal_window_opacity 1.0"
         yabai -m signal --add event=mission_control_exit action="yabai -m config active_window_opacity 1.0"
+        yabai -m signal --add event=space_changed action="${lib.getExe fs-space-order}"
 
         ${relabelCmd}
 
