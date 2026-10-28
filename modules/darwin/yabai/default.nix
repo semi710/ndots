@@ -159,7 +159,7 @@ in
       focus_follows_mouse = "autofocus";
       layout = "bsp";
       mouse_drop_action = "swap";
-      mouse_follows_focus = "on";
+      mouse_follows_focus = "off";
       mouse_modifier = "alt";
       normal_window_opacity = 0.98;
       bottom_padding = 10;
