@@ -57,8 +57,8 @@ in
       ${mod} + shift - k : ${lib.getExe pkgs.putils.yabai-cycle-move} north
       ${mod} + shift - l : ${lib.getExe pkgs.putils.yabai-cycle-move} east
 
-      ${mod} - n : ${lib.getExe pkgs.putils.yabai-space-cycle} next
-      ${mod} - p : ${lib.getExe pkgs.putils.yabai-space-cycle} prev
+      ${mod} - n : yabai -m space --focus next || yabai -m space --focus first
+      ${mod} - p : yabai -m space --focus prev || yabai -m space --focus last
 
       ${mod} + shift - 0x2C : ${lib.getExe pkgs.putils.yabai-get-window}
       ${mod} - 0x2C : ${lib.getExe pkgs.putils.yabai-focus-window}
