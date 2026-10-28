@@ -18,7 +18,9 @@
 
       set statusbar-h-padding 0
       set statusbar-v-padding 0
-      set page-padding 1
+      # split out of the old single "page-padding" option in newer zathura
+      set page-h-padding 1
+      set page-v-padding 1
       set database "sqlite"
       set guioptions ""
 
