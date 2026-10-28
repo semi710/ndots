@@ -28,17 +28,13 @@ in
   bitbucket-mcp = selfPkgs.bitbucket-mcp;
   kblight = selfPkgs.kblight;
 
-  # FIXME: agg23/macos-27 carries stale macOS 27 scripting-addition offsets
-  # (issue #2822): ours use 0x210000/0x170000 for fix_animation/add/remove/move
-  # space, but the confirmed-working set is 0x200000/0x150000 (see
-  # ImTheSquid/yabai "macOS 27 offsets"). Flip input to a fork with the correct
-  # offsets, then nixpkgs yabai once scripting-addition lands upstream.
+  # fork carries current macOS 27 SA offsets (see flake.nix note); keep the
+  # LC_UUID fix - macOS 27 dyld rejects dlopen of images without LC_UUID and
+  # nixpkgs' -no_uuid kills the scripting-addition payload inside Dock
   yabai = prev.yabai.overrideAttrs (old: {
     version = "unstable-${inputs.yabai.shortRev}";
     src = inputs.yabai;
     doInstallCheck = false; # fork still reports the last tagged version
-    # macOS 27 dyld rejects dlopen of images without LC_UUID; nixpkgs' -no_uuid
-    # kills the scripting-addition payload inside Dock (UUID becomes random, fine here)
     postPatch = builtins.replaceStrings [ "-Wl,-no_uuid" ] [ "" ] old.postPatch;
   });
 

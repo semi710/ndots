@@ -3104,16 +3104,15 @@
     "yabai": {
       "flake": false,
       "locked": {
-        "lastModified": 1783090113,
-        "narHash": "sha256-6tNi20q8K4LeNETjFA5nEDqcSVSBYvRFbzcJbDx7ntA=",
-        "owner": "agg23",
+        "lastModified": 1793122481,
+        "narHash": "sha256-C7mggfDCDVWau7G2+aYxjxPtTJoLocsb2yvbY/Zz184=",
+        "owner": "AhsanFazal",
         "repo": "yabai",
-        "rev": "d0d387d1445048415fd1f3566393a191fe3c5097",
+        "rev": "992eff03200255594b25f6ebca7ac688dbc88563",
         "type": "github"
       },
       "original": {
-        "owner": "agg23",
-        "ref": "macos-27",
+        "owner": "AhsanFazal",
         "repo": "yabai",
         "type": "github"
       }

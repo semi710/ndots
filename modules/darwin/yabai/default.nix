@@ -173,8 +173,9 @@ in
     };
     extraConfig = # sh
       ''
+        # re-inject on Dock restarts; passwordless via nix-darwin's own
+        # hash-pinned sudoers.d/yabai (boot-time load is the module's daemon)
         yabai -m signal --add event=dock_did_restart action="sudo yabai --load-sa"
-        sudo yabai --load-sa
 
         # FIXME: borders drawn at unscaled positions in Mission Control on macOS 27
         # (upstream FelixKratz/JankyBorders#209) - not workaroundable here because

@@ -57,12 +57,13 @@
     understand-anything.url = "github:Egonex-AI/Understand-Anything";
     understand-anything.flake = false;
 
-    # yabai with macOS 27 space-switching support: agg23's macos-27 branch adds
-    # augmented synthetic dock-swipe events (SIP-friendly, from InstantSpaceSwitcher)
-    # since the SA mach-injection is dead on macOS 27 final (26A428).
-    # Switch back to upstream when it lands there (koekeishiya/yabai#2802).
+    # yabai with macOS 27 (Golden Gate) scripting-addition support:
+    # AhsanFazal/yabai resolves SA offsets for every 27.x build so far
+    # (27.0-27.2, both arm64e slices); space focus is SA-based and instant
+    # (agg23's synthetic dock-swipes animate). 27.2 loses space --move
+    # (Dock rewrite) - stay on 27.0.1 until that's needed.
     # Bump with: `nix flake update yabai`.
-    yabai.url = "github:agg23/yabai/macos-27";
+    yabai.url = "github:AhsanFazal/yabai";
     yabai.flake = false;
 
     # nix-index; `,` command available
