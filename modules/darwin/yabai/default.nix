@@ -81,6 +81,7 @@ let
     "WhatsApp"
     "Messages"
     "Tailscale"
+    "gifski"
     "hiddenbar"
   ];
   floatingApps = [
