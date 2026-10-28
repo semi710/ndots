@@ -27,6 +27,7 @@ in
   sklauncher-beta = selfPkgs.sklauncher-beta;
   bitbucket-mcp = selfPkgs.bitbucket-mcp;
   kblight = selfPkgs.kblight;
+  modern-glass = selfPkgs.modern-glass;
 
   # fork carries current macOS 27 SA offsets (see flake.nix note); keep the
   # LC_UUID fix - macOS 27 dyld rejects dlopen of images without LC_UUID and

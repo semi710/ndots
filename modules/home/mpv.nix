@@ -1,27 +1,21 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   home.packages = with pkgs; [ ffmpegthumbnailer ];
 
   # macOS-specific: mpv only loads fonts from ~/.config/mpv/fonts/, not from
-  # nix-store paths inside script packages. modernx-zydezu bundles the icon
-  # font it needs at share/fonts/truetype/fluent-system-icons.ttf, so we
-  # symlink it into mpv's font dir to make the OSC button icons render.
-  # (Harmless on Linux; fontconfig already reaches the same file there.)
-  xdg.configFile."mpv/fonts/fluent-system-icons.ttf".source =
-    "${pkgs.mpvScripts.modernx-zydezu}/share/fonts/truetype/fluent-system-icons.ttf";
+  # nix-store paths inside script packages. ModernGlass bundles the Inter
+  # weights it renders its panels with, so symlink them in.
+  # (Harmless on Linux; fontconfig already reaches the same files there.)
+  xdg.configFile = {
+    "mpv/fonts/Inter-Medium.ttf".source = "${pkgs.modern-glass}/share/fonts/Inter-Medium.ttf";
+    "mpv/fonts/Inter-SemiBold.ttf".source = "${pkgs.modern-glass}/share/fonts/Inter-SemiBold.ttf";
+  };
 
   programs.mpv = {
     enable = true;
-    scripts = with pkgs.mpvScripts; [
-      modernx-zydezu
-    ];
-    # OSC text font (button icons keep using fluent-system-icons via the
-    # font symlink above; this just controls title/time/chapter text).
-    scriptOpts.modernx.font = "JetBrainsMono Nerd Font";
-    # Stats / keybindings overlay (`?` / `i` / `I`): vim-style minimal look.
-    # Scroll with Ctrl+k / Ctrl+j; monospace, thin border, no shadow.
-    # Note: stats.lua colors are libass-format BBGGRR - grayscale only here
-    # so the channel order is irrelevant.
+    scripts = [ pkgs.modern-glass ];
+    # OSC text font moved into ModernGlass (script-opts/modernz); stats.lua
+    # keeps the vim-style look from before.
     scriptOpts.stats = {
       key_scroll_up = "Ctrl+k";
       key_scroll_down = "Ctrl+j";
@@ -49,13 +43,47 @@
       ":" = "script-binding console/enable"; # vim-style ex-cmd opener
     };
     config = {
-      osc = "no"; # disable built-in OSC so modernx can render
+      osc = "no"; # disable built-in OSC so ModernGlass can render
+      # modernz doesn't disable mpv's core seek bar, which otherwise draws
+      # its stock look over the glass panel on every h/l seek
+      osd-bar = "no";
       save-position-on-quit = "yes";
+      # saved sub-pos fights ModernGlass's sub margins on resume
+      watch-later-options-remove = "sub-pos";
       ytdl-format = "bestvideo+bestaudio";
       # Let yabai/skhd resize the window freely on macOS. mpv still letterboxes
       # the video correctly via `keepaspect=yes` (default), so this only stops
       # the NSWindow itself from being aspect-locked / size-capped by AppKit.
       keepaspect-window = "no";
+
+      # precise relative seeks: the default lands h/l skips on keyframes and
+      # then re-syncs audio, which reads as janky
+      hr-seek = "yes";
+      # ModernGlass's glass panels need libplacebo's renderer; works on both
+      # darwin and linux builds
+      vo = "gpu-next";
+      # exact seeks decode from the previous keyframe - hwdec keeps them fast
+      # (videotoolbox on darwin, vaapi/nvdec on linux) and saves battery
+      hwdec = "auto-safe";
+      # mpv's curated quality presets: ewa_lanczossharp scaling, deband, etc.
+      profile = "high-quality";
+      # clock video to the display, not the audio timeline - smoother cadence
+      # for 24fps movies on 60hz screens (audio resamples slightly)
+      video-sync = "display-resample";
+      # default readahead is 1s; a deeper demuxer buffer lets skips and network
+      # streams resume cleanly instead of stuttering up to speed
+      demuxer-readahead-secs = "60";
+      demuxer-max-bytes = "512MiB";
+      demuxer-max-back-bytes = "64MiB";
+      # pick up loosely-named .srt files next to the video
+      sub-auto = "fuzzy";
+    }
+    // lib.optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+      # mpv's coreaudio AO fails to init on macOS 27 (channel-map API misuse,
+      # mpv#18384; fixes pending in PRs #18637/#18679) so every session falls
+      # back to avfoundation anyway - select it directly so coreaudio never
+      # runs and its error never logs. drop this when nixpkgs' mpv has the fix
+      ao = "avfoundation";
     };
   };
 
