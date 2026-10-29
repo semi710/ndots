@@ -53,6 +53,15 @@ in
       rev = "3.8";
       hash = "sha256-pv2wlr3coo+E0pfpb58giJJQn9PGgMFqtVA6nk+9JdE=";
     };
+    postPatch = (old.postPatch or "") + ''
+      # with allow-passthrough, pane XTVERSION queries get answered by the outer
+      # terminal; the duplicate reply was rejected here and fell through the key
+      # parser, typing "kitty(x.y)" into the active pane (ESC P > | k i run as
+      # normal-mode keys, the rest lands in the buffer). consume duplicates.
+      # drop this if upstream ever consumes repeated extended-DA replies
+      sed -i 's/if (tty->flags \& TTY_HAVEXDA)/if (0)/' tty-keys.c
+      grep -q 'if (0)' tty-keys.c
+    '';
   });
 
   # From an external pinned flake
