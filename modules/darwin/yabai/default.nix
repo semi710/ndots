@@ -218,6 +218,9 @@ in
         ${relabelCmd}
 
         ${notManaged unmanagedApps}
+        # zathura's window can be non-resizable while its document parses, and
+        # yabai's auto-evaluation then floats it - force it into the tree
+        yabai -m rule --add app="^\.zathura-wrapped$" manage=on
         ${spaceRules}
         ${floating floatingApps}
         yabai -m rule --apply
