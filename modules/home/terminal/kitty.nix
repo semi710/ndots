@@ -4,7 +4,6 @@ let
   fontFeatureString =
     name: # conf
     ''
-      clipboard_control read-primary read-clipboard write-primary write-clipboard no-append
       font_features Monaspace${name}Var-Bold +dlig +ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08
       font_features Monaspace${name}Var-BoldItalic +dlig +ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08
       font_features Monaspace${name}Var-ExtraBold +dlig +ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08
@@ -88,6 +87,12 @@ in
         input_delay = 0;
         repaint_delay = 2;
         sync_to_monitor = "yes";
+
+        # -ask gates OSC 52 reads behind a kitty permission prompt: silent
+        # read replies are what leaks into random panes as typed junk when a
+        # pending reply lands after the focused pane changed (tmux routes
+        # late replies to the active pane; nvim shows them as buffer text)
+        clipboard_control = "read-primary-ask read-clipboard-ask write-primary write-clipboard no-append";
 
         cursor_shape = "beam";
         cursor_beam_thickness = 1.5;
