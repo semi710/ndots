@@ -25,7 +25,17 @@ in
     flake.homeModules.naste
   ];
 
-  home.packages = with pkgs; [ sklauncher-beta ];
+  home.packages = with pkgs; [
+    sklauncher-beta
+    # bb wrapper mirrors hosts/nixos/common/workstation.nix, so bb works the
+    # same on both machines
+    (writeShellScriptBin "bb" ''
+      export BITBUCKET_URL="$(cat ${config.sops.secrets."bitbucket/url".path})/rest"
+      export BITBUCKET_ACCESS_TOKEN="$(cat ${config.sops.secrets."bitbucket/token".path})"
+      export BITBUCKET_USERNAME="$(cat ${config.sops.secrets."bitbucket/username".path})"
+      exec ${lib.getExe bitbucket-cli} "$@"
+    '')
+  ];
 
   services.syncthing = {
     guiCredentials = {
@@ -63,6 +73,15 @@ in
       sopsFile = "${flake}/secrets/server.yaml";
     };
     "naste/pass" = {
+      sopsFile = "${flake}/secrets/server.yaml";
+    };
+    "bitbucket/url" = {
+      sopsFile = "${flake}/secrets/server.yaml";
+    };
+    "bitbucket/username" = {
+      sopsFile = "${flake}/secrets/server.yaml";
+    };
+    "bitbucket/token" = {
       sopsFile = "${flake}/secrets/server.yaml";
     };
     # office keys
