@@ -46,7 +46,9 @@
   homebrew = {
     enable = true;
     onActivation = {
-      upgrade = true;
+      # never upgrade on activation: casks upgrade themselves in-app, and one
+      # failing CDN (whatsapp's has reset connections) fails the whole deploy
+      upgrade = false;
       autoUpdate = true;
       cleanup = "zap";
       # Homebrew >= 4.5 requires --force-cleanup for brew bundle install --cleanup --zap
