@@ -1940,11 +1940,11 @@
     },
     "nixpkgs_21": {
       "locked": {
-        "lastModified": 1776683584,
-        "narHash": "sha256-NuTLMrr10Tng72hurYG8jYQ4XKK8wnpJmOGcPiis96g=",
+        "lastModified": 1790510107,
+        "narHash": "sha256-EVMNYv7hYDDD9TGVT/hIyTYgpiXA8y3m5xIEIxuGNU0=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "9dd5558b06dbdacbf635a3dd36dce1b1a7ee3a89",
+        "rev": "3181085bfd08663b6b9e60bc7a8395c2aaa741bd",
         "type": "github"
       },
       "original": {
@@ -2307,16 +2307,16 @@
         "nixpkgs": "nixpkgs_21"
       },
       "locked": {
-        "lastModified": 1791439971,
-        "narHash": "sha256-JIZmF6G/CRQhM1Ia0j9GDqjn7qc0VcmEBrE4gIpLm44=",
+        "lastModified": 1792931261,
+        "narHash": "sha256-5q6LXNTSllcsbepSlJtbIW23QEalwKeCrr3osSu9gVA=",
         "owner": "leohenon",
         "repo": "opencode-vim",
-        "rev": "4c5202919789c2e44711a0e34c1768927b880e65",
+        "rev": "2432058fdb6dd42ae4d58336967c27ba183bd680",
         "type": "github"
       },
       "original": {
         "owner": "leohenon",
-        "ref": "ocv",
+        "ref": "2432058fd",
         "repo": "opencode-vim",
         "type": "github"
       }
@@ -2498,11 +2498,11 @@
         "workmux": "workmux"
       },
       "locked": {
-        "lastModified": 1792824962,
-        "narHash": "sha256-oOkhs4rHEPQZB7wn9Ujg8GI/QmkkrRuBEM2U1INufM0=",
+        "lastModified": 1793802135,
+        "narHash": "sha256-D64KySm9rFR2SGjkm0KBr6SwiIbSkEp6x+12Qnr/ujM=",
         "owner": "semi710",
         "repo": "s-ai",
-        "rev": "aa75cf5957c0f35c64d20c92ecd35879e3714471",
+        "rev": "6a64129b3131a0025197c2c77b0dfc4efda4de2f",
         "type": "github"
       },
       "original": {
@@ -3036,16 +3036,15 @@
     "vim-motions-pi": {
       "flake": false,
       "locked": {
-        "lastModified": 1788865932,
-        "narHash": "sha256-tdI1EBQS5Si7wir4iBav+oeoHZxXdfVpsdC8XpnKVgk=",
-        "owner": "semi710",
+        "lastModified": 1793247534,
+        "narHash": "sha256-Oo62rd3Zio1wyyXuTLG8dsMWBGkSyYW7KSyn9FOZcF0=",
+        "owner": "kepatrick",
         "repo": "vim-motions-pi",
-        "rev": "e338e61e6accff83d8f5c78566bdc7d8037b0e4c",
+        "rev": "d3918383ee557a70cee83ddbc03d3de9903a610e",
         "type": "github"
       },
       "original": {
-        "owner": "semi710",
-        "ref": "feat/insert-mode-bar-cursor",
+        "owner": "kepatrick",
         "repo": "vim-motions-pi",
         "type": "github"
       }

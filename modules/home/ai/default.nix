@@ -144,6 +144,18 @@ in
       # vim-motions-pi OSC 52 yank via our copy tool
       agents.pi.clipboardCommand = lib.getExe pkgs.copy;
 
+      # vim-style transcript copy mode (ctrl+x to enter, v/j/k/y to select/copy)
+      agents.pi.copyMode = true;
+
+      # pi extensions, version-pinned npm specs (pi update leaves pinned specs)
+      agents.pi.extraPackages = [
+        "npm:pi-web-access@0.46.0" # search + fetch + YouTube
+        "npm:pi-lens@4.4.8" # LSP/lint/diagnostics on edits
+        "npm:pi-subagents@0.84.0" # in-session child agents
+        "npm:@juicesharp/rpiv-todo@2.15.0" # live todo panel, survives compaction
+        "npm:@juicesharp/rpiv-ask-user-question@2.15.0" # structured questions to you
+      ];
+
       # advisor/prewalk roles point at grid models explicitly; omp's builtin
       # fallback chains carry none, which would leave the roles unarmed
       agents.omp.advisorModel = "juspay/claude-sonnet-4-6";
