@@ -71,6 +71,7 @@
         target = "clipboard";
       };
       dock = {
+        orientation = "left";
         autohide-time-modifier = 0.1;
         static-only = true;
         autohide = true;
