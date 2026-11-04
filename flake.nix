@@ -66,6 +66,10 @@
     yabai.url = "github:AhsanFazal/yabai";
     yabai.flake = false;
 
+    # KiwiDesk tiling WM: official packages + Home Manager module
+    # (github.com/KiwiCanopy/nix). Bump with: `nix flake update kiwicanopy`.
+    kiwicanopy.url = "github:KiwiCanopy/nix";
+
     # nix-index; `,` command available
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";

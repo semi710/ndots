@@ -16,14 +16,41 @@ in
 {
   # users specific home modules
   imports = [
-    (flake.homeModules.darwin + "/jankyborders.nix")
+    # KiwiDesk test: uncomment with the active_color line below to
+    # bring jankyborders back
+    # (flake.homeModules.darwin + "/jankyborders.nix")
     (flake.homeModules.darwin + "/hammerspoon.nix")
 
     flake.homeModules.sops
     flake.homeModules.ai
     flake.homeModules.syncthing
     flake.homeModules.naste
+
+    # KiwiDesk test: replaces yabai + skhd + jankyborders
+    (flake.homeModules.darwin + "/kiwidesk")
   ];
+
+  # KiwiDesk test: replaces yabai + skhd + jankyborders
+  kiwidesk = {
+    enable = true;
+    initLua = # lua
+      ''
+        -- focus border from the stylix palette, like the old
+        -- jankyborders active_color
+        border.set_focused_color("#${config.lib.stylix.colors.base06}")
+
+        -- workspace counter: liquid like the KiwiHub panels - the
+        -- fill keeps only 25% alpha under the glass
+        kiwishelf.set_fill_color("#${config.lib.stylix.colors.base00}40")
+      '';
+  };
+
+  # window control for AI agents - same API as the CLI (kiwidesk
+  # mcp serves the whole command set over stdio)
+  s-ai.mcp.servers.kiwidesk = {
+    command = "${config.programs.kiwidesk.package}/bin/kiwidesk";
+    args = [ "mcp" ];
+  };
 
   home.packages = with pkgs; [
     sklauncher-beta
@@ -205,8 +232,8 @@ in
     font.size = lib.mkForce 16;
   };
 
-  # color override as it comes from stylix
-  services.jankyborders.settings.active_color = "0xff${config.lib.stylix.colors.base06}";
+  # KiwiDesk test: uncomment with the jankyborders import above
+  # services.jankyborders.settings.active_color = "0xff${config.lib.stylix.colors.base06}";
 
   home.shellAliases.icloud = "cd \"$HOME/Library/Mobile Documents/com~apple~CloudDocs\"";
 

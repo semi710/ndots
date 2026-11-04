@@ -13,7 +13,7 @@ Home-manager modules live in `modules/home/`. Each is exposed as `flake.homeModu
 | [browser](#browser) | `homeModules.browser` | Zen browser (base, extensions, keymaps, search) |
 | [terminal](#terminal) | `homeModules.terminal` | kitty terminal |
 | [hyprland](#hyprland) | `homeModules.hyprland` | Hyprland home config, rofi, hypridle, hyprlock, keymaps |
-| [darwin](#darwin) | `homeModules.darwin` | aerospace, karabiner, hammerspoon, jankyborders |
+| [darwin](#darwin) | `homeModules.darwin` | aerospace, karabiner, hammerspoon, jankyborders, kiwidesk |
 | [stylix](#stylix) | `homeModules.stylix` | Stylix theming (config + cli-only mode) |
 | [packages](#packagesnix) | `homeModules.packages` | GUI packages + nixcord (not meant for external use) |
 | [syncthing](#syncthingnix) | `homeModules.syncthing` | Cross-device file sync |
@@ -469,7 +469,8 @@ Installs the `quick_hyper.karabiner.json` complex modification (from `misc/`). M
 [Hammerspoon](https://www.hammerspoon.org/) automation. Installs the Hammerspoon app + a large `init.lua`:
 
 - **Hammerspoon Mode** (`Ctrl+Opt+Shift+H`): keyboard brightness control, reload, with visual indicator
-- **SKHD Special Mode indicator**: shows "SPECIAL" overlay when skhd special mode is active
+- **SKHD Special Mode indicator** (`hammerspoon.yabai`, off unless the yabai darwin module is
+  active): shows "SPECIAL" overlay when skhd special mode is active
 - **VimMode spoon**: system-wide vim mode (enter with `jk`), with extensive guards:
   - Disables in Code, MacVim, zoom, kitty, Maccy, Homerow, Minecraft
   - Password field guard (disables in secure text fields)
@@ -493,6 +494,94 @@ Focus borders for macOS.
   # aerospace + karabiner + hammerspoon + jankyborders
 }
 ```
+
+---
+
+### kiwidesk.nix
+
+[KiwiDesk](https://github.com/KiwiCanopy/KiwiDesk) tiling WM - a thin wrapper over the
+upstream module ([KiwiCanopy/nix](https://github.com/KiwiCanopy/nix)) that imports it and
+adds the ndots option surface. The package is the signed, notarized release binary (never
+built from source), so the Developer ID signature - and with it the one-time Accessibility
+grant - survives every rebuild.
+
+Options (`kiwidesk.*`, the upstream ones stay at `programs.kiwidesk.*`):
+
+- `kiwidesk.enable` - off by default; the user file flips it
+- `kiwidesk.defaultKeymap` (bool, default `true`) - the yabai/skhd-parity keymap the module
+  ships: caps (Hyperkey app) produces the ctrl+opt+cmd chord, hjkl focus, shift+hjkl swap,
+  1-9 spaces (shift to move+follow), n/p cycle, 0 history-back, space toggles displays, q
+  closes, m toggles bsp/monocle, s the layout picker, o (and /) the window switcher, ;
+  the special layer (hjkl resize, shift+hjkl swap, name cut "SP" shows in the status
+  item/Space Bar while active), ' pocket, shift+f/a/m float/sticky/maximize, shift+v
+  KiwiVision, g/b the bars' reveal, c the comms space. Drag & drop on (drop zone +
+  ghost), hover-focus + pointer-warp on, mouse resize on. Panels keep Liquid Glass but
+  untinted (`set_shortcut_panel_liquid_glass` + `kiwishelf.set_tint_hub_and_plates`)
+- `kiwidesk.initLua` (lines, default `""`) - extra Lua layered after the keymap (so it can
+  override it) and before the `local.lua` import. Declaring settings makes init.lua the config
+  owner (Settings then offers "Adopt into the GUI"); empty keeps the Settings app the owner
+
+The module always appends a `local.lua` bridge to `initLua` (layer order: keymap, your
+`initLua`, bridge):
+
+```lua
+local path = os.getenv("HOME") .. "/.config/KiwiDesk/local.lua"
+local f = io.open(path, "r")
+if f then
+  f:close()
+  dofile(path)
+end
+```
+
+Home Manager writes `init.lua` as a read-only store symlink, so nothing you try on the go
+would stick - that is what `local.lua` is for: it lives next to `init.lua`, is yours to edit,
+loads **last** and so overrides anything the module or `kiwidesk.initLua` set. The Lua stdlib
+is fully open in KiwiDesk (the interpreter runs `luaL_openlibs`, no sandbox). The test loop:
+
+```sh
+echo 'gap.set_global(12, 12)' >> ~/.config/KiwiDesk/local.lua
+kiwidesk reload          # applies without a switch
+```
+
+Promote what works into `kiwidesk.initLua` (module/user settings) and delete it from
+`local.lua`. A broken `local.lua` fails the whole config load - empty or valid, nothing else.
+
+The app lands in `~/Applications/Home Manager Apps` (a copy, not a symlink - store paths
+change on every update and would orphan the app's own login item), the CLI is on `PATH`, and
+KiwiDesk's built-in updater turns itself off for this copy. First launch: grant Accessibility
+once, press Start Tiling. Borders are built in (focus ring + sticky/floating marks; enable
+KiwiVision in Settings to dim unfocused windows) - no jankyborders needed.
+
+The keymap is module-owned (`kiwidesk.defaultKeymap`, on by default); the user file is a
+one-line `kiwidesk.enable = true`. Skhd's special mode (backtick), app toggles and kblight
+bindings stay unported by design.
+
+**Usage:**
+
+```nix
+{ flake, ... }: {
+  imports = [ (flake.homeModules.darwin + "/kiwidesk.nix") ];
+  kiwidesk.enable = true;
+}
+```
+
+!!! warning "Rolling back across a KiwiDesk update"
+    An older Home Manager generation can meet profile files a newer KiwiDesk already
+    migrated. Back up `~/.config/KiwiDesk` before rolling back across an update.
+
+    The backtick-mode (resize, rotate, balance, kblight) and app toggles stayed unported by
+    design - KiwiDesk has `define_layer` for a mode like that if ever needed, and
+    `KiwiDesk.resize("x", 50)` for resize.
+
+The module also wires the CLI's own zsh completion (generated at build into the fpath, so
+`kiwidesk <tab>` completes every verb).
+
+!!! note "Reverting to yabai + skhd + jankyborders"
+    jp-mbp currently runs KiwiDesk as an experiment. To go back: re-add
+    `flake.darwinModules.yabai` to `hosts/darwin/jp-mbp/default.nix` imports (it sets
+    `hammerspoon.yabai = true` on its own, restoring the skhd special-mode indicator),
+    uncomment the jankyborders import and `active_color` line in the user file, drop the
+    kiwidesk import and `kiwidesk.enable = true`.
 
 ---
 

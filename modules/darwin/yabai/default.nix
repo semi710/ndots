@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   spaceLabels = {
     "1" = "1";
@@ -179,6 +184,11 @@ in
     space-destroy
     space-reset
   ];
+  # skhd's special-mode indicator rides Hammerspoon; that home
+  # module's hammerspoon.yabai flag is off unless this module is
+  # active, so the indicator follows the WM back
+  home-manager.users."${config.system.primaryUser}".hammerspoon.yabai = true;
+
   services.yabai = {
     enable = true;
     enableScriptingAddition = true; # Requires SIP to be disabled Partially

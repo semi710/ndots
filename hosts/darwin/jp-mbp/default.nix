@@ -14,7 +14,8 @@ in
   imports = [
     (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" config.system.primaryUser ])
     flake.darwinModules.default
-    flake.darwinModules.yabai
+    # KiwiDesk test: yabai + skhd (this module) and jankyborders
+    # (user file) are off while evaluating it
     flake.inputs.sops-nix.darwinModules.sops
   ];
 

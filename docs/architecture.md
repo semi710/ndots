@@ -73,7 +73,7 @@ modules/
     browser/             # Zen browser (base, extensions, keymaps, search)
     terminal/            # kitty
     hyprland/            # Hyprland home config, rofi, hypridle, hyprlock, keymaps, monitor, rules
-    darwin/              # aerospace, karabiner, hammerspoon, jankyborders
+    darwin/              # aerospace, karabiner, hammerspoon, jankyborders, kiwidesk
     stylix/              # theming config + cli-only mode
     syncthing.nix, sops.nix, ssh.nix, packages.nix, mpv.nix, zathura.nix, aria2.nix, nix-index.nix, nix-conf-fix.nix, home-only.nix
   darwin/
@@ -127,9 +127,11 @@ These define all imports directly in their `default.nix`. They are self-containe
 ```nix
 imports = [
   flake.darwinModules.default   # base: settings, brew, stylix, sharedModules
-  flake.darwinModules.yabai     # window manager + skhd
   flake.inputs.sops-nix.darwinModules.sops
 ];
+# Window manager: KiwiDesk (home module, modules/home/darwin/kiwidesk.nix)
+# is the current experiment; yabai + skhd (darwinModules.yabai) is what it
+# replaced - see modules/home.md > kiwidesk.nix for the revert steps.
 ```
 
 ## The `hm` Shorthand
