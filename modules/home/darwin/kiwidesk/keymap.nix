@@ -1,7 +1,12 @@
 # The default keymap + settings block, as a module: contributes
 # `kiwidesk.initLuaBase`, which default.nix layers under the user's
 # initLua and above the local.lua bridge.
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   cfg = config.kiwidesk;
   # The one chord the whole map is built on: ctrl+opt+cmd, produced
@@ -17,6 +22,13 @@ let
     prefix: entries:
     lib.concatStringsSep "
 " (lib.mapAttrsToList (k: v: bind "${prefix}${k}" v) entries);
+  # move the focused window to the next/prev Space on the focused
+  # screen: no relative-space verb exists, so compute the neighbour
+  # from get_state and call move_to_space_and_follow (jq negative
+  # indices wrap prev from the first Space)
+  moveSpace =
+    step:
+    ''KiwiDesk.exec([[sh -c 'k=${config.programs.kiwidesk.package}/bin/kiwidesk; j=${lib.getExe pkgs.jq}; s=$($k get_state) && w=$($k list_windows) && c=$(printf "%s" "$w" | $j -r "([.[] | select(.focused)][0].space_id) // empty") && [ -n "$c" ] || c=$(printf "%s" "$s" | $j -r .active_space) && n=$(printf "%s" "$s" | $j -r --arg c "$c" ".spaces | map(.id) as \$i | (\$i | index(\$c)) as \$x | \$i[((\$x ${step}) % (\$i|length))]") && $k move_to_space_and_follow "$n"']])'';
   # 1..9: <verb>(n) under mod (+extra), one line per digit
   digitBinds =
     verb: extra:
@@ -132,6 +144,8 @@ let
         v = "kiwivision.toggle()";
         c = ''KiwiDesk.move_to_space_and_follow("comms")'';
         apostrophe = "KiwiDesk.toggle_pocket_window()";
+        n = moveSpace " + 1";
+        p = moveSpace " - 1";
       }}
 
       -- special layer entry: switch_layer + the floating pill
