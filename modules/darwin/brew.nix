@@ -23,7 +23,6 @@
       "numi"
       "protonvpn"
       "shottr"
-      "signal"
       "sozercan/repo/kaset"
       "steam"
       "utm"

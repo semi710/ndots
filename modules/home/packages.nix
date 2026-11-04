@@ -25,6 +25,9 @@ let
     [
       mas
       bruno
+      # CDN resets from updates.signal.org block the brew
+      # cask on this network; nix fetches from cache.nixos.org
+      signal-desktop
       ytmdesktop
       bruno-cli
       drag
