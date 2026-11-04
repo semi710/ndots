@@ -104,6 +104,55 @@ in
           if win then win:centerOnScreen() end
         end)
 
+        -- KiwiDesk layer pill: floats bottom-right while a layer is
+        -- active (the app's own indicator lives in the Space Bar,
+        -- which cannot be hidden); label comes from the URL
+        klayer = {}
+        klayer.canvas = nil
+
+        function klayer.show(params)
+          local label = (params and params.label) or "LAYER"
+          if not klayer.canvas or klayer.label ~= label then
+            klayer.label = label
+            klayer.canvas = hs.canvas.new({ w = 110, h = 32, x = 0, y = 0 })
+            klayer.canvas:insertElement({
+              type = 'rectangle',
+              action = 'fill',
+              roundedRectRadii = { xRadius = 8, yRadius = 8 },
+              fillColor = { red = 0.2, green = 0.2, blue = 0.2, alpha = 0.85 },
+              strokeColor = { white = 1.0, alpha = 0.5 },
+              strokeWidth = 1.0,
+              frame = { x = 0, y = 0, h = 32, w = 110 },
+              withShadow = true
+            })
+            klayer.canvas:insertElement({
+              type = 'text',
+              action = 'fill',
+              frame = { x = 4, y = 6, h = 24, w = 102 },
+              text = hs.styledtext.new(label, {
+                font = { size = 14 },
+                color = { white = 1.0 },
+                paragraphStyle = { alignment = 'center' }
+              })
+            })
+          end
+          local win = hs.window.focusedWindow()
+          local frame = (win and win:screen() or hs.mainScreen()):frame()
+          klayer.canvas:topLeft({
+            x = frame.x + frame.w - 130,
+            y = frame.y + frame.h - 50
+          })
+          klayer.canvas:level("overlay")
+          klayer.canvas:show()
+        end
+
+        function klayer.hide()
+          if klayer.canvas then klayer.canvas:hide() end
+        end
+
+        hs.urlevent.bind("kw-layer-on", function(_, p) klayer.show(p) end)
+        hs.urlevent.bind("kw-layer-off", klayer.hide)
+
         -- VIM MODE
         local VimMode = hs.loadSpoon('VimMode')
         local vim = VimMode:new()

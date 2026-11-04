@@ -66,9 +66,9 @@ let
       kiwihub.set_key("left", "ctrl+h")
       kiwihub.set_key("right", "ctrl+l")
 
-      -- Space Bar: top edge, flush, anchored left; App Bar off
-      space_bar.set_edge("top")
-      kiwishelf.set_alignment("start")
+      -- Space Bar: bottom edge, centered, flush; App Bar off
+      space_bar.set_edge("bottom")
+      kiwishelf.set_alignment("center")
       kiwishelf.set_outer_margin(0)
       monocle.set_app_bar_visibility("hidden")
       scroll.set_app_bar_visibility("hidden")
@@ -115,9 +115,8 @@ let
         slash = ''kiwihub.show("windows")'';
         c = ''KiwiDesk.focus_space("comms")'';
         apostrophe = "KiwiDesk.pocket()";
-        g = "space_bar.toggle_reveal()";
+        w = "space_bar.toggle_reveal()";
         b = "app_bar.toggle_reveal()";
-        semicolon = ''KiwiDesk.switch_layer("special")'';
         "return" = ''KiwiDesk.focus_or_spawn("net.kovidgoyal.kitty")'';
       }}
 
@@ -135,7 +134,15 @@ let
         apostrophe = "KiwiDesk.toggle_pocket_window()";
       }}
 
+      -- special layer entry: switch_layer + the floating pill
+      -- (bottom right; the Space Bar item stays, no way to hide it)
+      KiwiDesk.bind("${mod}+semicolon", function()
+        KiwiDesk.switch_layer("special")
+        KiwiDesk.exec("open -g 'hammerspoon://kw-layer-on?label=SPECIAL'")
+      end)
+
       -- 1..9 focus a Space; shift+1..9 move the window and follow
+      -- (keymap.nix tables above are joined with these)
       ${digitBinds "focus_space" ""}
       ${digitBinds "move_to_space_and_follow" "shift+"}
 
@@ -163,8 +170,14 @@ let
         ["c"] = function()
           KiwiDesk.exec("open -g hammerspoon://kw-center")
         end,
-        ["return"] = function() KiwiDesk.switch_layer("default") end,
-        ["escape"] = function() KiwiDesk.switch_layer("default") end,
+        ["return"] = function()
+          KiwiDesk.switch_layer("default")
+          KiwiDesk.exec("open -g hammerspoon://kw-layer-off")
+        end,
+        ["escape"] = function()
+          KiwiDesk.switch_layer("default")
+          KiwiDesk.exec("open -g hammerspoon://kw-layer-off")
+        end,
       })
     '';
 
