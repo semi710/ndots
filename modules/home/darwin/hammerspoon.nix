@@ -83,27 +83,6 @@ in
 
         hs.urlevent.bind("hs-reload", function() hs.reload() end)
 
-        -- KiwiDesk's special layer nudges the focused window by
-        -- pixels through this (the API has no move verb); floats
-        -- keep the frame, tiled windows snap back to their slot
-        hs.urlevent.bind("kw-nudge", function(_, params)
-          local win = hs.window.focusedWindow()
-          if not win then return end
-          local dx = tonumber(params and params.dx) or 0
-          local dy = tonumber(params and params.dy) or 0
-          local f = win:frame()
-          f.x = f.x + dx
-          f.y = f.y + dy
-          win:setFrame(f, 0)
-        end)
-
-        -- KiwiDesk special layer: center the focused window on its
-        -- screen (the API has no center verb for floats)
-        hs.urlevent.bind("kw-center", function()
-          local win = hs.window.focusedWindow()
-          if win then win:centerOnScreen() end
-        end)
-
         -- KiwiDesk layer pill: floats bottom-right while a layer is
         -- active (the app's own indicator lives in the Space Bar,
         -- which cannot be hidden); label comes from the URL

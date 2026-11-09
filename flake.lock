@@ -1257,11 +1257,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1793623883,
-        "narHash": "sha256-zydmUHUI0mWOTelYznRHdtibvh5GXtKbud/jlgaB+2g=",
+        "lastModified": 1794161367,
+        "narHash": "sha256-dws8xMmH3ONm3Lz+RhDDgkiLWA5PpXjRKVrahHTxd4Y=",
         "owner": "KiwiCanopy",
         "repo": "nix",
-        "rev": "bba25375d364c5f0e8070ca6c8c444b0d8d66866",
+        "rev": "7ed5f4179c3269262ca5f97b14ad7b519527b81c",
         "type": "github"
       },
       "original": {
