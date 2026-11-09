@@ -71,7 +71,7 @@ in
     };
 
     # before compinit so the CLI's completion lands in fpath
-    programs.zsh.initExtraBeforeCompInit = ''
+    programs.zsh.initContent = lib.mkOrder 550 ''
       fpath+=( "${completion}/share/zsh/site-functions" )
     '';
   };
