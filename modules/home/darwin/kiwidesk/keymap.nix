@@ -39,6 +39,11 @@ let
   # set_gap_override, so both directions are written)
   cycleModeGap = ''KiwiDesk.exec([[sh -c 'k=${config.programs.kiwidesk.package}/bin/kiwidesk; j=${lib.getExe pkgs.jq}; $k cycle_mode && s=$($k get_state) && a=$(printf "%s" "$s" | $j -r .active_space) && m=$(printf "%s" "$s" | $j -r --arg a "$a" ".spaces[] | select(.id == \$a) | .mode") && g=0 && [ "$m" = "bsp" ] && g=10; $k set_gap_override "$a" "$g"']])'';
 
+  # kbd backlight step; clamped 0..1 so a press at 0 never feeds kblight a negative
+  kbStep =
+    op:
+    ''KiwiDesk.exec([[sh -c 'b=${lib.getExe pkgs.kblight}; j=${lib.getExe pkgs.jq}; $b "$($b get | $j ". ${op} 0.25 | if . < 0 then 0 elif . > 1 then 1 else . end")"']])'';
+
   # 1..9: <verb>(n) under mod (+extra), one line per digit
   digitBinds =
     verb: extra:
@@ -181,7 +186,9 @@ let
       ${digitBinds "move_to_space_and_follow" "shift+"}
 
       -- special layer (mod+;): hjkl resize, shift+hjkl nudge
-      -- floats, c center, g/b bars, esc/return exit
+      -- floats, c center, ,/. (</>) kbd backlight, g/b bars,
+      -- esc/return exit. Layers match bare keys only, so release
+      -- caps after mod+; or ,/. and esc won't fire
       KiwiDesk.define_layer("special", {
         ["h"] = function() KiwiDesk.resize("x", -50) end,
         ["l"] = function() KiwiDesk.resize("x", 50) end,
@@ -194,6 +201,10 @@ let
         ["g"] = function() space_bar.toggle_reveal() end,
         ["b"] = function() app_bar.toggle_reveal() end,
         ["c"] = function() KiwiDesk.center_floating() end,
+        ["comma"] = function() ${kbStep "-"} end,
+        ["period"] = function() ${kbStep "+"} end,
+        ["shift+comma"] = function() ${kbStep "-"} end,
+        ["shift+period"] = function() ${kbStep "+"} end,
         ["return"] = function()
           KiwiDesk.switch_layer("default")
           KiwiDesk.exec("open -g hammerspoon://kw-layer-off")
@@ -217,8 +228,8 @@ in
         spaces, n/p cycle, 0 history-back, space toggles displays,
         q closes, m cycles bsp/monocle (monocle gaps 0), s the view
         picker, o the window switcher, ; the special layer (resize, nudge,
-        center), shift+f/a/m/v float/sticky/maximize/vision, g/b
-        the bars, ' pocket, c the comms space, / the window
+        center, ,/. (</>) kbd backlight), shift+f/a/m/v float/sticky/maximize/vision,
+        g/b the bars, ' pocket, c the comms space, / the window
         switcher. Also sets a 2pt focus border and the float rules.
       '';
     };
