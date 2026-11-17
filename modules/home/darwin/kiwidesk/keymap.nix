@@ -22,6 +22,12 @@ let
     prefix: entries:
     lib.concatStringsSep "
 " (lib.mapAttrsToList (k: v: bind "${prefix}${k}" v) entries);
+  # a { key = body; } table -> one ["key"] = function() body end
+  # line each, for define_layer tables
+  layerBinds =
+    entries:
+    lib.concatStringsSep "
+" (lib.mapAttrsToList (k: v: ''["${k}"] = function() ${v} end,'') entries);
   # move the focused window to the next/prev Space on the focused
   # screen: no relative-space verb exists, so compute the neighbour
   # from get_state and call move_to_space_and_follow (jq negative
@@ -43,6 +49,10 @@ let
   kbStep =
     op:
     ''KiwiDesk.exec([[sh -c 'b=${lib.getExe pkgs.kblight}; j=${lib.getExe pkgs.jq}; $b "$($b get | $j ". ${op} 0.25 | if . < 0 then 0 elif . > 1 then 1 else . end")"']])'';
+
+  # every special-layer exit: back to the default layer with the
+  # hammerspoon pill cleared
+  layerOff = ''KiwiDesk.switch_layer("default"); KiwiDesk.exec("open -g hammerspoon://kw-layer-off")'';
 
   # 1..9: <verb>(n) under mod (+extra), one line per digit
   digitBinds =
@@ -175,10 +185,7 @@ let
 
       -- special layer entry: switch_layer + the floating pill
       -- (bottom right; the Space Bar item stays, no way to hide it)
-      KiwiDesk.bind("${mod}+semicolon", function()
-        KiwiDesk.switch_layer("special")
-        KiwiDesk.exec("open -g 'hammerspoon://kw-layer-on?label=SPECIAL'")
-      end)
+      ${bind "${mod}+semicolon" ''KiwiDesk.switch_layer("special"); KiwiDesk.exec("open -g 'hammerspoon://kw-layer-on?label=SPECIAL'")''}
 
       -- 1..9 focus a Space; shift+1..9 move the window and follow
       -- (keymap.nix tables above are joined with these)
@@ -187,32 +194,31 @@ let
 
       -- special layer (mod+;): hjkl resize, shift+hjkl nudge
       -- floats, c center, ,/. (</>) kbd backlight, g/b bars,
-      -- esc/return exit. Layers match bare keys only, so release
-      -- caps after mod+; or ,/. and esc won't fire
+      -- p the pocket list, esc/return exit. Layers match bare
+      -- keys only, so release caps after mod+; or ,/. and esc
+      -- won't fire
       KiwiDesk.define_layer("special", {
-        ["h"] = function() KiwiDesk.resize("x", -50) end,
-        ["l"] = function() KiwiDesk.resize("x", 50) end,
-        ["j"] = function() KiwiDesk.resize("y", -50) end,
-        ["k"] = function() KiwiDesk.resize("y", 50) end,
-        ["shift+h"] = function() KiwiDesk.move_floating("x", -40) end,
-        ["shift+l"] = function() KiwiDesk.move_floating("x", 40) end,
-        ["shift+j"] = function() KiwiDesk.move_floating("y", 40) end,
-        ["shift+k"] = function() KiwiDesk.move_floating("y", -40) end,
-        ["g"] = function() space_bar.toggle_reveal() end,
-        ["b"] = function() app_bar.toggle_reveal() end,
-        ["c"] = function() KiwiDesk.center_floating() end,
-        ["comma"] = function() ${kbStep "-"} end,
-        ["period"] = function() ${kbStep "+"} end,
-        ["shift+comma"] = function() ${kbStep "-"} end,
-        ["shift+period"] = function() ${kbStep "+"} end,
-        ["return"] = function()
-          KiwiDesk.switch_layer("default")
-          KiwiDesk.exec("open -g hammerspoon://kw-layer-off")
-        end,
-        ["escape"] = function()
-          KiwiDesk.switch_layer("default")
-          KiwiDesk.exec("open -g hammerspoon://kw-layer-off")
-        end,
+      ${layerBinds {
+        h = ''KiwiDesk.resize("x", -50)'';
+        l = ''KiwiDesk.resize("x", 50)'';
+        j = ''KiwiDesk.resize("y", -50)'';
+        k = ''KiwiDesk.resize("y", 50)'';
+        "shift+h" = ''KiwiDesk.move_floating("x", -40)'';
+        "shift+l" = ''KiwiDesk.move_floating("x", 40)'';
+        "shift+j" = ''KiwiDesk.move_floating("y", 40)'';
+        "shift+k" = ''KiwiDesk.move_floating("y", -40)'';
+        g = "space_bar.toggle_reveal()";
+        b = "app_bar.toggle_reveal()";
+        c = "KiwiDesk.center_floating()";
+        # the list's bare up/down/Return/Esc need the default layer
+        p = "pocket.toggle_list(); ${layerOff}";
+        comma = kbStep "-";
+        period = kbStep "+";
+        "shift+comma" = kbStep "-";
+        "shift+period" = kbStep "+";
+        "return" = layerOff;
+        "escape" = layerOff;
+      }}
       })
     '';
 
@@ -228,7 +234,7 @@ in
         spaces, n/p cycle, 0 history-back, space toggles displays,
         q closes, m cycles bsp/monocle (monocle gaps 0), s the view
         picker, o the window switcher, ; the special layer (resize, nudge,
-        center, ,/. (</>) kbd backlight), shift+f/a/m/v float/sticky/maximize/vision,
+        center, ,/. (</>) kbd backlight, p the pocket list), shift+f/a/m/v float/sticky/maximize/vision,
         g/b the bars, ' pocket, c the comms space, / the window
         switcher. Also sets a 2pt focus border and the float rules.
       '';
