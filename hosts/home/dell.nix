@@ -17,6 +17,9 @@
   s-ai.agents.claude.enable = lib.mkForce false;
 
   home.username = "dell";
+  # no local agent: leave SSH_AUTH_SOCK alone so a forwarded agent
+  # (laptop -> obox -> Ballu) stays usable in the shell
+  services.ssh-agent.enable = lib.mkForce false;
   home.packages = [ pkgs.git ];
   # git config is symlinked in from the Windows host - keep HM off it entirely
   # (the shared shell module enables programs.git, which writes ~/.gitconfig)
