@@ -1,5 +1,6 @@
 {
   flake,
+  lib,
   pkgs,
   ...
 }:
@@ -42,5 +43,8 @@
       jetbrains-mono
       fira-code
       droid-sans-mono
-    ]);
+    ])
+    # lsusb: check a USB device (debug probe, serial adapter) is visible;
+    # usbutils is Linux-only
+    ++ lib.optionals pkgs.stdenv.hostPlatform.isLinux [ pkgs.usbutils ];
 }
