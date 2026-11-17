@@ -55,6 +55,12 @@ in
       providers.juspay = {
         baseUrl = "https://grid.ai.juspay.net";
         apiKeyEnv = "JUSPAY_API_KEY";
+        # grid serves both wire protocols (/v1/chat/completions and
+        # /v1/messages); anthropic feeds claude code
+        protocols = [
+          "openai"
+          "anthropic"
+        ];
         # attrsets pin each served model's real window so omp's context meter and
         # compaction match the grid. windows/maxTokens are what the grid
         # advertises on `GET /v1/models` (max_input_tokens / max_output_tokens);
@@ -140,6 +146,10 @@ in
         ];
         skills.symlinkDirs = true;
       };
+
+      # claude code, speaking anthropic to the grid (unfree package allowed
+      # by nix-wire's blanket allowUnfree on every entrypoint)
+      agents.claude.enable = true;
 
       # vim-motions-pi OSC 52 yank via our copy tool
       agents.pi.clipboardCommand = lib.getExe pkgs.copy;

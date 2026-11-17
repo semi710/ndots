@@ -49,6 +49,10 @@
     # AI agents (opencode, omp, pi) with shared skills/prompts/mcp/providers.
     # Bump with: `nix flake update s-ai`.
     s-ai.url = "github:semi710/s-ai";
+    # one workmux rev everywhere: the binary embeds skills at compile time,
+    # s-ai symlinks them - skew makes `workmux setup` try to overwrite the
+    # read-only store symlinks and fail
+    s-ai.inputs.workmux.follows = "workmux";
 
     # Understand Anything - codebase-to-knowledge-graph skills (/understand*).
     # Skills are markdown + scripts; the dashboard ships as a prebuilt npx
