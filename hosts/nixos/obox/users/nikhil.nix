@@ -14,6 +14,9 @@ in
     flake.homeModules.nix-index
     flake.homeModules.sops
     flake.homeModules.syncthing
+    # SendEnv + ForwardAgent: obox opens the connections to the other boxes,
+    # so forwarded env/agent has to be offered from here
+    flake.homeModules.ssh
   ];
 
   sops.secrets = {
