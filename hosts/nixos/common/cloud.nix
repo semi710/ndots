@@ -60,6 +60,17 @@ in
     settings = {
       PermitRootLogin = "prohibit-password";
       PasswordAuthentication = false;
+      # same set as the juspay hosts: env forwarded through obox (laptop ->
+      # obox -> box) survives the hop
+      AcceptEnv = [
+        "LANG"
+        "LC_*"
+        "JUSPAY_*"
+        "GITHUB_*"
+        "ANTHROPIC_*"
+        "OPENROUTER_*"
+        "OPENCODE_*"
+      ];
     };
   };
   programs.zsh.enable = true;
