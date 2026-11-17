@@ -11,7 +11,8 @@ deploy target="" port="22":
         elif [ -f /etc/NIXOS ]; then \
             nh os switch .; \
         else \
-            nh home switch .#$(whoami); \
+            sys=$(nix eval --impure --raw --expr builtins.currentSystem); \
+            nix build --accept-flake-config .#legacyPackages.$sys.homeConfigurations.$(whoami).activationPackage && ./result/activate; \
         fi; \
     else \
         t="{{target}}"; u=""; h="$t"; \
@@ -45,9 +46,10 @@ deploy target="" port="22":
         fi; \
     fi
 
-# Deploy home-manager only (run on the target machine after SSH)
+# nh cannot address nix-wire's legacyPackages.homeConfigurations.<name>, so
+# deploy home-manager only from this flake, standalone HM, any host
 home user="nikhil":
-    nh home switch .#{{user}}
+    nix build --accept-flake-config .#legacyPackages.$(nix eval --impure --raw --expr builtins.currentSystem).homeConfigurations.{{user}}.activationPackage && ./result/activate
 
 # Dry build (eval only, no compilation)
 build host:
