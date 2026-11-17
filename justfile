@@ -1,24 +1,48 @@
 set positional-arguments
 
-# Deploy - current host (no arg) or remote host over SSH
-deploy host="":
-    @if [ -z "{{host}}" ]; then \
+# Deploy - auto-detects local or remote, NixOS or home-manager:
+#   just deploy                            → current machine (darwin/nixos/HM)
+#   just deploy <user>@<host> [port]       → SSH, detect type, deploy
+#   just deploy <host> [port]              → SSH, detect, user from flake (NixOS only)
+deploy target="" port="22":
+    @if [ -z "{{target}}" ]; then \
         if [ "$(uname -s)" = "Darwin" ]; then \
-            nh darwin switch . -H jp-mbp; \
-        else \
+            nh darwin switch . -H $(hostname -s); \
+        elif [ -f /etc/NIXOS ]; then \
             nh os switch .; \
+        else \
+            nh home switch .#$(whoami); \
         fi; \
     else \
-        case "{{host}}" in \
-            obox) \
-                nh os switch .#obox --target-host nikhil@obox --build-host nikhil@obox --elevation-strategy passwordless ;; \
-            bbox) \
-                nh os switch .#bbox --target-host nikhil@bbox --build-host nikhil@bbox --elevation-strategy passwordless ;; \
-            mach) \
-                nh os switch .#mach --target-host niksingh710@mach --elevation-strategy passwordless ;; \
-            *) \
-                nh os switch .#{{host}} --target-host nikhil.singh@{{host}} --elevation-strategy passwordless ;; \
-        esac; \
+        t="{{target}}"; u=""; h="$t"; \
+        case "$t" in *@*) u="${t%%@*}"; h="${t##*@}";; esac; \
+        p="{{port}}"; case "$p" in -p*) p="${p#-p}";; port=*) p="${p#port=}";; esac; \
+        [ -z "$p" ] && p=22; \
+        cm="-o ControlMaster=auto -o ControlPath=/tmp/just-deploy-%r@%h:%p -o ControlPersist=300 -o ServerAliveInterval=30 -o ServerAliveCountMax=20"; \
+        info=$(ssh $cm -o ConnectTimeout=10 -p "$p" "$t" 'echo "$(test -f /etc/NIXOS && echo yes || echo no):$(hostname -s):$(uname -s)"' 2>/dev/null) || \
+            { echo "✗ can't reach $t on port $p"; exit 1; }; \
+        is_nixos=$(echo "$info" | cut -d: -f1); \
+        rh=$(echo "$info" | cut -d: -f2); \
+        os=$(echo "$info" | cut -d: -f3); \
+        if [ "$is_nixos" = "yes" ]; then \
+            if [ -z "$u" ]; then \
+                u=$(nix eval --raw .#nixosConfigurations.$rh.config.users.users --apply 'users: builtins.concatStringsSep " " (builtins.filter (n: users.${n}.isNormalUser or false) (builtins.attrNames users))' 2>/dev/null) || \
+                    { echo "✗ can't lookup user for $rh"; exit 1; }; \
+                case "$u" in \
+                    *\ *) echo "✗ multiple users on $rh: $u - use: just deploy <user>@$h"; exit 1 ;; \
+                esac; \
+            fi; \
+            nh os switch .#$rh --target-host $u@$h --build-host $u@$h --elevation-strategy passwordless; \
+        elif [ "$os" = "Linux" ]; then \
+            if [ -z "$u" ]; then \
+                echo "✗ user required for HM deploy: just deploy <user>@$h"; exit 1; \
+            fi; \
+            rsync -az --delete --exclude='.git' --exclude='result' --exclude='.direnv' -e "ssh $cm -p $p" ./ "$u@$h:/tmp/ndots/"; \
+            ssh $cm -o ConnectTimeout=10 -p "$p" "$u@$h" \
+                "cd /tmp/ndots && NIX_CONFIG='accept-flake-config = true' nix build .#legacyPackages.x86_64-linux.homeConfigurations.$u.activationPackage && ./result/activate"; \
+        else \
+            echo "✗ $os on $h - remote deploy not supported"; exit 1; \
+        fi; \
     fi
 
 # Deploy home-manager only (run on the target machine after SSH)
