@@ -89,7 +89,9 @@
         # tmux - same path as zsh yanks). The inline printf variant used the
         # DCS-passthrough leg which fails through ssh; copy keys off $TMUX
         # and falls back to plain OSC52 which tmux's set-clipboard forwards.
-        os.copyToClipboardCmd = ''printf "%s" {{text}} | ${lib.getExe pkgs.copy}'';
+        # > /dev/tty: lazygit captures the cmd's stdout (CombinedOutput), so
+        # the OSC52 sequence must go straight to the terminal to work.
+        os.copyToClipboardCmd = ''printf "%s" {{text}} | ${lib.getExe pkgs.copy} > /dev/tty'';
         os.editPreset = "nvim-remote";
         gui = {
           nerdFontsVersion = "3";
