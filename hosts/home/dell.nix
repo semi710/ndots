@@ -12,6 +12,10 @@
   ];
   stylix.cliOnly = true;
 
+  # claude code is configured on the Windows host - keep HM out of ~/.claude
+  # (the ai module enables it and renders settings.json/CLAUDE.md/skills)
+  s-ai.agents.claude.enable = lib.mkForce false;
+
   home.username = "dell";
   home.packages = [ pkgs.git ];
   # git config is symlinked in from the Windows host - keep HM off it entirely
