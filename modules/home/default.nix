@@ -33,6 +33,10 @@
       source-code-pro
       ttf_bitstream_vera
       pkgs.dejavu_fonts
+
+      # xterm-kitty for any box SSH'd into from kitty (clear, tmux);
+      # found via TERMINFO_DIRS from targets.genericLinux / HM's darwin target
+      kitty.terminfo
     ]
     ++ (with pkgs.nerd-fonts; [
       jetbrains-mono
