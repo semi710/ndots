@@ -23,9 +23,26 @@ let
         tab=$'\t'
         self="$0"
 
-        rows() { # rows [extra sesh list flags]
-          local list
-          list=$(workmux status --all --json 2>/dev/null | jq -r '
+        layout() { # layout <icon-map> [extra sesh list flags]
+          local list="$1"; shift
+          sesh list --icons --format "{name}''${tab}{session}" "$@" \
+            | awk -F'\t' -v OFS='\t' '
+                NR==FNR { if (NF >= 2) m[$1] = $2; next }
+                { name = $1; plain = name; gsub(/\033\[[0-9;]*m/, "", plain)
+                  n++; rn[n] = name; rs[n] = $2; rp[n] = plain
+                  if (length(plain) > max) max = length(plain) }
+                END {
+                  for (i = 1; i <= n; i++) {
+                    pad = max - length(rp[i]) + 2
+                    ic = (rs[i] in m) ? m[rs[i]] : "  "
+                    printf "%s%*s%s\t%s\n", rn[i], pad, "", ic, rs[i]
+                  }
+                }
+              ' <(printf '%s\n' "$list") -
+        }
+
+        icon_map() {
+          workmux status --all --json 2>/dev/null | jq -r '
             def rank: if . == "waiting" then 0 elif . == "working" then 1
                       elif . == "quiet" then 2 elif . == "done" then 3 else 4 end;
             def icon: if . == "waiting" then "💬" elif . == "working" then "🤖"
@@ -33,12 +50,15 @@ let
             [.agents[]?]
             | group_by(.session)
             | map({ session: .[0].session, icon: (map(.status) | sort_by(rank) | .[0] | icon) })
-            | .[] | "\(.session)\t\(.icon)"')
-          sesh list --icons --format "{name}''${tab}{session}" "$@" \
-            | awk -F'\t' -v OFS='\t' '
-                NR==FNR { if (NF >= 2) m[$1] = $2; next }
-                { disp = $1; if ($2 in m) disp = m[$2] " " disp; print disp "\t" $2 }
-              ' <(printf '%s\n' "$list") -
+            | .[] | "\(.session)\t\(.icon)"'
+        }
+
+        rows() { # rows [extra sesh list flags] - includes status icons
+          layout "$(icon_map)" "$@"
+        }
+
+        plain_rows() { # rows [extra sesh list flags] - no status lookup
+          layout "" "$@"
         }
 
         case "$1" in
@@ -46,13 +66,14 @@ let
         esac
 
         row=$(
-          rows \
+          plain_rows \
             | fzf --tmux 80%,70% \
                 --no-sort --ansi \
                 --delimiter "$tab" --with-nth 1 \
                 --border-label ' sesh ' --prompt '⚡  ' \
                 --header '  ^a all ^t tmux ^g configs ^x zoxide ^d kill' \
                 --bind 'tab:down,btab:up' \
+                --bind "start:reload($self --rows)" \
                 --bind "ctrl-a:change-prompt(⚡  )+reload($self --rows)" \
                 --bind "ctrl-t:change-prompt(🪟  )+reload($self --rows -t)" \
                 --bind "ctrl-g:change-prompt(⚙️  )+reload($self --rows -c)" \
