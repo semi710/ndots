@@ -249,7 +249,6 @@ in
     };
   };
   home.packages = [
-    pkgs.workmux
     (pkgs.writeShellScriptBin "ta" ''
       session="$1"
 

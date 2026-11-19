@@ -39,20 +39,10 @@ in
     postPatch = builtins.replaceStrings [ "-Wl,-no_uuid" ] [ "" ] old.postPatch;
   });
 
-  # FIXME: remove pin when the flake's nixpkgs pin carries tmux >= 3.8.
-  # 3.7x breaks OSC 52 handling (CHANGES 3.7c->3.8: "parsing clipboard
-  # sequences", "clipboard or palette replies", "pass which clipboard is set
-  # through to the terminal") - dead/wrong clipboard via lazygit c-o, nvim
-  # osc52 yank+paste inside tmux. 3.8 also fixes opentui layout corruption
-  # on macOS (sst/opencode#34782).
+  # nixpkgs carries tmux 3.8 now; the override stays only for the
+  # XTVERSION fix below - upstream tmux 3.8 still rejects the duplicate
+  # reply that allow-passthrough produces
   tmux = prev.tmux.overrideAttrs (old: {
-    version = "3.8";
-    src = prev.fetchFromGitHub {
-      owner = "tmux";
-      repo = "tmux";
-      rev = "3.8";
-      hash = "sha256-pv2wlr3coo+E0pfpb58giJJQn9PGgMFqtVA6nk+9JdE=";
-    };
     postPatch = (old.postPatch or "") + ''
       # with allow-passthrough, pane XTVERSION queries get answered by the outer
       # terminal; the duplicate reply was rejected here and fell through the key
@@ -67,31 +57,8 @@ in
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
-  # FIXME: remove pin when the flake's nixpkgs pin carries sesh >= 2.33.0
-  # (worktree-aware session naming: git_namer_use_worktree_root/git_dir_length)
-  sesh = prev.sesh.overrideAttrs (old: {
-    version = "2.33.0";
-    src = prev.fetchFromGitHub {
-      owner = "joshmedeski";
-      repo = "sesh";
-      rev = "v2.33.0";
-      hash = "sha256-Q25fdn+1T4NOnFX5ZuIMhhRBFSj7dfjybgCj2bu3lK4=";
-    };
-    vendorHash = "sha256-8CMqOlq3rAXPpzABxd2pp2DhMOvKAN+jHVZ2bLZUN0w=";
-  });
-  # FIXME: remove when raine/workmux releases the drain-before-close fix
-  # (test oversized_unterminated_request_line_is_rejected fails on macOS without it)
-  # workmux-sidebar-focus: pane-focus-in dirty signal so the current-AI marker
-  # tracks focus moves (no pane-focus hook upstream; marker only refreshed on
-  # window/session events, which is why it lagged after sesh session switches)
-  workmux = inputs.workmux.packages.${prev.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-    patches = (old.patches or [ ]) ++ [
-      ./patches/workmux-drain-inbound.patch
-      ./patches/workmux-sidebar-focus.patch
-    ];
-    # FIXME: drop when raine/workmux fixes
-    # state::store::tests::conditional_consumption_preserves_atomic_replacement
-    # (panics on unwrap None; 1 of 1902 tests, blocks linux/wsl builds)
-    doCheck = false;
-  });
+  # nixpkgs >= 2.34.0 now covers the worktree-aware session naming
+  # (git_namer_use_worktree_root/git_dir_length)
+  # workmux lives in s-ai now: plugins.workmux installs the binary + skills
+  # from the flake input (ndots pins one rev via s-ai.inputs.workmux.follows)
 }
