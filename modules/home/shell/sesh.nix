@@ -1,13 +1,5 @@
 { pkgs, lib, ... }:
 let
-  # sesh ships no completion file and its hm module generates none; the
-  # binary emits one. landing in home.packages puts it on the zsh fpath
-  # via the profile's share/zsh/site-functions
-  completions = pkgs.runCommandLocal "sesh-zsh-completion" { } ''
-    ${lib.getExe pkgs.sesh} completion zsh > _sesh
-    install -Dm644 _sesh $out/share/zsh/site-functions/_sesh
-  '';
-
   # rows are "name <padding> status-icon<TAB>raw session". window names
   # can't carry workmux status here (automatic-rename overwrites them with
   # the running command), so the icon comes from workmux's own state via
@@ -25,31 +17,30 @@ let
 
         layout() { # layout <icon-map> [extra sesh list flags]
           local list="$1"; shift
+          # sess with a workmux agent: swap sesh's leading source icon for
+          # the agent status glyph; others keep their folder/gear icon
           sesh list --icons --format "{name}''${tab}{session}" "$@" \
-            | awk -F'\t' -v OFS='\t' '
-                NR==FNR { if (NF >= 2) m[$1] = $2; next }
-                { name = $1; plain = name; gsub(/\033\[[0-9;]*m/, "", plain)
-                  n++; rn[n] = name; rs[n] = $2; rp[n] = plain
-                  if (length(plain) > max) max = length(plain) }
-                END {
-                  for (i = 1; i <= n; i++) {
-                    pad = max - length(rp[i]) + 2
-                    ic = (rs[i] in m) ? m[rs[i]] : "  "
-                    printf "%s%*s%s\t%s\n", rn[i], pad, "", ic, rs[i]
-                  }
-                }
+            | awk -F'\t' '
+                NR==FNR { if (NF >= 2 && $2 != "") m[$1] = $2; next }
+                ($2 in m) { sub(/^\033\[[0-9;]*m[^\033]+\033\[[0-9;]*m ?/, m[$2] " ") }
+                { print }
               ' <(printf '%s\n' "$list") -
         }
 
         icon_map() {
           workmux status --all --json 2>/dev/null | jq -r '
-            def rank: if . == "waiting" then 0 elif . == "working" then 1
-                      elif . == "quiet" then 2 elif . == "done" then 3 else 4 end;
-            def icon: if . == "waiting" then "💬" elif . == "working" then "🤖"
-                      elif . == "quiet" then "○" elif . == "done" then "✅" else "•" end;
+            def rank: if . == "waiting" then 0 elif . == "working" then 1 else 2 end;
+            # nerd-font glyphs: comment (waiting, yellow), spinner
+            # (working, blue), check (done, green) - emoji codepoints have
+            # no glyph in the configured font and fall back to bullets
+            def icon:
+              if . == "waiting" then "\u001b[1;33m\uf075\u001b[22;39m"
+              elif . == "working" then "\u001b[1;34m\uf110\u001b[22;39m"
+              elif . == "done" then "\u001b[1;32m\uf00c\u001b[22;39m" else "" end;
             [.agents[]?]
             | group_by(.session)
             | map({ session: .[0].session, icon: (map(.status) | sort_by(rank) | .[0] | icon) })
+            | map(select(.icon != ""))
             | .[] | "\(.session)\t\(.icon)"'
         }
 
@@ -61,8 +52,49 @@ let
           layout "" "$@"
         }
 
+        band() { # band <text> - bg-tinted line separating the header from the preview
+          local t="$1" plain pad
+          plain=$(printf '%s' "$t" | sed $'s/\x1b\\[[0-9;]*m//g')
+          pad=$((68 - ''${#plain}))
+          [ "$pad" -lt 0 ] && pad=0
+          printf "\033[48;2;40;39;39m\033[38;2;220;215;186m %s%*s \033[0m\n" "$t" "$pad" ""
+        }
+
         case "$1" in
           --rows) shift; rows "$@"; exit 0 ;;
+          --preview)
+            s="$2"
+            pidx=$(tmux list-panes -a -F '#{pane_id} #{window_index}' 2>/dev/null \
+              | jq -R -s 'split("\n") | map(select(length > 0) | split(" ") | {(.[0]): (.[1] | tonumber)}) | add // {}')
+            # one line: total agents, then per-window count+icon groups in
+            # window order; agents without a real status are ignored
+            hdr=$(workmux status --all --json 2>/dev/null | jq -r --arg s "$s" --argjson pidx "$pidx" '
+              def icon($st):
+                if $st == "waiting" then "\u001b[1;33m\uf075\u001b[22;39m"
+                elif $st == "working" then "\u001b[1;34m\uf110\u001b[22;39m"
+                else "\u001b[1;32m\uf00c\u001b[22;39m" end;
+              [.agents[]? | select(.session == $s) | .wind = ($pidx[.pane_id] // 999999)] as $a
+              | [$a[] | select(.status == "waiting" or .status == "working" or .status == "done")] as $r
+              | if ($r | length) == 0 then empty
+                else
+                  ($r | length) as $total
+                  | $a
+                  | group_by(.wind)
+                  | sort_by(.[0].wind)
+                  | map(. as $g
+                        | (["waiting", "working", "done"]
+                           | map(. as $st
+                                 | ($g | map(select(.status == $st)) | length) as $n
+                                 | select($n > 0)
+                                 | "\($n) \(icon($st))")
+                           | join(" ")))
+                  | map(select(length > 0))
+                  | " \($total): \(join(" | "))"
+                end')
+            if [ -n "$hdr" ]; then band "$hdr"; printf "\n"; fi
+            sesh preview "$s"
+            exit 0
+            ;;
         esac
 
         row=$(
@@ -80,7 +112,8 @@ let
                 --bind "ctrl-x:change-prompt(📁  )+reload($self --rows -z)" \
                 --bind "ctrl-d:execute-silent(tmux kill-session -t {2})+reload($self --rows)" \
                 --preview-window 'right:55%' \
-                --preview 'sesh preview {2}'
+                --preview-label ' agents ' \
+                --preview "$self --preview {2}"
         )
         [ -n "$row" ] && sesh connect "$(printf '%s' "$row" | cut -f2)"
         exit 0
@@ -138,7 +171,6 @@ in
       ];
     };
   };
-  home.packages = [ completions ];
   programs.tmux.extraConfig = # tmux
     ''
       bind -N "last-session (via sesh) " "C-p" run-shell "sesh last"
