@@ -84,9 +84,35 @@ fmt:
 update:
     nix flake update
 
-# Check flake (eval all configs)
+# Eval every deploy target - host toplevels and local home configs. nix
+# flake check does NOT evaluate these, which is how nixpkgs rename fallout
+# (pnpm_11-style) reaches a deploy instead of a check
 check:
-    nix flake check
+    #!/usr/bin/env bash
+    set -euo pipefail
+    sys=$(nix eval --impure --raw --expr builtins.currentSystem)
+    fail=0
+    run() { # run <label> <attr-path>
+      local out
+      if out=$(nix eval --raw "$2.drvPath" --accept-flake-config 2>&1); then
+        echo "  ok    $1"
+      else
+        echo "  FAIL  $1"
+        echo "$out" | tail -4 | sed 's/^/        /'
+        fail=1
+      fi
+    }
+    for u in $(nix eval --json ".#legacyPackages.$sys.homeConfigurations" --apply builtins.attrNames | jq -r '.[]'); do
+      run "home/$u" ".#legacyPackages.$sys.homeConfigurations.$u.activationPackage"
+    done
+    for h in $(nix eval --json .#nixosConfigurations --apply builtins.attrNames | jq -r '.[]'); do
+      [ "$h" = "anywhere" ] && continue # template, needs generated hardware config
+      run "nixos/$h" ".#nixosConfigurations.$h.config.system.build.toplevel"
+    done
+    for h in $(nix eval --json .#darwinConfigurations --apply builtins.attrNames | jq -r '.[]'); do
+      run "darwin/$h" ".#darwinConfigurations.$h.config.system.build.toplevel"
+    done
+    [ "$fail" -eq 0 ] && echo "all deploy targets evaluate" || { echo "eval failures above"; exit 1; }
 
 # Garbage collect - all profiles (needs sudo)
 gc:
