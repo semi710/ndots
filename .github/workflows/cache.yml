@@ -6,13 +6,21 @@ on:
     paths:
       - packages/**
       - overlays/**
+      - modules/**
+      - hosts/**
       - flake.nix
       - flake.lock
   workflow_dispatch:
 
+# Cancel in-progress runs on new pushes; stale builds waste runner time.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build-and-cache:
     runs-on: ${{ matrix.runner }}
+    timeout-minutes: 360
     strategy:
       fail-fast: false
       matrix:
@@ -38,11 +46,20 @@ jobs:
           name: nija
           authToken: ${{ secrets.NIJA_CACHIX_TOKEN }}
 
-      - name: Build devshell and all packages
+      - name: Free disk space (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc "/usr/local/share/boost" "$AGENT_TOOLSDIRECTORY"
+          df -h
+
+      # The home configurations and host toplevels carry the expensive
+      # closures (nvix full with its grammar set, the ocv opencode build,
+      # workmux); caching them is what turns local deploys into downloads.
+      - name: Build devshell, packages, home configs and host toplevels
         env:
           SYSTEM: ${{ matrix.system }}
         run: |
-          # Auto-discover packages, skip 'iso' and filter by platform support
+          # packages this system supports (iso has its own workflow)
           PACKAGES=$(nix eval --impure --raw --apply \
             'p: builtins.concatStringsSep " " (
               builtins.map (n: ".#" + n) (
@@ -56,8 +73,39 @@ jobs:
                 ) (builtins.attrNames p)
               )
             )' \
-            .#packages.${{ matrix.system }})
+            .#packages.$SYSTEM)
+
+          # every home configuration user on this system
+          HOMES=$(nix eval --impure --json --expr "
+            builtins.attrNames
+              (builtins.getFlake (toString ./.)).legacyPackages.$SYSTEM.homeConfigurations" \
+            | jq -r '.[] | ".#legacyPackages." + env.SYSTEM + ".homeConfigurations." + . + ".activationPackage"')
+
+          # every nixos host whose platform is this system (hosts without a
+          # platform, like the 'anywhere' installer config, are skipped)
+          HOSTS=$(nix eval --impure --json --expr "
+            let
+              flake = builtins.getFlake (toString ./.);
+              cfgs = flake.nixosConfigurations;
+              sys = builtins.getEnv \"SYSTEM\";
+            in builtins.filter
+              (n: (builtins.tryEval cfgs.\${n}.pkgs.stdenv.hostPlatform.system).value or \"\" == sys)
+              (builtins.attrNames cfgs)" \
+            | jq -r '.[] | ".#nixosConfigurations." + . + ".config.system.build.toplevel"')
+
+          # darwin system toplevels only build on the darwin runner
+          DARWIN=""
+          if [ "$SYSTEM" = "aarch64-darwin" ]; then
+            DARWIN=$(nix eval --impure --json --expr \
+              'builtins.attrNames (builtins.getFlake (toString ./.)).darwinConfigurations' \
+              | jq -r '.[] | ".#darwinConfigurations." + . + ".config.system.build.toplevel"')
+          fi
+
+          echo "packages: $PACKAGES"
+          echo "homes:    $HOMES"
+          echo "hosts:    $HOSTS"
+          echo "darwin:   $DARWIN"
 
           nix build --no-link --print-out-paths \
-            .#devShells.${{ matrix.system }}.default \
-            $PACKAGES
+            .#devShells.$SYSTEM.default \
+            $PACKAGES $HOMES $HOSTS $DARWIN
