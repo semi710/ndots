@@ -174,6 +174,160 @@ in
       mcp.servers = lib.mkIf config.ndots.ai.mcp.workServers workServers;
     };
 
+    # v2 terminal-client prefs, rendered into cli.json by the s-ai module
+    # (tabs off per the top-bar question; the rest mirrors what the Nov-4
+    # auto-migration had baked in)
+    s-ai.agents.opencode.extraCliSettings = {
+      tabs.mode = "off";
+      diffs.wrap = "word";
+      session = {
+        sidebar = "hide";
+        scrollbar = false;
+        thinking = "show";
+      };
+      animations = true;
+      # which-key is dead on the current ocv pin (the panel handler is
+      # missing from the bundled opentui) - the binding activates after a
+      # pin bump. ctrl+alt+k default is unsendable from macOS terminals.
+      # help dialog on f1 meanwhile; ? would swallow prompt input.
+      # keybind entries must stay flat dotted keys, not nested objects.
+      keybinds."which-key.toggle" = "<leader>k";
+      keybinds."help.show" = "f1";
+    };
+
+    # opencode's TUI rewrites cli.json in place (settings dialog, env
+    # content merges), replacing the store symlink with a regular file;
+    # force keeps the next deploy from wedging on the backup collision
+    home.file.".config/opencode/cli.json".force = true;
+
+    # v2 permission rules, ordered, LAST match wins. s-ai still renders the
+    # v1 `permission` map whose "*": "ask" sits last, so after v2's in-memory
+    # normalization it silently overrode every allow and asked for
+    # everything. Native v2 rules take precedence over the v1 map, so the
+    # blanket ask leads here and the specific allows land after it.
+    # A trailing " *" pattern also matches the bare command (v2 rule).
+    s-ai.agents.opencode.extraSettings.permissions = [
+      {
+        action = "shell";
+        resource = "*";
+        effect = "ask";
+      }
+    ]
+    ++
+      map
+        (pattern: {
+          action = "shell";
+          resource = pattern;
+          effect = "allow";
+        })
+        [
+          "git status *"
+          "git log *"
+          "git diff *"
+          "git branch *"
+          "git show *"
+          "git rev-parse *"
+          "git remote *"
+          "git stash list"
+          "git add *"
+          "git fetch *"
+          "git blame *"
+          "git ls-files *"
+          "git describe *"
+          "git grep *"
+          "ls *"
+          "cat *"
+          "head *"
+          "tail *"
+          "wc *"
+          "tree *"
+          "find *"
+          "file *"
+          "stat *"
+          "readlink *"
+          "realpath *"
+          "which *"
+          "echo *"
+          "pwd *"
+          "basename *"
+          "dirname *"
+          "test *"
+          "true"
+          "false"
+          "nix flake show *"
+          "nix flake metadata *"
+          "nix flake check *"
+          "nix flake lock *"
+          "nix flake update *"
+          "nix eval *"
+          "nix search *"
+          "nix path-info *"
+          "nix derivation *"
+          "nix hash *"
+          "nix store * cat *"
+          "nix store * ls *"
+          "nix build *"
+          "nix-instantiate *"
+          "python3 -m json.tool *"
+          "jq *"
+          "ps *"
+          "rg *"
+          "grep *"
+          "fd *"
+          "awk *"
+          "sort *"
+          "uniq *"
+          "diff *"
+          "less *"
+          "du *"
+          "df *"
+          "date *"
+          "uname *"
+          "sw_vers *"
+          "hostname *"
+          "id *"
+          "whoami *"
+          "printenv *"
+          "mkdir *"
+        ]
+    ++ [
+      {
+        action = "read";
+        resource = "*";
+        effect = "allow";
+      }
+      {
+        action = "read";
+        resource = ".env*";
+        effect = "ask";
+      }
+      {
+        action = "read";
+        resource = "**/.env*";
+        effect = "ask";
+      }
+      {
+        action = "grep";
+        resource = "*";
+        effect = "allow";
+      }
+      {
+        action = "grep";
+        resource = ".env*";
+        effect = "ask";
+      }
+      {
+        action = "grep";
+        resource = "**/.env*";
+        effect = "ask";
+      }
+      {
+        action = "glob";
+        resource = "*";
+        effect = "allow";
+      }
+    ];
+
     # opencode-only providers (built-in gateways / env keys), not part of the
     # shared grid; s-ai does not manage these
     programs.opencode.settings = {
