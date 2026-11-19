@@ -72,6 +72,10 @@ in
           ${fontFeatureString "Neon"}
           map shift+enter send_text all \x1b[13;2u
           map ctrl+space send_text all \x00
+          # Monaspace carries no nerd/emoji glyphs; kitty's CoreText fallback
+          # paints placeholder bullets for them. pin the ranges explicitly.
+          symbol_map U+E000-U+F8FF JetBrainsMono Nerd Font
+          symbol_map U+1F300-U+1FAFF,U+2705,U+2022 Apple Color Emoji
         '';
       settings = {
         background_opacity = lib.mkForce "0.85";
