@@ -2479,11 +2479,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1795102030,
-        "narHash": "sha256-Hh1k3TZ5NkhIW2qrZiqZqas6EQ94eLzqz0j5fUiuElY=",
+        "lastModified": 1795117512,
+        "narHash": "sha256-uWJsQ9yu5LHlqol+yhRJcNJ8VrOh1NWjR26Fs1SfqMc=",
         "owner": "semi710",
         "repo": "s-ai",
-        "rev": "ad5633750e8a3979c900a5f3e457d3cfa32b786f",
+        "rev": "bf11e807b64d6f310d3c9ef46099efebe939678f",
         "type": "github"
       },
       "original": {
