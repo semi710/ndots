@@ -30,6 +30,23 @@ in
     (flake.homeModules.darwin + "/kiwidesk")
   ];
 
+  # extensions need the wrapped bundle, at the cost of the upstream signature
+  programs.zen-browser.darwin.packageMode = "wrapped";
+
+  # copyApps restores the store bundle (and its unusable signature) every
+  # deploy, so re-sign Zen ad hoc after the copy; launchd refuses to spawn
+  # a bundle with an invalid signature on Apple Silicon. scoped to Zen and
+  # best-effort: other bundles verify as invalid and are fine in practice
+  home.activation.resignApps = lib.hm.dag.entryAfter [ "copyApps" ] ''
+    for app in "$HOME/Applications/Home Manager Apps/Zen Browser"*.app; do
+      [ -d "$app" ] || continue
+      if ! /usr/bin/codesign --verify "$app" >/dev/null 2>&1; then
+        /bin/chmod -R u+w "$app"
+        /usr/bin/codesign --force --deep --sign - "$app" || true
+      fi
+    done
+  '';
+
   # KiwiDesk test: replaces yabai + skhd + jankyborders
   kiwidesk = {
     enable = true;
