@@ -2257,11 +2257,11 @@
         "treefmt-nix": "treefmt-nix_5"
       },
       "locked": {
-        "lastModified": 1795097759,
-        "narHash": "sha256-kRChS8IGTbjQV+WtPaWFt6rKF+51PlynMz87PeirTMw=",
+        "lastModified": 1795102012,
+        "narHash": "sha256-NZi9suMCZ38QQ5GfXu9KHV8AZoXiMT8ZnXXbFt2Mvss=",
         "owner": "semi710",
         "repo": "nvix",
-        "rev": "dae3512b72e0afbc53436deb68732a7c4d2b024f",
+        "rev": "d4bd96ee22b66a6a04adf444dcb312775203fa46",
         "type": "github"
       },
       "original": {
