@@ -1,10 +1,21 @@
 { pkgs, lib, ... }:
 let
-  # rows are "status-icon name<TAB>raw session". window names can't carry
-  # workmux status here (automatic-rename overwrites them with the running
-  # command), so the icon comes from workmux's own state via `status --json`,
-  # joined by tmux session name. fzf shows only the display field
-  # (--with-nth 1) and connects via the hidden raw session (cut -f2).
+  # sesh ships no completion file and its hm module generates none; the
+  # binary emits one. landing in home.packages puts it on the zsh fpath
+  # via the profile's share/zsh/site-functions
+  completions = pkgs.runCommandLocal "sesh-zsh-completion" { } ''
+    ${lib.getExe pkgs.sesh} completion zsh > _sesh
+    install -Dm644 _sesh $out/share/zsh/site-functions/_sesh
+  '';
+
+  # rows are "name <padding> status-icon<TAB>raw session". window names
+  # can't carry workmux status here (automatic-rename overwrites them with
+  # the running command), so the icon comes from workmux's own state via
+  # `status --json`, joined by tmux session name. fzf shows only the
+  # display field (--with-nth 1) and connects via the hidden session
+  # (cut -f2). plain_rows renders the same layout without the (slow)
+  # workmux lookup so the picker paints immediately; fzf then reloads
+  # with icons once the status query returns.
   sesh-picker =
     pkgs.writeShellScript "sesh-picker" # bash
       ''
@@ -106,6 +117,7 @@ in
       ];
     };
   };
+  home.packages = [ completions ];
   programs.tmux.extraConfig = # tmux
     ''
       bind -N "last-session (via sesh) " "C-p" run-shell "sesh last"
