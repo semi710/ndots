@@ -169,6 +169,11 @@ in
           unbind -n MouseDown2Pane
           set-option -g automatic-rename on
           set-option -g status-style bg=default
+          # tmux 3.8 paints popups with a solid theme color by default
+          # (bg=themedarkgrey); bg=default leaves them unpainted so the
+          # terminal's own transparency shows through again
+          set -g popup-style bg=default,fg=default
+          set -g popup-border-style bg=default,fg=themelightgrey
           set -g prefix C-a
 
           bind N new-session
