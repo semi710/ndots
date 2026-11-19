@@ -11,7 +11,8 @@
     };
   };
 
-  # TODO: Test if this is failing connection for Google Assistant as Speaker.
-  # https://github.com/NixOS/nixpkgs/issues/114222
+  # NOTE: telephony_client stays off - the Google Assistant speaker
+  # pairing breakage in https://github.com/NixOS/nixpkgs/issues/114222
+  # was never re-tested since the hyprland desktop fell out of use
   systemd.user.services.telephony_client.enable = false;
 }
