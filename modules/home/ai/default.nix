@@ -177,6 +177,10 @@ in
     # v2 terminal-client prefs, rendered into cli.json by the s-ai module
     # (tabs off per the top-bar question; the rest mirrors what the Nov-4
     # auto-migration had baked in)
+    # stylix pins the v1 tui theme, which OpenCode 2 ignore-warns on; the
+    # s-ai module reads the theme from themes.stylix for cli.json instead
+    programs.opencode.tui = lib.mkForce { };
+
     s-ai.agents.opencode.extraCliSettings = {
       tabs.mode = "off";
       diffs.wrap = "word";
