@@ -32,7 +32,7 @@
       ipafont
       kochi-substitute
       source-code-pro
-      ttf_bitstream_vera
+      ttf-bitstream-vera
       pkgs.dejavu_fonts
 
       # xterm-kitty for any box SSH'd into from kitty (clear, tmux);
