@@ -1,28 +1,52 @@
 { pkgs, lib, ... }:
 let
-  # rows are "active-window + name<TAB>raw session": the active window name
-  # carries workmux agent status icons, fzf shows only the display field
-  # (--with-nth 1) and connects via the hidden raw session (cut -f2)
+  # rows are "status-icon name<TAB>raw session". window names can't carry
+  # workmux status here (automatic-rename overwrites them with the running
+  # command), so the icon comes from workmux's own state via `status --json`,
+  # joined by tmux session name. fzf shows only the display field
+  # (--with-nth 1) and connects via the hidden raw session (cut -f2).
   sesh-picker =
     pkgs.writeShellScript "sesh-picker" # bash
       ''
         set +e
         tab=$'\t'
-        fmt="{active_window_name_prefix}{name}''${tab}{session}"
-        list="sesh list --icons --format \"$fmt\""
+        self="$0"
+
+        rows() { # rows [extra sesh list flags]
+          local list
+          list=$(workmux status --all --json 2>/dev/null | jq -r '
+            def rank: if . == "waiting" then 0 elif . == "working" then 1
+                      elif . == "quiet" then 2 elif . == "done" then 3 else 4 end;
+            def icon: if . == "waiting" then "💬" elif . == "working" then "🤖"
+                      elif . == "quiet" then "○" elif . == "done" then "✅" else "•" end;
+            [.agents[]?]
+            | group_by(.session)
+            | map({ session: .[0].session, icon: (map(.status) | sort_by(rank) | .[0] | icon) })
+            | .[] | "\(.session)\t\(.icon)"')
+          sesh list --icons --format "{name}''${tab}{session}" "$@" \
+            | awk -F'\t' -v OFS='\t' '
+                NR==FNR { if (NF >= 2) m[$1] = $2; next }
+                { disp = $1; if ($2 in m) disp = m[$2] " " disp; print disp "\t" $2 }
+              ' <(printf '%s\n' "$list") -
+        }
+
+        case "$1" in
+          --rows) shift; rows "$@"; exit 0 ;;
+        esac
+
         row=$(
-          sesh list --icons --format "$fmt" \
+          rows \
             | fzf --tmux 80%,70% \
                 --no-sort --ansi \
                 --delimiter "$tab" --with-nth 1 \
                 --border-label ' sesh ' --prompt '⚡  ' \
                 --header '  ^a all ^t tmux ^g configs ^x zoxide ^d kill' \
                 --bind 'tab:down,btab:up' \
-                --bind "ctrl-a:change-prompt(⚡  )+reload($list)" \
-                --bind "ctrl-t:change-prompt(🪟  )+reload($list -t)" \
-                --bind "ctrl-g:change-prompt(⚙️  )+reload($list -c)" \
-                --bind "ctrl-x:change-prompt(📁  )+reload($list -z)" \
-                --bind "ctrl-d:execute-silent(tmux kill-session -t {2})+reload($list)" \
+                --bind "ctrl-a:change-prompt(⚡  )+reload($self --rows)" \
+                --bind "ctrl-t:change-prompt(🪟  )+reload($self --rows -t)" \
+                --bind "ctrl-g:change-prompt(⚙️  )+reload($self --rows -c)" \
+                --bind "ctrl-x:change-prompt(📁  )+reload($self --rows -z)" \
+                --bind "ctrl-d:execute-silent(tmux kill-session -t {2})+reload($self --rows)" \
                 --preview-window 'right:55%' \
                 --preview 'sesh preview {2}'
         )
@@ -34,8 +58,9 @@ in
   programs.fzf.tmux.enableShellIntegration = true;
   programs.sesh = {
     enable = true;
-    # custom c-o bind below shows workmux agent status icons through the
-    # active window name; the hm module's generated bind can't format rows
+    # custom c-o bind below shows workmux agent status icons (joined from
+    # `workmux status --json`, so window names/automatic-rename don't
+    # matter); the hm module's generated bind can't format rows
     enableTmuxIntegration = false;
     settings = {
       # git-derived names: worktree sessions name from their own top-level,
