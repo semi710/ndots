@@ -57,6 +57,17 @@ in
   # From an external pinned flake
   putils = inputs.utils.packages.${prev.stdenv.hostPlatform.system};
   drag = inputs.dragterm.packages.${final.stdenv.hostPlatform.system}.drag;
+  # nixpkgs sesh ships no completions; generate them in the package itself
+  # like workmux does, so they land in share/zsh/site-functions and any
+  # consumer (hm's programs.sesh) gets them
+  # FIXME: drop when nixpkgs sesh ships completions
+  sesh = prev.sesh.overrideAttrs (old: {
+    nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ prev.installShellFiles ];
+    postInstall = (old.postInstall or "") + ''
+      installShellCompletion --cmd sesh \
+        --zsh <($out/bin/sesh completion zsh)
+    '';
+  });
   # nixpkgs >= 2.34.0 now covers the worktree-aware session naming
   # (git_namer_use_worktree_root/git_dir_length)
   # workmux lives in s-ai now: plugins.workmux installs the binary + skills
