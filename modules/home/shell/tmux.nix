@@ -130,6 +130,8 @@ in
       extraConfig = # tmux
         ''
           set -g allow-passthrough all
+          # truecolor passthrough for kitty graphics (vellum markdown images)
+          set -as terminal-features ',*:RGB'
           # TUI agents don't request extended keys over SSH+tmux, so "on" left
           # panes in VT10x mode where Shift+Enter collapses to \r; "always" forces
           # mode 1 so modified keys reach apps as CSI-u (\x1b[13;2u = shift+enter)
