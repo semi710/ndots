@@ -164,36 +164,68 @@ in
           end
         end)
 
-        -- Password field guard
-        vim.inPasswordField = false
+        -- Context guard: disable vim mode where its keystrokes would be
+        -- harmful or redundant - secure text fields and firenvim frames.
+        -- Tracks a single disabledByGuard flag so we only re-enable when
+        -- we were the ones who disabled, never clobbering the app watcher
+        -- or spotlight logic.
+        vim.contextGuard = { disabledByGuard = false }
 
-        vim.passwordChecker = hs.timer.doEvery(0.3, function()
+        -- Firenvim runs neovim inside a browser-extension iframe. Walk the
+        -- focused element's AX parent chain; an AXWebArea whose URL uses an
+        -- extension scheme means an extension owns the keystrokes, so
+        -- VimMode.spoon must stay out of the way.
+        local extensionSchemes = {
+          ["chrome-extension:"] = true,
+          ["moz-extension:"] = true,
+          ["safari-web-extension:"] = true,
+        }
+
+        local function focusedInFirenvim()
           local ax = require("hs.axuielement")
           local systemElement = ax.systemWideElement()
-          if not systemElement then return end
+          if not systemElement then return false end
 
-          local currentElement = systemElement:attributeValue("AXFocusedUIElement")
-          if not currentElement then
-            if vim.inPasswordField then
-              vim.inPasswordField = false
-              vim:enable()
+          local element = systemElement:attributeValue("AXFocusedUIElement")
+          local depth = 0
+          while element and depth < 50 do
+            depth = depth + 1
+            if element:attributeValue("AXRole") == "AXWebArea" then
+              local url = element:attributeValue("AXURL")
+              if type(url) == "string" then
+                local scheme = url:match("^([^:]+:)")
+                if scheme and extensionSchemes[scheme] then return true end
+              end
             end
-            return
+            element = element:attributeValue("AXParent")
           end
+          return false
+        end
 
-          local role = currentElement:attributeValue("AXRole") or ""
-          local isSecure = currentElement:attributeValue("AXSecure") or false
+        local function focusedInPasswordField()
+          local ax = require("hs.axuielement")
+          local systemElement = ax.systemWideElement()
+          if not systemElement then return false end
 
-          if role == "AXSecureTextField" or isSecure then
-            if not vim.inPasswordField then
-              vim.inPasswordField = true
-              vim:disable()
-            end
-          else
-            if vim.inPasswordField then
-              vim.inPasswordField = false
-              vim:enable()
-            end
+          local element = systemElement:attributeValue("AXFocusedUIElement")
+          if not element then return false end
+
+          local role = element:attributeValue("AXRole") or ""
+          local isSecure = element:attributeValue("AXSecure") or false
+          return role == "AXSecureTextField" or isSecure
+        end
+
+        vim.contextTimer = hs.timer.doEvery(0.3, function()
+          local guard = vim.contextGuard
+          local shouldDisable = focusedInPasswordField() or focusedInFirenvim()
+
+          if shouldDisable and not guard.disabledByGuard then
+            vim:exit()
+            vim:disable()
+            guard.disabledByGuard = true
+          elseif not shouldDisable and guard.disabledByGuard then
+            vim:enable()
+            guard.disabledByGuard = false
           end
         end)
 
