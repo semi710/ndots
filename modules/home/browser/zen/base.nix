@@ -68,6 +68,13 @@
         "browser.download.deletePrivate" = true;
         "security.insecure_connection_text.enabled" = false;
         "security.insecure_connection_text.pbmode.enabled" = false;
+
+        # Firenvim's editor frame reaches neovim over ws://127.0.0.1:<port>;
+        # LNA WebSocket checks block it, so the frame flashes and closes and
+        # the plain textarea remains.
+        # FIXME: revert when a per-extension LNA exception exists
+        # (glacambre/firenvim TROUBLESHOOTING.md "Local Network Access")
+        "network.lna.websocket.enabled" = false;
       };
     };
 
