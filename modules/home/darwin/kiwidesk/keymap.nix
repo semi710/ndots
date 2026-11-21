@@ -163,6 +163,7 @@ let
         space = "KiwiDesk.focus_display_last()";
         m = cycleModeGap;
         s = ''kiwihub.show("view")'';
+        d = ''kiwihub.show("desktops")'';
         o = ''kiwihub.show("windows")'';
         slash = ''kiwihub.show("windows")'';
         c = ''KiwiDesk.focus_space("comms")'';
@@ -226,6 +227,15 @@ let
         "escape" = layerOff;
       }}
       })
+      })
+
+      -- trackpad gestures (5.0): compose with the Hyperkey chord so
+      -- hold caps + gesture does what the keys do, no second modifier
+      -- scheme to learn. bare (no keys) gestures fire without caps.
+      gesture.bind("drag", "${mod}", "move")
+      gesture.bind("drag", "${mod}+shift", "resize")
+      gesture.bind("swipe3", "${mod}", "focus")
+      gesture.bind("tap3", "", "last_space")
     '';
 
 in
