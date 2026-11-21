@@ -62,7 +62,7 @@ in
     done
   '';
 
-  # KiwiDesk test: replaces yabai + skhd + jankyborders
+  # KiwiDesk: replaces yabai + skhd + jankyborders
   kiwidesk = {
     enable = true;
     initLua = # lua
@@ -71,9 +71,12 @@ in
         -- jankyborders active_color
         border.set_focused_color("#${config.lib.stylix.colors.base06}")
 
-        -- workspace counter: liquid like the KiwiHub panels - the
-        -- fill keeps only 25% alpha under the glass
+        -- bar fill: 25% alpha under the glass, like the KiwiHub panels
         kiwishelf.set_fill_color("#${config.lib.stylix.colors.base00}40")
+
+        -- 5.0 bar handle: thin, matched to the palette
+        kiwishelf.set_handle_color("#${config.lib.stylix.colors.base04}")
+        kiwishelf.set_handle_thickness(2)
       '';
   };
 

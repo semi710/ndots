@@ -35,10 +35,9 @@ let
   moveSpace =
     step:
     ''KiwiDesk.exec([[sh -c 'k=${config.programs.kiwidesk.package}/bin/kiwidesk; j=${lib.getExe pkgs.jq}; s=$($k get_state) && w=$($k list_windows) && c=$(printf "%s" "$w" | $j -r "([.[] | select(.focused)][0].space_id) // empty") && [ -n "$c" ] || c=$(printf "%s" "$s" | $j -r .active_space) && n=$(printf "%s" "$s" | $j -r --arg c "$c" ".spaces | map(.id) as \$i | (\$i | index(\$c)) as \$x | \$i[((\$x ${step}) % (\$i|length))]") && $k move_to_space_and_follow "$n"']])'';
-  # skhd parity: mod+shift+space moved the window to the next display;
-  # KiwiDesk has no last-display move verb, so toggle desktop 1<->2 (two
-  # displays, one desktop each - revisit when a third display appears)
-  moveDisplay = ''KiwiDesk.exec([[sh -c 'k=${config.programs.kiwidesk.package}/bin/kiwidesk; j=${lib.getExe pkgs.jq}; o=$($k get_state | $j -r ".desktop | if . == 1 then 2 else 1 end") && $k move_to_desktop_and_follow "$o"']])'';
+  # 5.0 added move_to_display_last_and_follow: proper "send window to the
+  # other screen and follow" replaces the desktop 1<->2 toggle hack
+  moveDisplay = "KiwiDesk.move_to_display_last_and_follow()";
 
   # mod+m: cycle bsp<->monocle, gap follows the mode - monocle
   # edge-to-edge, bsp back to the global 10 (no clear verb for
@@ -78,7 +77,6 @@ let
       KiwiDesk.set_gap_global(10)
       -- Space switches: instant, nothing drawn over the windows
       KiwiDesk.set_space_transition("none")
-      -- 4.2 slides the scroll step otherwise
       KiwiDesk.set_space_scroll_transition("none")
 
       -- thinner than the default 5pt focus border
@@ -91,6 +89,10 @@ let
       -- drag&drop on
       drag.set_drop_zone_enabled(true)
       drag.set_ghost_enabled(true)
+
+      -- maximize follows focus instead of ending, so agent-spawned
+      -- windows keep the maximized window tracking focus
+      maximize.set_follow_focus(true)
 
       -- panels: Liquid Glass on, untinted; bars: glass off (flat fill)
       KiwiDesk.set_shortcut_panel_liquid_glass(true)
@@ -114,6 +116,10 @@ let
       space_bar.set_edge("bottom")
       space_bar.set_visibility("hidden")
       space_bar.set_reserve(false)
+      -- 5.0 bar rework: no more Space dots, an outline marks the active
+      -- one, empty ones stay out of the way
+      space_bar.set_active_indicator("outline")
+      space_bar.set_hide_empty(true)
       kiwishelf.set_alignment("center")
       kiwishelf.set_outer_margin(0)
       monocle.set_app_bar_visibility("hidden")
