@@ -193,10 +193,6 @@ let
       -- (bottom right; the Space Bar item stays, no way to hide it)
       ${bind "${mod}+semicolon" ''KiwiDesk.switch_layer("special"); KiwiDesk.exec("open -g 'hammerspoon://kw-layer-on?label=SPECIAL'")''}
 
-      -- Cmd+d opens the desktops hub (Mission Control with drag);
-      -- not under the mod chord: d there collides with an app hotkey
-      ${bind "super+d" ''kiwihub.show("desktops")''}
-
       -- 1..9 focus a Space; shift+1..9 move the window and follow
       -- (keymap.nix tables above are joined with these)
       ${digitBinds "focus_space" ""}
@@ -219,7 +215,9 @@ let
         "shift+k" = ''KiwiDesk.move_floating("y", -40)'';
         g = "space_bar.toggle_reveal()";
         b = "app_bar.toggle_reveal()";
-        # d opens the Mission Control-like hub, then drops the layer
+        # d opens the Mission Control-like hub, then drops the layer.
+        # mod+d and Cmd+d collide with app hotkeys, so the layer is
+        # the only entry point: mod+; then d
         d = ''kiwihub.show("desktops"); ${layerOff}'';
         c = "KiwiDesk.center_floating()";
         # the list's bare up/down/Return/Esc need the default layer
