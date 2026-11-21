@@ -1225,11 +1225,11 @@
         "nixpkgs": "nixpkgs_4"
       },
       "locked": {
-        "lastModified": 1794161367,
-        "narHash": "sha256-dws8xMmH3ONm3Lz+RhDDgkiLWA5PpXjRKVrahHTxd4Y=",
+        "lastModified": 1795188637,
+        "narHash": "sha256-1oqo4NNvBcGIpRz5ATuzUarDgmA1RkL3e/6YJMypx3k=",
         "owner": "KiwiCanopy",
         "repo": "nix",
-        "rev": "7ed5f4179c3269262ca5f97b14ad7b519527b81c",
+        "rev": "6f96bd7b6dc13fe71bd4163bac996969665c8d0c",
         "type": "github"
       },
       "original": {
