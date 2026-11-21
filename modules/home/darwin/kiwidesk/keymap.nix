@@ -39,6 +39,11 @@ let
   # other screen and follow" replaces the desktop 1<->2 toggle hack
   moveDisplay = "KiwiDesk.move_to_display_last_and_follow()";
 
+  # delete the focused Space only when it has no windows; lands on the
+  # history-back Space after. Silent no-op when the Space still has
+  # windows, so nothing is lost by a stray shift+D
+  deleteSpace = ''KiwiDesk.exec([[sh -c 'k=${config.programs.kiwidesk.package}/bin/kiwidesk; j=${lib.getExe pkgs.jq}; s=$($k get_state) && a=$(printf "%s" "$s" | $j -r .active_space) && w=$(printf "%s" "$s" | $j -r --arg a "$a" ".spaces[] | select(.id == \$a) | .windows | length") && [ "$w" = "0" ] && $k delete_space "$a" && $k focus_space_back']])'';
+
   # mod+m: cycle bsp<->monocle, gap follows the mode - monocle
   # edge-to-edge, bsp back to the global 10 (no clear verb for
   # set_gap_override, so both directions are written)
@@ -219,6 +224,8 @@ let
         # mod+d and Cmd+d collide with app hotkeys, so the layer is
         # the only entry point: mod+; then d
         d = ''kiwihub.show("desktops"); ${layerOff}'';
+        # shift+D deletes the focused Space when it has no windows
+        "shift+d" = "${deleteSpace}; ${layerOff}";
         c = "KiwiDesk.center_floating()";
         # the list's bare up/down/Return/Esc need the default layer
         p = "pocket.toggle_list(); ${layerOff}";
