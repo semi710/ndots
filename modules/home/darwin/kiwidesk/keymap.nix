@@ -219,6 +219,8 @@ let
         "shift+k" = ''KiwiDesk.move_floating("y", -40)'';
         g = "space_bar.toggle_reveal()";
         b = "app_bar.toggle_reveal()";
+        # d opens the Mission Control-like hub, then drops the layer
+        d = ''kiwihub.show("desktops"); ${layerOff}'';
         c = "KiwiDesk.center_floating()";
         # the list's bare up/down/Return/Esc need the default layer
         p = "pocket.toggle_list(); ${layerOff}";

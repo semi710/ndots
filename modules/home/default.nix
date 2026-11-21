@@ -74,10 +74,19 @@ in
     source = config.lib.file.mkOutOfStoreSymlink "${config.home.profileDirectory}/share/terminfo";
   };
 
-  # SSH into these boxes with the key from config.nix; non-NixOS has no
+  # SSH into these boxes with the keys from config.nix; non-NixOS has no
   # users.users.<n>.openssh.authorizedKeys, so the file is the only way.
-  # First switch needs any hand-made ~/.ssh/authorized_keys removed.
-  home.file.".ssh/authorized_keys" = lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
-    text = lib.concatStringsSep "\n" me.sshPublicKeys + "\n";
-  };
+  # Written by an activation hook, not home.file: HM symlinks store-backed
+  # files and sshd's secure_filename check rejects the symlink (seen on
+  # WSL), so this writes a real 600 file every switch.
+  home.activation.sshAuthorizedKeys = lib.mkIf pkgs.stdenv.hostPlatform.isLinux (
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      mkdir -p "$HOME/.ssh"
+      chmod 700 "$HOME/.ssh"
+      rm -f "$HOME/.ssh/authorized_keys"
+      printf '%s\n' ${lib.concatStringsSep " " (map lib.escapeShellArg me.sshPublicKeys)} \
+        > "$HOME/.ssh/authorized_keys"
+      chmod 600 "$HOME/.ssh/authorized_keys"
+    ''
+  );
 }
