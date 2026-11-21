@@ -6,6 +6,7 @@ in
   imports = [
     flake.flakeModules.nix
     flake.nixosModules.stylix
+    flake.nixosModules.deploy
   ];
 
   home-manager.sharedModules = [
@@ -29,8 +30,6 @@ in
     xz
     xdg-utils
     openssh
-    # nh remote diff needs dix >= 3.0.0 on the target
-    dix
   ];
 
   nixpkgs.overlays = [

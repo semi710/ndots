@@ -24,6 +24,7 @@ in
     flake.nixosModules.tailscale
     flake.nixosModules.beszel
     flake.nixosModules.virtualisation
+    flake.nixosModules.deploy
 
     # Shorthand: config.hm.* -> config.home-manager.users.${username}.*
     (lib.mkAliasOptionModule [ "hm" ] [ "home-manager" "users" username ])
@@ -48,10 +49,6 @@ in
   programs.nix-index-database.comma.enable = true;
 
   environment.variables.TERM = "xterm-256color";
-
-  # nh remote diff needs dix >= 3.0.0 on the target; cloud hosts don't
-  # import nixosModules.default where it's also added
-  environment.systemPackages = [ pkgs.dix ];
 
   networking.firewall.allowedTCPPorts = [
     80
