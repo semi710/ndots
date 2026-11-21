@@ -29,6 +29,8 @@ in
     xz
     xdg-utils
     openssh
+    # nh remote diff needs dix >= 3.0.0 on the target
+    dix
   ];
 
   nixpkgs.overlays = [

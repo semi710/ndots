@@ -256,12 +256,31 @@ let
       tail -f "$LOGFILE"
     }
 
+    # Print a no_proxy string derived from config.yaml rules that route to
+    # direct-vpn (those domains go through GP, not mihomo - so CLI tools
+    # with proxy_on should skip the proxy for them). Always includes
+    # localhost and the Tailscale CGNAT range.
+    cmd_no_proxy() {
+      local list="localhost,127.0.0.1"
+      # Extract DOMAIN-SUFFIX rules pointing to direct-vpn -> *.domain
+      local domains
+      domains="$(grep -E '^\s*- DOMAIN-SUFFIX,.*,direct-vpn' "$CONFIG" 2>/dev/null \
+        | sed 's/.*DOMAIN-SUFFIX,\([^,]*\),.*/\1/')"
+      for d in $domains; do
+        list="$list,*.$d,$d"
+      done
+      # Tailscale CGNAT range + ts.net always bypass
+      list="$list,100.64.0.0/10,*.ts.net"
+      echo "$list"
+    }
+
     case "''${1:-}" in
       enable) cmd_enable ;;
       reset|disable|stop) cmd_reset ;;
       status) cmd_status ;;
       reload) cmd_reload ;;
       test)   cmd_test ;;
+      no-proxy) cmd_no_proxy ;;
       logs)   cmd_logs ;;
       *)
         cat <<HELP

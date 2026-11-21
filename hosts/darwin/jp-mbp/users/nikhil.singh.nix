@@ -59,9 +59,9 @@ in
       export HTTP_PROXY="$http_proxy"
       export HTTPS_PROXY="$https_proxy"
       export ALL_PROXY="$all_proxy"
-      export no_proxy="localhost,127.0.0.1,*.juspay.net,*.juspay.in"
+      export no_proxy="$(vpn-split no-proxy)"
       export NO_PROXY="$no_proxy"
-      echo "CLI proxy ON (mihomo 127.0.0.1:7890)"
+      echo "CLI proxy ON (mihomo 127.0.0.1:7890) - bypassing: $no_proxy"
     }
     proxy_off() {
       unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY no_proxy NO_PROXY
