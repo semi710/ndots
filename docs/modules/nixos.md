@@ -7,6 +7,7 @@ NixOS system modules live in `modules/nixos/`. Each is exposed as `flake.nixosMo
 | Module | Flake output | Description |
 |---|---|---|
 | [base](#basenix-defaultnix) | `nixosModules.default` | Base system: nix settings, stylix, home-manager, base packages |
+| [deploy](#deploynix) | `nixosModules.deploy` | Deploy tooling: `dix` for nh remote diffs |
 | [beszel](#beszelnix) | `nixosModules.beszel` | Beszel monitoring agent |
 | [filebrowser](#filebrowsernix) | `nixosModules.filebrowser` | FileBrowser Quantum web file manager |
 | [virtualisation](#virtualisationnix) | `nixosModules.virtualisation` | Docker (system + rootless) + Podman |
@@ -31,6 +32,17 @@ NixOS system modules live in `modules/nixos/`. Each is exposed as `flake.nixosMo
   ];
 }
 ```
+
+---
+
+## deploy.nix
+
+Deploy tooling shared by every NixOS host - imported by both `cloud.nix` (obox, bbox) and
+`nixosModules.default` (workstations) so remote `nh os switch` diffs work everywhere.
+
+- `dix` (>= 3.0.0) in `environment.systemPackages` - `nh` snapshots the target with it
+  before activation to show what packages changed; without it the deploy still works
+  but skips the diff with a warning
 
 ---
 

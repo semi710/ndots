@@ -18,6 +18,7 @@ Custom packages live in `packages/` and are auto-discovered by nix-wire, exposed
 | [bitbucket-server-mcp](#bitbucket-server-mcp) | unix | MCP server for Bitbucket Server PR management |
 | [kblight](#kblight) | darwin (aarch64) | MacBook keyboard backlight control via CoreBrightness |
 | [sklauncher-beta](#sklauncher-beta) | linux + darwin | SKLauncher 4.0 beta (native Electron, bundled JRE) |
+| [vpn-split](#vpn-split) | darwin + linux | Mihomo-based split tunnel for GlobalProtect |
 
 ## Using Packages
 
@@ -248,3 +249,21 @@ nix run github:semi710/ndots#sklauncher-beta
 
 !!! warning "Unfree license"
     SKLauncher is unfree. The package sets `meta.license = lib.licenses.unfree`.
+
+## vpn-split
+
+Mihomo-based split tunnel for GlobalProtect full-tunnel VPNs. Two "direct" outbounds route
+per-connection by hostname: `direct-vpn` follows the default route (through GP to the office),
+`direct-bypass` binds to the physical interface (bypasses GP to the normal net). `__PHYS_IF__`
+is substituted at enable time with the active interface. A PAC file (`proxy_on` in the shell)
+tries mihomo on `127.0.0.1:7890` and falls back to DIRECT, so toggling needs no browser restart.
+
+```bash
+vpn-split enable     # start mihomo with the bypass config
+vpn-split reload     # apply config edits
+vpn-split disable    # stop
+```
+
+!!! note "Config file"
+    `~/.config/vpn-split/config.yaml` is the editable template; domains to route per-outbound
+    are listed there.

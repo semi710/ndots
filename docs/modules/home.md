@@ -62,8 +62,11 @@ The base home setup every user gets - the foundation all other home modules laye
 
 - Sets `home.stateVersion = "26.05"`
 - Enables fontconfig
-- Imports: `shell`, `editor`, `ssh`, `nix-index`, `aria2`, `nix-conf-fix`
+- Imports: `shell`, `editor`, `ssh`, `nix-index`, `aria2`, `nix-conf-fix`, `naste`
 - Installs fonts: noto (sans, emoji, CJK), carlito, ipafont, kochi-substitute, source-code-pro, dejavu, nerd-fonts (jetbrains-mono, fira-code, droid-sans-mono)
+- Installs `kitty.terminfo` so SSH'd-in sessions from kitty find `xterm-kitty`
+- **Linux-only**: `TERMINFO_DIRS` session variable (profile + distro fallbacks) and `~/.terminfo` symlink to the profile's share/terminfo, because Nix zsh's ncurses ignores `/usr/share/terminfo` and `targets.genericLinux` only exports `TERMINFO_DIRS` via systemd (plain SSH logins never import it)
+- **Linux-only**: `~/.ssh/authorized_keys` written by an activation hook (not `home.file`, which symlinks into `/nix/store/` and sshd's `secure_filename` rejects because the store dir is group-writable). Keys come from `config.nix` (`users.me.sshPublicKeys`)
 
 **Usage:**
 
@@ -127,7 +130,7 @@ Fzf as the universal fuzzy picker, wired into shell, tmux, and git. `fd` replace
 
 Custom starship prompt that surfaces git state and dev-shell context at a glance. Two-line so the verbose git info (branch, last commit, status counts) sits on its own line and never eats into the command line.
 
-- Shows: directory icon, file count, folder count, disk usage
+- Shows: directory icon, file count, folder count, disk usage, proxy indicator (satellite icon when `http_proxy` is set)
 - Git: branch, host icon (github/gitlab/etc), last commit message, status with counts
 - Two-line prompt (git info on second line)
 - Vim mode character (`vimcmd_symbol`)
@@ -206,6 +209,14 @@ Shell aliases + the `nxbuild` helper. `nxbuild` exists to offload nix builds to 
   nxbuild .#iso               # configured builders
   nxbuild dsd -j 4 nixpkgs#hello
   ```
+
+### tailscale.nix
+
+`ts-status` zsh function - tabular Tailscale peer overview with online/offline indicator, OS icon, hostname and tailnet IP. Uses `tailscale status --json` + `jq`.
+
+```bash
+ts-status     # prints a formatted table of all Tailscale peers
+```
 
 ### android.nix
 
@@ -512,11 +523,16 @@ Options (`kiwidesk.*`, the upstream ones stay at `programs.kiwidesk.*`):
   ships: caps (Hyperkey app) produces the ctrl+opt+cmd chord, hjkl focus, shift+hjkl swap,
   1-9 spaces (shift to move+follow), n/p cycle, 0 history-back, space toggles displays, q
   closes, m toggles bsp/monocle, s the layout picker, o (and /) the window switcher, ;
-  the special layer (hjkl resize, shift+hjkl swap, name cut "SP" shows in the status
-  item/Space Bar while active), ' pocket, shift+f/a/m float/sticky/maximize, shift+v
-  KiwiVision, g/b the bars' reveal, c the comms space. Drag & drop on (drop zone +
-  ghost), hover-focus + pointer-warp on, mouse resize on. Panels keep Liquid Glass but
-  untinted (`set_shortcut_panel_liquid_glass` + `kiwishelf.set_tint_hub_and_plates`)
+  the special layer (hjkl resize, shift+hjkl swap, d the desktops hub/Mission Control
+  replacement, name cut "SP" shows in the status item/Space Bar while active), ' pocket,
+  shift+f/a/m float/sticky/maximize, shift+v KiwiVision, g/b the bars' reveal, c the comms
+  space. Trackpad gestures (5.0): caps+drag moves, caps+shift+drag resizes, caps+3-finger
+  swipe focuses, bare 3-finger tap toggles last Space. Bar: outline active indicator,
+  hide-empty, 2pt handle styled to the palette. `maximize.set_follow_focus(true)` so
+  maximized windows track focus instead of ending. `move_to_display_last_and_follow()`
+  replaces the old desktop 1<->2 toggle hack. Drag & drop on (drop zone + ghost),
+  hover-focus + pointer-warp on. Panels keep Liquid Glass but untinted
+  (`set_shortcut_panel_liquid_glass` + `kiwishelf.set_tint_hub_and_plates`)
 - `kiwidesk.initLua` (lines, default `""`) - extra Lua layered after the keymap (so it can
   override it) and before the `local.lua` import. Declaring settings makes init.lua the config
   owner (Settings then offers "Adopt into the GUI"); empty keeps the Settings app the owner
