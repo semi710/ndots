@@ -190,6 +190,9 @@ in
         thinking = "show";
       };
       animations = true;
+      # FIXME: enable prompt.image_preview + session.image_preview when
+      # https://github.com/anomalyco/opencode/issues/62181 is fixed (native
+      # clipboard image read silently fails on macOS in 2.1.4)
       # which-key is dead on the current ocv pin (the panel handler is
       # missing from the bundled opentui) - the binding activates after a
       # pin bump. ctrl+alt+k default is unsendable from macOS terminals.
