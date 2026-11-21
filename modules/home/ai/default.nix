@@ -190,15 +190,14 @@ in
         thinking = "show";
       };
       animations = true;
-      # FIXME: enable prompt.image_preview + session.image_preview when
-      # https://github.com/anomalyco/opencode/issues/62181 is fixed (native
-      # clipboard image read silently fails on macOS in 2.1.4)
-      # which-key is dead on the current ocv pin (the panel handler is
-      # missing from the bundled opentui) - the binding activates after a
-      # pin bump. ctrl+alt+k default is unsendable from macOS terminals.
-      # help dialog on f1 meanwhile; ? would swallow prompt input.
-      # keybind entries must stay flat dotted keys, not nested objects.
-      keybinds."which-key.toggle" = "<leader>k";
+      # image paste (ctrl+v) works since the ocv 2.3.0 bump; clipboard
+      # read errors are now surfaced instead of silently dropped
+      # (upstream #62181 was the silent-failure, #61094 added error display)
+      # ctrl+alt+k is the upstream default but unsendable from macOS
+      # terminals; <leader>k (ctrl+x, k) is the alternative. keep both
+      # so the leader path works when vim mode's jk-escape doesn't eat
+      # the k first. keybind entries must stay flat dotted keys.
+      keybinds."which-key.toggle" = "<leader>k,ctrl+alt+k";
       keybinds."help.show" = "f1";
     };
 
