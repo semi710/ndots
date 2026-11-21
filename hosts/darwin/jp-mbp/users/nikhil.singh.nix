@@ -33,6 +33,21 @@ in
   # extensions need the wrapped bundle, at the cost of the upstream signature
   programs.zen-browser.darwin.packageMode = "wrapped";
 
+  # PAC file: "try mihomo proxy, fall back to DIRECT if it's down."
+  # When mihomo runs -> proxy works -> split routing (work via GP, rest bypass).
+  # When mihomo is off -> connection refused (instant, localhost) -> DIRECT -> GP-only.
+  # No browser restart needed on enable/reset.
+  home.file.".config/vpn-split/proxy.pac".text = ''
+    function FindProxyForURL(url, host) {
+        return "PROXY 127.0.0.1:7890; DIRECT";
+    }
+  '';
+
+  programs.zen-browser.profiles.default.settings = {
+    "network.proxy.type" = 2;
+    "network.proxy.autoconfig_url" = "file://${config.home.homeDirectory}/.config/vpn-split/proxy.pac";
+  };
+
   # copyApps restores the store bundle (and its unusable signature) every
   # deploy, so re-sign Zen ad hoc after the copy; launchd refuses to spawn
   # a bundle with an invalid signature on Apple Silicon. scoped to Zen and
@@ -71,6 +86,7 @@ in
 
   home.packages = with pkgs; [
     sklauncher-beta
+    vpn-split
     # bb wrapper mirrors hosts/nixos/common/workstation.nix, so bb works the
     # same on both machines
     (writeShellScriptBin "bb" ''
