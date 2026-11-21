@@ -44,6 +44,7 @@ in
     enable = true;
     settings = {
       format = lib.concatStrings [
+        "\${custom.proxy}"
         "\${custom.dir}"
         "\${custom.home_dir}"
         "$directory"
@@ -79,6 +80,17 @@ in
       };
       gcloud = {
         disabled = true;
+      };
+      custom.proxy = {
+        when = ''[ -n "$http_proxy" ]'';
+        command = "echo 󰒔";
+        style = "fg:bright-yellow bg:black bold";
+        format = "[$output ]($style)";
+        shell = [
+          "bash"
+          "--norc"
+          "--noprofile"
+        ];
       };
       custom.home_dir = {
         command = "echo  ";

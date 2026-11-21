@@ -30,8 +30,10 @@ in
     name = me.fullname;
     email = me.email;
   };
-  # non-NixOS integration: sources nix.sh, fixes XDG dirs, and exports
-  # TERMINFO_DIRS into the profile so Ubuntu's clear/tmux find xterm-kitty
+  # non-NixOS integration: sources nix.sh, fixes XDG dirs, and (via systemd)
+  # exports TERMINFO_DIRS into the user session. The shared homeModules.default
+  # also exports TERMINFO_DIRS via home.sessionVariables so plain SSH logins
+  # (no systemd user session) still see xterm-kitty.
   # (mkHomeConfigs builds this file for darwin systems too - keep it inert there)
   targets.genericLinux.enable = pkgs.stdenv.hostPlatform.isLinux;
   programs.zsh.initContent = ''
