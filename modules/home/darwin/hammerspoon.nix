@@ -175,11 +175,19 @@ in
         -- focused element's AX parent chain; an AXWebArea whose URL uses an
         -- extension scheme means an extension owns the keystrokes, so
         -- VimMode.spoon must stay out of the way.
+        -- Chromium/Safari expose the URL via AXURL (string); Firefox/Zen
+        -- returns a table there but carries the same URL in AXDescription.
         local extensionSchemes = {
           ["chrome-extension:"] = true,
           ["moz-extension:"] = true,
           ["safari-web-extension:"] = true,
         }
+
+        local function isExtensionUrl(candidate)
+          if type(candidate) ~= "string" then return false end
+          local scheme = candidate:match("^([^:]+:)")
+          return scheme ~= nil and extensionSchemes[scheme] == true
+        end
 
         local function focusedInFirenvim()
           local ax = require("hs.axuielement")
@@ -191,11 +199,8 @@ in
           while element and depth < 50 do
             depth = depth + 1
             if element:attributeValue("AXRole") == "AXWebArea" then
-              local url = element:attributeValue("AXURL")
-              if type(url) == "string" then
-                local scheme = url:match("^([^:]+:)")
-                if scheme and extensionSchemes[scheme] then return true end
-              end
+              if isExtensionUrl(element:attributeValue("AXURL")) then return true end
+              if isExtensionUrl(element:attributeValue("AXDescription")) then return true end
             end
             element = element:attributeValue("AXParent")
           end
