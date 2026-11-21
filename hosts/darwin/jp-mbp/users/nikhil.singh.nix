@@ -48,6 +48,27 @@ in
     "network.proxy.autoconfig_url" = "file://${config.home.homeDirectory}/.config/vpn-split/proxy.pac";
   };
 
+  # CLI proxy toggle: curl/git/etc don't understand PAC files, so they need
+  # env vars to use mihomo. proxy_on sets them (current shell only),
+  # proxy_off clears. Matches vpn-split enable/disable lifecycle.
+  programs.zsh.initContent = lib.mkAfter ''
+    proxy_on() {
+      export http_proxy="http://127.0.0.1:7890"
+      export https_proxy="http://127.0.0.1:7890"
+      export all_proxy="http://127.0.0.1:7890"
+      export HTTP_PROXY="$http_proxy"
+      export HTTPS_PROXY="$https_proxy"
+      export ALL_PROXY="$all_proxy"
+      export no_proxy="localhost,127.0.0.1,*.juspay.net,*.juspay.in"
+      export NO_PROXY="$no_proxy"
+      echo "CLI proxy ON (mihomo 127.0.0.1:7890)"
+    }
+    proxy_off() {
+      unset http_proxy https_proxy all_proxy HTTP_PROXY HTTPS_PROXY ALL_PROXY no_proxy NO_PROXY
+      echo "CLI proxy OFF"
+    }
+  '';
+
   # copyApps restores the store bundle (and its unusable signature) every
   # deploy, so re-sign Zen ad hoc after the copy; launchd refuses to spawn
   # a bundle with an invalid signature on Apple Silicon. scoped to Zen and
