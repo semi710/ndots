@@ -163,7 +163,6 @@ let
         space = "KiwiDesk.focus_display_last()";
         m = cycleModeGap;
         s = ''kiwihub.show("view")'';
-        d = ''kiwihub.show("desktops")'';
         o = ''kiwihub.show("windows")'';
         slash = ''kiwihub.show("windows")'';
         c = ''KiwiDesk.focus_space("comms")'';
@@ -193,6 +192,10 @@ let
       -- special layer entry: switch_layer + the floating pill
       -- (bottom right; the Space Bar item stays, no way to hide it)
       ${bind "${mod}+semicolon" ''KiwiDesk.switch_layer("special"); KiwiDesk.exec("open -g 'hammerspoon://kw-layer-on?label=SPECIAL'")''}
+
+      -- Cmd+d opens the desktops hub (Mission Control with drag);
+      -- not under the mod chord: d there collides with an app hotkey
+      ${bind "super+d" ''kiwihub.show("desktops")''}
 
       -- 1..9 focus a Space; shift+1..9 move the window and follow
       -- (keymap.nix tables above are joined with these)
@@ -226,7 +229,6 @@ let
         "return" = layerOff;
         "escape" = layerOff;
       }}
-      })
       })
 
       -- trackpad gestures (5.0): compose with the Hyperkey chord so
