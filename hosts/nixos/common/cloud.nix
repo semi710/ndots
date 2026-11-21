@@ -49,6 +49,10 @@ in
 
   environment.variables.TERM = "xterm-256color";
 
+  # nh remote diff needs dix >= 3.0.0 on the target; cloud hosts don't
+  # import nixosModules.default where it's also added
+  environment.systemPackages = [ pkgs.dix ];
+
   networking.firewall.allowedTCPPorts = [
     80
     443
