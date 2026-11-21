@@ -4,7 +4,11 @@
     nerd-fonts.jetbrains-mono
     monaspace
   ];
+  # Home-manager manages completions (full fpath incl. kiwidesk, nix
+  # plugins); the system compinit in /etc/zshrc races it and wins,
+  # building a stale dump without our fpath entries.
   programs.zsh.enable = true;
+  programs.zsh.enableCompletion = false;
   security.pam.services.sudo_local = {
     touchIdAuth = true;
     reattach = true;
