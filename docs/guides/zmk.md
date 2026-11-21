@@ -27,9 +27,9 @@ just zmk-build    # nix build .#zmk -> result/zmk_{left,right}.uf2
 nix run .#zmk-flash    # interactive flash on a Linux host
 ```
 
-CI in zmk-config builds every keyboard on push; ndots builds `packages.zmk`
-locally (`just zmk-build`) - the CI cache workflow was removed, nothing
-on GitHub builds it anymore.
+CI in zmk-config builds every keyboard on push and uploads the firmware
+artifacts; ndots only consumes that (`just zmk` downloads from its CI),
+no redundant build here.
 
 ```bash
 just zmk    # waits for the latest zmk-config CI run, downloads firmware to zmk/out/
