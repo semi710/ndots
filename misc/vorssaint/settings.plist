@@ -68,9 +68,9 @@
 		<key>brightnessUpdatePromptState</key>
 		<string>handled</string>
 		<key>cameraPreviewShortcut</key>
-		<string>control+option+command:13</string>
+		<string>control+option+command:8</string>
 		<key>cameraPreviewShortcutEnabled</key>
-		<false/>
+		<true/>
 		<key>clamshellPreferred</key>
 		<true/>
 		<key>cleanerScheduleFrequency</key>
@@ -98,7 +98,7 @@
 		<key>clipboardAutoClearOnSleep</key>
 		<false/>
 		<key>clipboardHistoryEnabled</key>
-		<false/>
+		<true/>
 		<key>clipboardHistoryFilterSensitiveText</key>
 		<false/>
 		<key>clipboardHistoryIgnoredApps</key>
@@ -108,7 +108,7 @@
 		<key>clipboardHistoryLayout</key>
 		<string>list</string>
 		<key>clipboardHistoryLimit</key>
-		<integer>50</integer>
+		<integer>0</integer>
 		<key>clipboardHistoryMenuBarPreview</key>
 		<false/>
 		<key>clipboardHistoryMenuBarPreviewLength</key>
@@ -122,7 +122,7 @@
 		<key>clipboardHistoryShortcutEnabled</key>
 		<true/>
 		<key>clipboardHistoryShowSourceAppIcons</key>
-		<false/>
+		<true/>
 		<key>colorPickerBareHex</key>
 		<false/>
 		<key>colorPickerFormat</key>
@@ -226,13 +226,13 @@
 		<key>featureAvailable.brightness</key>
 		<true/>
 		<key>featureAvailable.cameraPreview</key>
-		<false/>
+		<true/>
 		<key>featureAvailable.cleaner</key>
 		<false/>
 		<key>featureAvailable.cleaningMode</key>
 		<true/>
 		<key>featureAvailable.clipboardHistory</key>
-		<false/>
+		<true/>
 		<key>featureAvailable.colorPicker</key>
 		<true/>
 		<key>featureAvailable.commandBar</key>
@@ -250,7 +250,7 @@
 		<key>featureAvailable.fanControl</key>
 		<true/>
 		<key>featureAvailable.finderCutPaste</key>
-		<false/>
+		<true/>
 		<key>featureAvailable.finderRename</key>
 		<false/>
 		<key>featureAvailable.focusFollowsMouse</key>
@@ -322,7 +322,7 @@
 		<key>featureAvailable.notchWatch</key>
 		<true/>
 		<key>featureAvailable.pastePlain</key>
-		<false/>
+		<true/>
 		<key>featureAvailable.portManager</key>
 		<true/>
 		<key>featureAvailable.quickLauncher</key>
@@ -342,7 +342,7 @@
 		<key>featureAvailable.screenRecorder</key>
 		<true/>
 		<key>featureAvailable.screenshot</key>
-		<false/>
+		<true/>
 		<key>featureAvailable.scrollHorizontal</key>
 		<false/>
 		<key>featureAvailable.scrollInverter</key>
@@ -377,10 +377,12 @@
 		<false/>
 		<key>featuresOnboardingVersion</key>
 		<integer>4</integer>
+		<key>finderCutPasteEnabled</key>
+		<true/>
 		<key>finderCutPasteShowHUD</key>
 		<true/>
 		<key>finderPasteImageAsFile</key>
-		<false/>
+		<true/>
 		<key>finderRenameEnabled</key>
 		<false/>
 		<key>finderRenameShortcut</key>
@@ -1149,7 +1151,7 @@
 		<key>panelUtilityWindowLayout</key>
 		<true/>
 		<key>pastePlainEnabled</key>
-		<false/>
+		<true/>
 		<key>pastePlainShortcut</key>
 		<string>option+shift+command:9</string>
 		<key>pinchZoomEnabled</key>
@@ -1399,7 +1401,7 @@
 		<key>screenshotWatermarkPresets</key>
 		<string>[]</string>
 		<key>screenshotWatermarkStyle</key>
-		<string>{"rotation":0,"opacity":0.4,"text":"","anchor":"bottomTrailing","color":"white","size":0.3,"kind":"none"}</string>
+		<string>{"size":0.3,"kind":"none","color":"white","text":"","opacity":0.4,"rotation":0,"anchor":"bottomTrailing"}</string>
 		<key>scrollHorizontalEnabled</key>
 		<false/>
 		<key>scrollHorizontalModifier</key>
@@ -1443,7 +1445,7 @@
 		<key>shelfShortcutEnabled</key>
 		<true/>
 		<key>showCountdownInMenuBar</key>
-		<true/>
+		<false/>
 		<key>showReleaseNotesBeforeUpdate</key>
 		<true/>
 		<key>smoothScrollCoast</key>

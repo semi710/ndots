@@ -17,7 +17,9 @@
     startup.chime = false;
     keyboard = {
       enableKeyMapping = true;
-      remapCapsLockToEscape = true;
+      # caps lock stays as macOS ships it; Vorssaint's Super key claims it
+      # (with its own tap action), so no escape remap here
+      remapCapsLockToEscape = false;
     };
     defaults.CustomUserPreferences."com.apple.HIToolbox".AppleFnUsageType = 0;
     defaults = {

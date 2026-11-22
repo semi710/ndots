@@ -14,12 +14,12 @@
       "frankea/whisky/whisky"
       "google-gemini"
       "homerow"
-      "hyperkey"
+      # "hyperkey" # vorssaint has hyperkey
       "imageoptim"
       "impactor"
       "keycastr"
       "localsend"
-      "maccy"
+      # "maccy" # vorssaint has clipboard
       "numi"
       "protonvpn"
       "shottr"
@@ -37,10 +37,10 @@
     ];
     masApps = {
       # only mac apps supported not iOS one
-      "handmirror" = 1502839586;
+      # "handmirror" = 1502839586; # vorssaint has camera preview
       "gifski" = 1351639930;
-      "gladys" = 1382386877;
-      "amphetamine" = 937984704;
+      # "gladys" = 1382386877; # vorssaint has drag drop
+      # "amphetamine" = 937984704; # vorssaint has always on
     };
   };
 
