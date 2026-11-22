@@ -432,17 +432,17 @@
 		<key>keepAwakeRunningApps</key>
 		<false/>
 		<key>keepAwakeShortcut</key>
-		<string>shift+command:34</string>
+		<string>control+option+shift+command:34</string>
 		<key>keepAwakeSwitchUsesUntil</key>
 		<false/>
 		<key>keepAwakeUntilTime</key>
 		<real>0.0</real>
 		<key>keyboardBrightnessDecreaseShortcut</key>
-		<string>option+command:27</string>
+		<string>control+option+command:27</string>
 		<key>keyboardBrightnessIncreaseShortcut</key>
-		<string>option+command:24</string>
+		<string>control+option+command:24</string>
 		<key>keyboardBrightnessShortcutsEnabled</key>
-		<false/>
+		<true/>
 		<key>keyboardDebounceEnabled</key>
 		<false/>
 		<key>keyboardDebounceKeyWindows</key>
@@ -866,7 +866,7 @@
 		<key>notchHapticFeedback</key>
 		<true/>
 		<key>notchHiddenControls</key>
-		<string>keyboardLight,microphone,screenshot,recording,speedTest,panel,commandBar,scratchpad</string>
+		<string>commandBar,keyboardLight,microphone,panel,scratchpad</string>
 		<key>notchHiddenModules</key>
 		<string></string>
 		<key>notchHiddenShowsActivity</key>
@@ -1293,13 +1293,13 @@
 		<key>screenshotBackdropStyle</key>
 		<string></string>
 		<key>screenshotClipboardShortcut</key>
-		<string>control+option+command:35</string>
+		<string>shift+command:35</string>
 		<key>screenshotClipboardShortcutEnabled</key>
-		<false/>
+		<true/>
 		<key>screenshotCopyImageOnly</key>
-		<false/>
+		<true/>
 		<key>screenshotCopyToClipboard</key>
-		<false/>
+		<true/>
 		<key>screenshotDefaultAction</key>
 		<string></string>
 		<key>screenshotDelay</key>
@@ -1315,9 +1315,9 @@
 		<key>screenshotFreeze</key>
 		<true/>
 		<key>screenshotFullScreenShortcut</key>
-		<string>control+option+command:20</string>
+		<string>shift+command:20</string>
 		<key>screenshotFullScreenShortcutEnabled</key>
-		<false/>
+		<true/>
 		<key>screenshotHideVorssaintWindows</key>
 		<true/>
 		<key>screenshotHighlightWindows</key>
@@ -1333,9 +1333,9 @@
 		<key>screenshotLastBlurTextOnly</key>
 		<false/>
 		<key>screenshotLastCaptureShortcut</key>
-		<string>control+option+command:14</string>
+		<string>shift+command:14</string>
 		<key>screenshotLastCaptureShortcutEnabled</key>
-		<false/>
+		<true/>
 		<key>screenshotLastColor</key>
 		<string>red</string>
 		<key>screenshotLastSticker</key>
@@ -1377,9 +1377,9 @@
 		<key>screenshotSharingEnabled</key>
 		<true/>
 		<key>screenshotShortcut</key>
-		<string>control+option+command:21</string>
+		<string>shift+command:21</string>
 		<key>screenshotShortcutEnabled</key>
-		<false/>
+		<true/>
 		<key>screenshotShowCaptureMenuOnShortcut</key>
 		<true/>
 		<key>screenshotShowLastRegion</key>
@@ -1401,7 +1401,7 @@
 		<key>screenshotWatermarkPresets</key>
 		<string>[]</string>
 		<key>screenshotWatermarkStyle</key>
-		<string>{"size":0.3,"kind":"none","color":"white","text":"","opacity":0.4,"rotation":0,"anchor":"bottomTrailing"}</string>
+		<string>{"opacity":0.4,"text":"","size":0.3,"kind":"none","color":"white","rotation":0,"anchor":"bottomTrailing"}</string>
 		<key>scrollHorizontalEnabled</key>
 		<false/>
 		<key>scrollHorizontalModifier</key>
