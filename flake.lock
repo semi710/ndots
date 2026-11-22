@@ -2998,11 +2998,11 @@
         "nixpkgs": "nixpkgs_27"
       },
       "locked": {
-        "lastModified": 1795032031,
-        "narHash": "sha256-Cx5/mGGhlxprEXOo5GNqNedKVyoXQ29dZ9QFGbGIRBc=",
+        "lastModified": 1795273019,
+        "narHash": "sha256-UHfMPyxXVB+aSwKiQ6LJnW+giXKaXpDAounPlXlfE6g=",
         "owner": "raine",
         "repo": "workmux",
-        "rev": "e9b16d54ca7d7456fd139544c49e883c7d275160",
+        "rev": "748997d6e9a6cf4d8f25035ee996f85251bd65a9",
         "type": "github"
       },
       "original": {
