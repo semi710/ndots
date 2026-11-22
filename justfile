@@ -1,5 +1,30 @@
 set positional-arguments
 
+# Sync app configs into misc/ and push. Each app exports its live state to
+# its snapshot: no override file sits in the app's config dir, so the app
+# always runs on its own defaults and this is pure versioning (restore with
+# the app's import).
+app-sync app="vorssaint":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case "{{app}}" in
+      vorssaint)
+        mkdir -p misc/vorssaint
+        /Applications/Vorssaint.app/Contents/MacOS/Vorssaint --export-settings misc/vorssaint/settings.plist
+        ;;
+      *)
+        echo "app-sync: unknown app '{{app}}'"
+        exit 1
+        ;;
+    esac
+    git add misc/
+    if git diff --cached --quiet; then
+      echo "app-sync: no changes"
+      exit 0
+    fi
+    git commit -m "chore(apps): sync {{app}} config"
+    git push
+
 # Deploy - auto-detects local or remote, NixOS or home-manager:
 #   just deploy                            → current machine (darwin/nixos/HM)
 #   just deploy <user>@<host> [port]       → SSH, detect type, deploy
