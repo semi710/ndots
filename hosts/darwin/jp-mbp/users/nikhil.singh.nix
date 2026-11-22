@@ -20,6 +20,7 @@ in
     # bring jankyborders back
     # (flake.homeModules.darwin + "/jankyborders.nix")
     (flake.homeModules.darwin + "/hammerspoon.nix")
+    (flake.homeModules.darwin + "/vorssaint.nix")
 
     flake.homeModules.sops
     flake.homeModules.ai
