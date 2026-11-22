@@ -249,19 +249,7 @@ in
           "test *"
           "true"
           "false"
-          "nix flake show *"
-          "nix flake metadata *"
-          "nix flake check *"
-          "nix flake lock *"
-          "nix flake update *"
-          "nix eval *"
-          "nix search *"
-          "nix path-info *"
-          "nix derivation *"
-          "nix hash *"
-          "nix store * cat *"
-          "nix store * ls *"
-          "nix build *"
+          "nix *"
           "nix-instantiate *"
           "python3 -m json.tool *"
           "jq *"
@@ -315,6 +303,12 @@ in
           "git commit *"
           "git reset --hard *"
           "git clean *"
+          # nix wholesale is allowed above; keep profile mutations (AGENTS.md
+          # says never profile install) and destructive/publishing ops gated
+          "nix profile *"
+          "nix store gc *"
+          "nix store delete *"
+          "nix copy *"
         ]
     ++ [
       {
