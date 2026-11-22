@@ -212,6 +212,8 @@ in
     # everything. Native v2 rules take precedence over the v1 map, so the
     # blanket ask leads here and the specific allows land after it.
     # A trailing " *" pattern also matches the bare command (v2 rule).
+    # git is allowed wholesale; the ask carve-outs after the allow list
+    # re-gate the publishing/irreversible commands (last match wins).
     s-ai.agents.opencode.extraSettings.permissions = [
       {
         action = "shell";
@@ -227,20 +229,7 @@ in
           effect = "allow";
         })
         [
-          "git status *"
-          "git log *"
-          "git diff *"
-          "git branch *"
-          "git show *"
-          "git rev-parse *"
-          "git remote *"
-          "git stash list"
-          "git add *"
-          "git fetch *"
-          "git blame *"
-          "git ls-files *"
-          "git describe *"
-          "git grep *"
+          "git *"
           "ls *"
           "cat *"
           "head *"
@@ -295,6 +284,19 @@ in
           "whoami *"
           "printenv *"
           "mkdir *"
+        ]
+    ++
+      map
+        (pattern: {
+          action = "shell";
+          resource = pattern;
+          effect = "ask";
+        })
+        [
+          "git push *"
+          "git commit *"
+          "git reset --hard *"
+          "git clean *"
         ]
     ++ [
       {
