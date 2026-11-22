@@ -26,6 +26,7 @@
       "sozercan/repo/kaset"
       "steam"
       "utm"
+      "vorssaint"
       "whatsapp"
       "windows-app"
       "zulip"
