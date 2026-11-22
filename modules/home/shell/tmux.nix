@@ -159,6 +159,9 @@ in
 
           set-option -ga update-environment "UPTERM_ADMIN_SOCKET"
           set-option -ga update-environment "SSH_AUTH_SOCK"
+          # re-read from the attaching client (whose login shell exported it
+          # via TERM derivation) so panes of a long-lived server see it too
+          set-option -ga update-environment "FZF_PREVIEW_IMAGE_HANDLER"
 
           # get-clipboard request: relay OSC52 reads to the most recent client
           # (the host clipboard); default "buffer" answers from tmux's paste
