@@ -270,11 +270,11 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1793173048,
-        "narHash": "sha256-GR05DyYKq8j8twAZxeemhYUD7PYhWGxtY1G0MmdVfDI=",
+        "lastModified": 1795343686,
+        "narHash": "sha256-YMWUofi0D0FTePb5DmHJ1ar71zYbIJ80w4o+DZb2l/I=",
         "owner": "semi710",
         "repo": "dragterm",
-        "rev": "3bb39abe5fed1cb342f332084dbf68cd0dc20111",
+        "rev": "5fea37c4d875c839d053035ab934fdd16f2f2cf3",
         "type": "github"
       },
       "original": {
