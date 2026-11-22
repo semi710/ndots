@@ -170,14 +170,13 @@ let
         s = ''kiwihub.show("view")'';
         o = ''kiwihub.show("windows")'';
         slash = ''kiwihub.show("windows")'';
-        c = ''KiwiDesk.focus_space("comms")'';
         apostrophe = "KiwiDesk.pocket()";
         w = "space_bar.toggle_reveal()";
         b = "app_bar.toggle_reveal()";
         "return" = ''KiwiDesk.focus_or_spawn("net.kovidgoyal.kitty")'';
       }}
 
-      -- mod+shift: swap, window state, comms move, pocket add
+      -- mod+shift: swap, window state, pocket add
       ${binds "${mod}+shift+" {
         h = ''KiwiDesk.swap("left")'';
         j = ''KiwiDesk.swap("down")'';
@@ -187,7 +186,6 @@ let
         a = "KiwiDesk.toggle_sticky()";
         m = "KiwiDesk.toggle_maximized()";
         v = "kiwivision.toggle()";
-        c = ''KiwiDesk.move_to_space_and_follow("comms")'';
         apostrophe = "KiwiDesk.toggle_pocket_window()";
         n = moveSpace " + 1";
         p = moveSpace " - 1";
@@ -260,7 +258,7 @@ in
         q closes, m cycles bsp/monocle (monocle gaps 0), s the view
         picker, o the window switcher, ; the special layer (resize, nudge,
         center, ,/. (</>) kbd backlight, p the pocket list), shift+f/a/m/v float/sticky/maximize/vision,
-        g/b the bars, ' pocket, c the comms space, / the window
+        g/b the bars, ' pocket, / the window
         switcher. Also sets a 2pt focus border and the float rules.
       '';
     };
