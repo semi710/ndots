@@ -33,6 +33,21 @@
       bindkey '^[j' fzf-tab-complete
       bindkey '^[k' fzf-tab-complete
 
+      # fzf-tab previews: the plugin ships none by default. $realpath is only
+      # set for file completions; fzf-preview chooses bat/eza/images itself
+      # (its image handler comes from kitty.conf locally, TERM-derived on ssh).
+      zstyle ':fzf-tab:complete:*:*' fzf-preview \
+        'if [[ -e $realpath ]]; then fzf-preview $realpath; else echo -E $word; fi'
+      zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza -1 --color=always $realpath'
+      zstyle ':fzf-tab:complete:__zsh_like_cd:*' fzf-preview 'eza -1 --color=always $realpath'
+      zstyle ':fzf-tab:complete:git-(checkout|switch|log|show):*' fzf-preview \
+        'git log --color=always --oneline --decorate -n 30 $word 2>/dev/null || echo -E $word'
+      zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \
+        'ps -p $word -o pid=,ppid=,pcpu=,pmem=,comm='
+      zstyle ':fzf-tab:*' fzf-flags --bind=space:toggle-preview
+      zstyle ':fzf-tab:*' fzf-min-height 15
+      zstyle ':fzf-tab:*' switch-group ',' '.'
+
       # OSC52 Clipboard Integration
       # Uses the `osc` tool which handles tmux escape sequences automatically
       # Note: Visual mode highlight may linger after yanking due to upstream zsh-vi-mode bug

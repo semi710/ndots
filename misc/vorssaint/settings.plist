@@ -22,6 +22,10 @@
 		<true/>
 		<key>audioPriorityDeviceNames</key>
 		<dict>
+			<key>34-0E-22-86-CC-6B:input</key>
+			<string>SemiPods</string>
+			<key>34-0E-22-86-CC-6B:output</key>
+			<string>SemiPods</string>
 			<key>55FCF669-69B3-40FC-BD5A-F2BC00000003</key>
 			<string>iSemi Microphone</string>
 			<key>BuiltInMicrophoneDevice</key>
@@ -33,6 +37,7 @@
 		<true/>
 		<key>audioPriorityInputUIDs</key>
 		<array>
+			<string>34-0E-22-86-CC-6B:input</string>
 			<string>BuiltInMicrophoneDevice</string>
 			<string>55FCF669-69B3-40FC-BD5A-F2BC00000003</string>
 		</array>
@@ -40,6 +45,7 @@
 		<true/>
 		<key>audioPriorityOutputUIDs</key>
 		<array>
+			<string>34-0E-22-86-CC-6B:output</string>
 			<string>BuiltInSpeakerDevice</string>
 		</array>
 		<key>autoCheckUpdates</key>
@@ -1001,7 +1007,7 @@
 		<key>notchTimerEnabled</key>
 		<true/>
 		<key>notchTimerMinutes</key>
-		<integer>15</integer>
+		<integer>92</integer>
 		<key>notchTimerMode</key>
 		<string>timer</string>
 		<key>notchTimerSoundEnabled</key>
@@ -1253,7 +1259,7 @@
 		<key>recorderSharingEnabled</key>
 		<true/>
 		<key>recorderShortcut</key>
-		<string>control+option+command:23</string>
+		<string>shift+command:23</string>
 		<key>recorderShortcutEnabled</key>
 		<true/>
 		<key>recorderShowCaptureMenuOnShortcut</key>
@@ -1401,7 +1407,7 @@
 		<key>screenshotWatermarkPresets</key>
 		<string>[]</string>
 		<key>screenshotWatermarkStyle</key>
-		<string>{"anchor":"bottomTrailing","opacity":0.4,"kind":"none","color":"white","text":"","rotation":0,"size":0.3}</string>
+		<string>{"anchor":"bottomTrailing","size":0.3,"text":"","color":"white","rotation":0,"opacity":0.4,"kind":"none"}</string>
 		<key>scrollHorizontalEnabled</key>
 		<false/>
 		<key>scrollHorizontalModifier</key>
@@ -1537,7 +1543,9 @@
 		<key>switcherWindowlessApps</key>
 		<string>finder</string>
 		<key>systemShortcutTakeOverKeys</key>
-		<array/>
+		<array>
+			<string>recorderShortcut</string>
+		</array>
 		<key>temperatureUnit</key>
 		<string>celsius</string>
 		<key>textSnippetsEnabled</key>
