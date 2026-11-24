@@ -168,7 +168,7 @@ in
 
       # advisor/prewalk roles point at grid models explicitly; omp's builtin
       # fallback chains carry none, which would leave the roles unarmed
-      agents.omp.advisorModel = "juspay/claude-sonnet-4-6";
+      agents.omp.advisorModel = "juspay/claude-opus-4-6";
       agents.omp.smolModel = "juspay/glm-flash-experimental";
 
       mcp.servers = lib.mkIf config.ndots.ai.mcp.workServers workServers;

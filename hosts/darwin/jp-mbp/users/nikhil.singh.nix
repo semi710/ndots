@@ -195,6 +195,18 @@ in
   nvix.variant = "full";
   ndots.ai.mcp.workServers = true;
 
+  # role routing: heavy models plan/review, cheap ones explore, sonnet
+  # executes against the spec (small-model edits only pay off with a
+  # precise plan plus a different-family reviewer - see the role table
+  # in s-ai's opencode module)
+  s-ai.agents.opencode.models = {
+    main = "juspay/glm-latest";
+    planner = "juspay/claude-opus-4-6";
+    reviewer = "juspay/gemini-3.1-pro";
+    executor = "juspay/claude-sonnet-4-6";
+    explorer = "juspay/glm-flash-experimental";
+  };
+
   # Color override for tmux plugin
   programs.tmux.plugins = [
     {
