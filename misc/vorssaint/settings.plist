@@ -252,7 +252,7 @@
 		<key>featureAvailable.dockPreview</key>
 		<false/>
 		<key>featureAvailable.extraBrightness</key>
-		<true/>
+		<false/>
 		<key>featureAvailable.fanControl</key>
 		<true/>
 		<key>featureAvailable.finderCutPaste</key>
@@ -1407,7 +1407,7 @@
 		<key>screenshotWatermarkPresets</key>
 		<string>[]</string>
 		<key>screenshotWatermarkStyle</key>
-		<string>{"anchor":"bottomTrailing","size":0.3,"text":"","color":"white","rotation":0,"opacity":0.4,"kind":"none"}</string>
+		<string>{"color":"white","kind":"none","text":"","size":0.3,"rotation":0,"anchor":"bottomTrailing","opacity":0.4}</string>
 		<key>scrollHorizontalEnabled</key>
 		<false/>
 		<key>scrollHorizontalModifier</key>
