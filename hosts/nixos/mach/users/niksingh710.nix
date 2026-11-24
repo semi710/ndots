@@ -77,6 +77,8 @@ in
   };
 
   nvix.variant = "full";
+  # personal box, but work happens here over VPN (jp-key, bitbucket git
+  # config) - keep the work MCP tier available
   ndots.ai.mcp.workServers = true;
 
   programs.git = {
