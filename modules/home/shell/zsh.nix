@@ -95,6 +95,36 @@
       # Run background + detached (use after Ctrl+Z)
       runbg() { bg %+ >/dev/null 2>&1 && disown %+ >/dev/null 2>&1; }
 
+      ${lib.optionalString pkgs.stdenv.isDarwin ''
+        # Agent-traffic toggle: route shell-launched agents through the
+        # prompt_security mitm (:3636). localhost stays direct so agent<->daemon
+        # and MCP sockets aren't intercepted; NODE_EXTRA_CA_CERTS makes node/bun
+        # trust the re-signed TLS (curl uses the system keychain). Fresh
+        # processes only - a running opencode daemon keeps its own env.
+        proxy() {
+          case "''${1:-on}" in
+            on)
+              export HTTP_PROXY="http://127.0.0.1:3636"
+              export HTTPS_PROXY="http://127.0.0.1:3636"
+              export http_proxy="http://127.0.0.1:3636"
+              export https_proxy="http://127.0.0.1:3636"
+              export NO_PROXY="127.0.0.1,localhost,::1"
+              export no_proxy="127.0.0.1,localhost,::1"
+              export NODE_EXTRA_CA_CERTS="/Users/Shared/.prompt_security/.certs/mitmproxy-ca-cert.pem"
+              echo "proxy: prompt_security mitm on (:3636, localhost direct) - proxy off to reset"
+              ;;
+            off)
+              unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy NODE_EXTRA_CA_CERTS
+              echo "proxy: off"
+              ;;
+            *)
+              echo "usage: proxy [on|off]" >&2
+              return 1
+              ;;
+          esac
+        }
+      ''}
+
       function zvm_after_lazy_keybindings() {
         bindkey -M visual 'y' _visual_yank_with_osc52
       }
