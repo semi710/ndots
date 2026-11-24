@@ -21,7 +21,11 @@
           "OPENCODE_*"
         ];
       }
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin { useKeychain = true; })
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
+        # UseKeychain is Apple-only; IgnoreUnknown lets vanilla openssh (nix, devshells) skip it
+        IgnoreUnknown = "UseKeychain";
+        useKeychain = true;
+      })
     ];
   };
   # To avoid collision in home-manager
