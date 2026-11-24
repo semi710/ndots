@@ -7,16 +7,11 @@ set positional-arguments
 app-sync app="vorssaint":
     #!/usr/bin/env bash
     set -euo pipefail
-    case "{{app}}" in
-      vorssaint)
-        mkdir -p misc/vorssaint
-        /Applications/Vorssaint.app/Contents/MacOS/Vorssaint --export-settings misc/vorssaint/settings.plist
-        ;;
-      *)
-        echo "app-sync: unknown app '{{app}}'"
-        exit 1
-        ;;
-    esac
+    tmp=$(mktemp)
+    trap 'rm -f "$tmp"' EXIT
+    just _app-export {{app}} "$tmp"
+    mkdir -p misc/vorssaint
+    cp "$tmp" misc/vorssaint/settings.plist
     git add misc/
     if git diff --cached --quiet; then
       echo "app-sync: no changes"
@@ -24,6 +19,39 @@ app-sync app="vorssaint":
     fi
     git commit -m "chore(apps): sync {{app}} config"
     git push
+
+# Dry sync: export the live config to a temp file and report whether the
+# snapshot in misc/ drifted. Also wired as the pre-commit hint hook
+# (parts/default.nix); never exits non-zero.
+app-sync-dry app="vorssaint":
+    #!/usr/bin/env bash
+    set -euo pipefail
+    tmp=$(mktemp)
+    trap 'rm -f "$tmp"' EXIT
+    just _app-export {{app}} "$tmp"
+    if git diff --no-index --quiet misc/vorssaint/settings.plist "$tmp"; then
+      echo "app-sync: no changes"
+    else
+      echo "hint: {{app}} settings drifted - run 'just app-sync {{app}}' before you forget"
+    fi
+
+# Export an app's live config, canonicalized, to the given path. The raw
+# export shuffles JSON key order between runs; canonicalize (sorted keys +
+# sorted JSON-in-string values) so the file is byte-stable and diff-based
+# guards mean something.
+_app-export app out:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    case "{{app}}" in
+      vorssaint)
+        /Applications/Vorssaint.app/Contents/MacOS/Vorssaint --export-settings "{{out}}" >/dev/null
+        python3 misc/vorssaint/canonicalize.py "{{out}}" > "{{out}}.c" && mv "{{out}}.c" "{{out}}"
+        ;;
+      *)
+        echo "app-sync: unknown app '{{app}}'"
+        exit 1
+        ;;
+    esac
 
 # Deploy - auto-detects local or remote, NixOS or home-manager:
 #   just deploy                            → current machine (darwin/nixos/HM)

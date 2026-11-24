@@ -54,6 +54,14 @@
           enable = true;
           entry = "${lib.getExe config.treefmt.build.wrapper}";
         };
+        # advice-only drift hint; verbose so the hint shows on success too
+        hooks.app-drift = {
+          enable = true;
+          always_run = true;
+          pass_filenames = false;
+          verbose = true;
+          entry = "just app-sync-dry";
+        };
       };
     };
 }

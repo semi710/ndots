@@ -196,7 +196,7 @@
 		<key>dockClickMinimize</key>
 		<false/>
 		<key>dockPreviewBackgroundOpacity</key>
-		<real>1</real>
+		<real>1.0</real>
 		<key>dockPreviewCurrentSpaceOnly</key>
 		<false/>
 		<key>dockPreviewEnabled</key>
@@ -478,11 +478,11 @@
 		<key>mediaGIFEnd</key>
 		<real>0.0</real>
 		<key>mediaGIFFPS</key>
-		<real>12</real>
+		<real>12.0</real>
 		<key>mediaGIFLoops</key>
 		<true/>
 		<key>mediaGIFQuality</key>
-		<real>0.73999999999999999</real>
+		<real>0.74</real>
 		<key>mediaGIFSizing</key>
 		<string>resolution</string>
 		<key>mediaGIFStart</key>
@@ -504,7 +504,7 @@
 		<key>mediaImageProfiles</key>
 		<string>[]</string>
 		<key>mediaImageQuality</key>
-		<real>0.71999999999999997</real>
+		<real>0.72</real>
 		<key>mediaImageRenamePattern</key>
 		<string></string>
 		<key>mediaImageResizeHeight</key>
@@ -524,11 +524,11 @@
 		<key>mediaImageWatermarkMargin</key>
 		<integer>32</integer>
 		<key>mediaImageWatermarkOpacity</key>
-		<real>0.45000000000000001</real>
+		<real>0.45</real>
 		<key>mediaImageWatermarkPosition</key>
 		<string>bottomRight</string>
 		<key>mediaImageWatermarkScale</key>
-		<real>0.17999999999999999</real>
+		<real>0.18</real>
 		<key>mediaImageWatermarkText</key>
 		<string></string>
 		<key>mediaLastTool</key>
@@ -542,13 +542,13 @@
 		<key>mediaVideoEnd</key>
 		<real>0.0</real>
 		<key>mediaVideoFPS</key>
-		<real>30</real>
+		<real>30.0</real>
 		<key>mediaVideoKeepAudio</key>
 		<true/>
 		<key>mediaVideoMaxDimension</key>
 		<integer>1280</integer>
 		<key>mediaVideoQuality</key>
-		<real>0.68000000000000005</real>
+		<real>0.68</real>
 		<key>mediaVideoSizing</key>
 		<string>resolution</string>
 		<key>mediaVideoStart</key>
@@ -784,7 +784,7 @@
 		<key>notchAgentsFinishAlert</key>
 		<true/>
 		<key>notchAgentsFinishMinimum</key>
-		<real>60</real>
+		<real>60.0</real>
 		<key>notchAgentsHiddenCards</key>
 		<string></string>
 		<key>notchAgentsLimitAlert</key>
@@ -794,7 +794,7 @@
 		<key>notchAgentsLimitFocus</key>
 		<string>mostUsed</string>
 		<key>notchAgentsLimitThreshold</key>
-		<real>80</real>
+		<real>80.0</real>
 		<key>notchAgentsLiveActivity</key>
 		<true/>
 		<key>notchAgentsOpenCode</key>
@@ -844,7 +844,7 @@
 		<key>notchClipboardWindow</key>
 		<true/>
 		<key>notchCloseDelay</key>
-		<real>0.17999999999999999</real>
+		<real>0.18</real>
 		<key>notchCommandBar</key>
 		<true/>
 		<key>notchCommandBarStyle</key>
@@ -854,9 +854,9 @@
 		<key>notchCoversMenus</key>
 		<true/>
 		<key>notchCustomHeight</key>
-		<real>480</real>
+		<real>480.0</real>
 		<key>notchCustomWidth</key>
-		<real>440</real>
+		<real>440.0</real>
 		<key>notchDismissNativeNotifications</key>
 		<false/>
 		<key>notchDisplay</key>
@@ -1192,7 +1192,7 @@
 		<key>quitAppsShortcutEnabled</key>
 		<false/>
 		<key>quitProtectionCloseDoubleIntervalMs</key>
-		<real>600</real>
+		<real>600.0</real>
 		<key>quitProtectionCloseEnabled</key>
 		<false/>
 		<key>quitProtectionCloseExceptions</key>
@@ -1200,7 +1200,7 @@
 		<key>quitProtectionCloseExtraModifier</key>
 		<string>shift</string>
 		<key>quitProtectionCloseHoldDurationMs</key>
-		<real>800</real>
+		<real>800.0</real>
 		<key>quitProtectionCloseMode</key>
 		<string>hold</string>
 		<key>quitProtectionCloseScope</key>
@@ -1208,7 +1208,7 @@
 		<key>quitProtectionCloseShowFeedback</key>
 		<true/>
 		<key>quitProtectionQuitDoubleIntervalMs</key>
-		<real>600</real>
+		<real>600.0</real>
 		<key>quitProtectionQuitEnabled</key>
 		<false/>
 		<key>quitProtectionQuitExceptions</key>
@@ -1216,7 +1216,7 @@
 		<key>quitProtectionQuitExtraModifier</key>
 		<string>shift</string>
 		<key>quitProtectionQuitHoldDurationMs</key>
-		<real>800</real>
+		<real>800.0</real>
 		<key>quitProtectionQuitMode</key>
 		<string>hold</string>
 		<key>quitProtectionQuitScope</key>
@@ -1279,7 +1279,7 @@
 		<key>scratchpadShortcutEnabled</key>
 		<false/>
 		<key>scratchpadTextSize</key>
-		<real>13</real>
+		<real>13.0</real>
 		<key>screenOCRDetectQRCodes</key>
 		<true/>
 		<key>screenOCRRemoveLineBreaks</key>
@@ -1353,7 +1353,7 @@
 		<key>screenshotLastTool</key>
 		<string>arrow</string>
 		<key>screenshotLoupeDefaultZoom</key>
-		<real>1</real>
+		<real>1.0</real>
 		<key>screenshotLoupeRememberZoom</key>
 		<false/>
 		<key>screenshotLoupeStartsOn</key>
@@ -1407,7 +1407,7 @@
 		<key>screenshotWatermarkPresets</key>
 		<string>[]</string>
 		<key>screenshotWatermarkStyle</key>
-		<string>{"color":"white","kind":"none","text":"","size":0.3,"rotation":0,"anchor":"bottomTrailing","opacity":0.4}</string>
+		<string>{"anchor":"bottomTrailing","color":"white","kind":"none","opacity":0.4,"rotation":0,"size":0.3,"text":""}</string>
 		<key>scrollHorizontalEnabled</key>
 		<false/>
 		<key>scrollHorizontalModifier</key>
@@ -1613,7 +1613,7 @@
 		<key>windowLayoutIgnoredApps</key>
 		<array/>
 		<key>windowLayoutMarginPercent</key>
-		<real>5</real>
+		<real>5.0</real>
 		<key>windowLayoutScreenGap</key>
 		<integer>0</integer>
 		<key>windowLayoutShortcutBottom</key>
