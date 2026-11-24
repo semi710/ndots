@@ -19,10 +19,10 @@
       "impactor"
       "keycastr"
       "localsend"
-      # "maccy" # vorssaint has clipboard
+      "maccy" # vorssaint has clipboard (but maccy is best)
       "numi"
       "protonvpn"
-      "shottr"
+      # "shottr"
       "sozercan/repo/kaset"
       "steam"
       "utm"
