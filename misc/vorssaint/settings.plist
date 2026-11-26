@@ -26,8 +26,14 @@
 			<string>SemiPods</string>
 			<key>34-0E-22-86-CC-6B:output</key>
 			<string>SemiPods</string>
+			<key>4C2DB3E0-0000-0000-1E23-010380462778</key>
+			<string>Smart M50F</string>
 			<key>55FCF669-69B3-40FC-BD5A-F2BC00000003</key>
 			<string>iSemi Microphone</string>
+			<key>AppleUSBAudioEngine:Logitech:Logi USB Headset:000000000000:1</key>
+			<string>Logi USB Headset</string>
+			<key>AppleUSBAudioEngine:Logitech:Logi USB Headset:000000000000:2</key>
+			<string>Logi USB Headset</string>
 			<key>BuiltInMicrophoneDevice</key>
 			<string>MacBook Pro Microphone</string>
 			<key>BuiltInSpeakerDevice</key>
@@ -40,6 +46,7 @@
 			<string>34-0E-22-86-CC-6B:input</string>
 			<string>BuiltInMicrophoneDevice</string>
 			<string>55FCF669-69B3-40FC-BD5A-F2BC00000003</string>
+			<string>AppleUSBAudioEngine:Logitech:Logi USB Headset:000000000000:1</string>
 		</array>
 		<key>audioPriorityOutputEnabled</key>
 		<true/>
@@ -47,6 +54,8 @@
 		<array>
 			<string>34-0E-22-86-CC-6B:output</string>
 			<string>BuiltInSpeakerDevice</string>
+			<string>4C2DB3E0-0000-0000-1E23-010380462778</string>
+			<string>AppleUSBAudioEngine:Logitech:Logi USB Headset:000000000000:2</string>
 		</array>
 		<key>autoCheckUpdates</key>
 		<true/>
@@ -431,6 +440,8 @@
 		<integer>5</integer>
 		<key>keepAwakePauseWhenLocked</key>
 		<false/>
+		<key>keepAwakePowerDisconnectDelaySeconds</key>
+		<integer>0</integer>
 		<key>keepAwakeRightClickToggle</key>
 		<true/>
 		<key>keepAwakeRunningAppBundleIDs</key>
@@ -464,7 +475,7 @@
 		<key>killProcessSortBy</key>
 		<string>cpu</string>
 		<key>lastUpdateIntroVersion</key>
-		<string>3.4.4</string>
+		<string>3.4.5</string>
 		<key>launchAtLoginWanted</key>
 		<true/>
 		<key>linearScrollEnabled</key>
@@ -607,6 +618,8 @@
 		<integer>70</integer>
 		<key>menuBarUsageBarNormalColor</key>
 		<string>#64D2FF</string>
+		<key>micMuteFollowCallApps</key>
+		<false/>
 		<key>micMuteMenuBarIndicator</key>
 		<true/>
 		<key>micMuteShortcut</key>
@@ -776,6 +789,8 @@
 		<key>notchAgentsCodex</key>
 		<true/>
 		<key>notchAgentsCopilot</key>
+		<true/>
+		<key>notchAgentsCursor</key>
 		<true/>
 		<key>notchAgentsDailyBudget</key>
 		<real>0.0</real>
@@ -1299,7 +1314,7 @@
 		<key>screenshotBackdropStyle</key>
 		<string></string>
 		<key>screenshotClipboardShortcut</key>
-		<string>shift+command:35</string>
+		<string>option+shift+command:14</string>
 		<key>screenshotClipboardShortcutEnabled</key>
 		<true/>
 		<key>screenshotCopyImageOnly</key>
@@ -1489,7 +1504,7 @@
 		<key>superKeySource</key>
 		<string>capsLock</string>
 		<key>supportUpdateIntroVersion</key>
-		<string>3.4.4-support</string>
+		<string>3.4.5-support</string>
 		<key>switcherAllWindowsShortcut</key>
 		<string>option:48</string>
 		<key>switcherAllWindowsShortcutEnabled</key>
@@ -1714,7 +1729,7 @@
 		<false/>
 	</dict>
 	<key>vorssaintBackupAppVersion</key>
-	<string>3.4.4</string>
+	<string>3.4.5</string>
 	<key>vorssaintBackupVersion</key>
 	<integer>1</integer>
 </dict>
